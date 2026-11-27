@@ -1,0 +1,67 @@
+<section class="card flex flex-col gap-3">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h2 class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'salaryIntelligence.projection.title' | translate }}</h2>
+    <div class="inline-flex rounded-lg border border-slate-300 p-0.5 dark:border-slate-600" role="group" [attr.aria-label]="'salaryIntelligence.projection.horizon' | translate">
+      @for (months of horizons; track months) {
+        <button
+          type="button"
+          class="rounded-md px-3 py-1.5 text-sm font-medium transition"
+          [class.bg-brand-600]="horizon() === months"
+          [class.text-white]="horizon() === months"
+          [class.text-slate-600]="horizon() !== months"
+          (click)="setHorizon(months)"
+        >{{ 'salaryIntelligence.projection.horizons.' + months | translate }}</button>
+      }
+    </div>
+  </div>
+
+  <p class="text-xs text-slate-500 dark:text-slate-400">{{ 'salaryIntelligence.projection.disclaimer' | translate }}</p>
+
+  @if (loading()) {
+    <app-skeleton [lines]="8" />
+  } @else if (error()) {
+    <div class="space-y-2 py-6 text-center">
+      <p class="text-sm text-slate-500 dark:text-slate-400">{{ 'salaryIntelligence.states.error' | translate }}</p>
+      <button type="button" class="btn-secondary text-xs" (click)="retry.emit()">{{ 'salaryIntelligence.states.retry' | translate }}</button>
+    </div>
+  } @else if (isEmpty()) {
+    <p class="py-6 text-center text-sm text-slate-500 dark:text-slate-400">
+      {{ 'salaryIntelligence.states.empty' | translate }}
+      <a routerLink="/salaries/new" class="ml-1 font-medium text-brand-600 hover:underline">{{ 'salaryIntelligence.states.emptyLink' | translate }}</a>
+    </p>
+  } @else if (isInsufficient()) {
+    <p class="py-6 text-center text-sm text-slate-500 dark:text-slate-400">{{ 'salaryIntelligence.states.insufficientRecords' | translate }}</p>
+  } @else if (hasData()) {
+    <div class="grid items-stretch gap-3 sm:grid-cols-3">
+      @for (scenario of scenarios(); track scenario.name) {
+        <div class="flex min-h-0 flex-col gap-1">
+          <app-stat-card
+            class="min-h-0 flex-1"
+            [label]="scenarioLabel(scenario)"
+            [value]="money(scenario.value)"
+            icon="chart-bar"
+            [tone]="scenarioTone(scenario.name)"
+          />
+          <p class="min-h-5 px-1 text-xs text-slate-500 dark:text-slate-400">
+            @if (scenario.realValue !== null) {
+              {{ 'salaryIntelligence.projection.realValue' | translate: { value: money(scenario.realValue) } }}
+            }
+          </p>
+        </div>
+      }
+    </div>
+
+    @if (data()?.inflationCriterion) {
+      <p class="text-xs text-slate-500 dark:text-slate-400">
+        {{ 'salaryIntelligence.projection.criterion.' + data()!.inflationCriterion | translate }}
+      </p>
+    }
+
+    <app-line-chart
+      [labels]="chart().labels"
+      [datasets]="datasets()"
+      [yTickFormatter]="yFormatter"
+      [ariaLabel]="'salaryIntelligence.projection.chartLabel' | translate"
+    />
+  }
+</section>

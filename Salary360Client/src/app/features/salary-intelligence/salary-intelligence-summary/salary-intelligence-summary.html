@@ -1,0 +1,26 @@
+<section class="card flex flex-col gap-3">
+  <h2 class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'salaryIntelligence.summary.title' | translate }}</h2>
+
+  @if (loading()) {
+    <app-skeleton [lines]="4" />
+  } @else if (error()) {
+    <div class="space-y-2 py-4 text-center">
+      <p class="text-sm text-slate-500 dark:text-slate-400">{{ 'salaryIntelligence.states.error' | translate }}</p>
+      <button type="button" class="btn-secondary text-xs" (click)="onRetry()">{{ 'salaryIntelligence.states.retry' | translate }}</button>
+    </div>
+  } @else if (isEmpty()) {
+    <p class="py-4 text-center text-sm text-slate-500 dark:text-slate-400">
+      {{ 'salaryIntelligence.states.empty' | translate }}
+      <a routerLink="/salaries/new" class="ml-1 font-medium text-brand-600 hover:underline">{{ 'salaryIntelligence.states.emptyLink' | translate }}</a>
+    </p>
+  } @else if (isInsufficient()) {
+    <p class="py-4 text-center text-sm text-slate-500 dark:text-slate-400">{{ 'salaryIntelligence.states.insufficientRecords' | translate }}</p>
+  } @else if (hasData()) {
+    <div class="grid items-stretch gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <app-stat-card [label]="'salaryIntelligence.summary.currentGross' | translate" [value]="money(data()!.currentGross)" icon="banknotes" [tone]="StatTone.Brand" />
+      <app-stat-card [label]="'salaryIntelligence.summary.currentNet' | translate" [value]="money(data()!.currentNet)" icon="banknotes" [tone]="StatTone.Emerald" />
+      <app-stat-card [label]="'salaryIntelligence.summary.benefits' | translate" [value]="money(data()!.totalBenefits)" icon="banknotes" [tone]="StatTone.Slate" />
+      <app-stat-card [label]="'salaryIntelligence.summary.periodEvolution' | translate" [value]="evolutionDisplay()" icon="chart-bar" [tone]="evolutionTone()" />
+    </div>
+  }
+</section>

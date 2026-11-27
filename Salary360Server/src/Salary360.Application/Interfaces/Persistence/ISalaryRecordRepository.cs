@@ -21,6 +21,17 @@ public interface ISalaryRecordRepository
     Task<IReadOnlyList<SalaryEvolutionPointDto>> GetYearEvolutionAsync(
         Guid userId, int fromYear, int toYear, CancellationToken cancellationToken = default);
 
+    Task<(int Year, int Month)?> GetLatestCompetenceAsync(
+        Guid userId, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<SalaryRecord>> ListByPeriodAsync(
+        Guid userId,
+        int fromYear,
+        int fromMonth,
+        int toYear,
+        int toMonth,
+        CancellationToken cancellationToken = default);
+
     void Add(SalaryRecord record);
 
     void Remove(SalaryRecord record);

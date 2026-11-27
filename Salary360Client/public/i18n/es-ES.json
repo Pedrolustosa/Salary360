@@ -10,7 +10,8 @@
     "toggleMenu": "Alternar menú lateral",
     "profile": "Perfil",
     "salaries": "Salarios",
-    "evolution": "Evolución"
+    "evolution": "Evolución",
+    "salaryIntelligence": "Inteligencia salarial"
   },
   "auth": {
     "loginSubtitle": "Cada salario con un propósito.",
@@ -112,7 +113,11 @@
       "invalid_year": "Año no válido.",
       "future_competence": "La competencia no puede ser futura.",
       "too_many_items": "Máximo de 50 ítems por salario.",
-      "duplicate_item_name": "Ya existe un ítem con este nombre."
+      "duplicate_item_name": "Ya existe un ítem con este nombre.",
+      "invalid_period": "Introduce un período válido (desde/hasta).",
+      "period_too_long": "El período máximo es de 120 meses.",
+      "invalid_basis": "Base salarial no válida.",
+      "invalid_horizon": "Horizonte de proyección no válido."
     }
   },
   "home": {
@@ -249,6 +254,91 @@
     "maxNet": "Mayor líquido",
     "minNet": "Menor líquido",
     "variation": "Variación"
+  },
+  "salaryIntelligence": {
+    "title": "Inteligencia salarial",
+    "subtitle": "Indicadores, poder adquisitivo, insights y proyecciones a partir de tu historial.",
+    "filters": {
+      "from": "Desde",
+      "to": "Hasta"
+    },
+    "basis": {
+      "label": "Base",
+      "net": "Líquido",
+      "gross": "Bruto"
+    },
+    "shortcuts": {
+      "last12": "12 meses",
+      "currentYear": "Año actual",
+      "all": "Todo"
+    },
+    "states": {
+      "loading": "Cargando...",
+      "error": "No se pudieron cargar estos datos.",
+      "retry": "Reintentar",
+      "empty": "Aún no hay salarios registrados.",
+      "emptyLink": "Registrar salario",
+      "insufficientRecords": "Registros insuficientes para este análisis.",
+      "emptyInsights": "No hay insights para el período."
+    },
+    "summary": {
+      "title": "Resumen",
+      "currentGross": "Bruto actual",
+      "currentNet": "Líquido actual",
+      "benefits": "Beneficios",
+      "periodEvolution": "Evolución del período"
+    },
+    "charts": {
+      "evolutionTitle": "Evolución del período",
+      "evolutionLabel": "Gráfico de evolución salarial del período",
+      "gross": "Bruto",
+      "net": "Líquido"
+    },
+    "purchasingPower": {
+      "title": "Poder adquisitivo",
+      "actual": "Nominal",
+      "adjusted": "Ajustado por IPCA",
+      "chartLabel": "Gráfico de poder adquisitivo",
+      "stale": "Los datos de IPCA pueden estar desactualizados.",
+      "partial": "Cobertura parcial del IPCA hasta {{month}}.",
+      "unavailable": "IPCA no disponible para este período."
+    },
+    "insightsTitle": "Insights",
+    "insights": {
+      "salary_increase": "Aumento salarial del {{percent}}%.",
+      "salary_decrease": "Reducción salarial del {{percent}}%.",
+      "real_loss": "Pérdida real de poder adquisitivo del {{percent}}%.",
+      "real_gain": "Ganancia real de poder adquisitivo del {{percent}}%.",
+      "deductions_rise": "Los descuentos subieron un {{percent}}%.",
+      "deductions_drop": "Los descuentos bajaron un {{percent}}%.",
+      "benefits_rise": "Los beneficios subieron un {{percent}}%.",
+      "benefits_drop": "Los beneficios bajaron un {{percent}}%.",
+      "net_ratio_change": "La relación líquido/bruto cambió un {{percent}}%.",
+      "best_month": "Mejor mes: {{competence}} ({{amount}}).",
+      "worst_month": "Peor mes: {{competence}} ({{amount}}).",
+      "stable_period": "Período estable, sin variaciones relevantes."
+    },
+    "projection": {
+      "title": "Proyección estimada",
+      "disclaimer": "Estimación basada en el historial reciente. No es una garantía de resultado futuro.",
+      "horizon": "Horizonte",
+      "horizons": {
+        "3": "3 meses",
+        "6": "6 meses",
+        "12": "12 meses"
+      },
+      "actual": "Historial",
+      "realValue": "Valor real estimado: {{value}}",
+      "chartLabel": "Gráfico de proyección salarial",
+      "scenarios": {
+        "conservative": "Conservador",
+        "likely": "Probable",
+        "optimistic": "Optimista"
+      },
+      "criterion": {
+        "average_ipca_last_12_months": "Ajuste real según el promedio del IPCA de los últimos 12 meses."
+      }
+    }
   },
   "monthYear": {
     "placeholder": "Selecciona mes/año",

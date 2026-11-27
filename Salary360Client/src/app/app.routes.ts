@@ -70,6 +70,14 @@ export const routes: Routes = [
         canActivate: [permissionGuard(Permission.SalariesView)],
         loadComponent: () => import('./features/evolution/evolution-page').then((m) => m.EvolutionPage),
       },
+      {
+        path: 'salary-intelligence',
+        canActivate: [permissionGuard(Permission.SalariesView)],
+        loadComponent: () =>
+          import('./features/salary-intelligence/salary-intelligence/salary-intelligence').then(
+            (m) => m.SalaryIntelligence,
+          ),
+      },
     ],
   },
   {
