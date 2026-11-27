@@ -9,8 +9,14 @@ public sealed class PermissionsTests
         => Assert.Equal(AppPermissions.All, AppPermissions.ByRole[AppRoles.Admin]);
 
     [Fact]
-    public void User_HasOnlyProfilePermissions()
-        => Assert.Equal([AppPermissions.Profile.View, AppPermissions.Profile.Update], AppPermissions.ByRole[AppRoles.User]);
+    public void User_HasProfileAndSalaryPermissions()
+        => Assert.Equal(
+            [
+                AppPermissions.Profile.View, AppPermissions.Profile.Update,
+                AppPermissions.Salaries.View, AppPermissions.Salaries.Create,
+                AppPermissions.Salaries.Update, AppPermissions.Salaries.Delete
+            ],
+            AppPermissions.ByRole[AppRoles.User]);
 
     [Fact]
     public void Permissions_AreUnique()

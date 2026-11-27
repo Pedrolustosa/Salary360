@@ -7,7 +7,7 @@ public sealed class RateLimitedApiFactory : ApiFactory
         ["RateLimiting:LoginPermitLimit"] = "3",
         ["RateLimiting:LoginWindowMinutes"] = "5",
         ["RateLimiting:LoginIpPermitLimit"] = "1000",
-        ["RateLimiting:RegisterPermitLimit"] = "1000",
-        ["RateLimiting:ApiPermitLimit"] = "100000"
+        ["RateLimiting:RegisterPermitLimit"] = "100",
+        ["RateLimiting:ApiPermitLimit"] = "10000"
     };
 }

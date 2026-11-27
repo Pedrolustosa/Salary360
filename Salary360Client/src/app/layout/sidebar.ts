@@ -9,10 +9,11 @@ import { Icon } from '../shared/icon';
 
 const NAV_ITEMS: readonly NavItem[] = [
   { labelKey: 'nav.home', route: '/', icon: 'home', exact: true },
+  { labelKey: 'nav.salaries', route: '/salaries', icon: 'banknotes', exact: false, permission: Permission.SalariesView },
+  { labelKey: 'nav.evolution', route: '/evolution', icon: 'chart-bar', exact: false, permission: Permission.SalariesView },
   { labelKey: 'nav.profile', route: '/profile', icon: 'user-circle', exact: false, permission: Permission.ProfileView },
   { labelKey: 'nav.admin', route: '/admin', icon: 'shield-check', exact: false, permission: Permission.RolesView },
 ];
-
 @Component({
   selector: 'app-sidebar',
   imports: [RouterLink, RouterLinkActive, TranslatePipe, Icon],

@@ -1,0 +1,72 @@
+<div class="space-y-4">
+  <section class="card space-y-4">
+    <div>
+      <h1 class="text-lg font-semibold">{{ 'evolution.title' | translate }}</h1>
+      <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'evolution.subtitle' | translate }}</p>
+    </div>
+
+    <div class="flex flex-wrap items-end gap-3">
+      <div class="inline-flex rounded-lg border border-slate-300 p-0.5 dark:border-slate-600" role="group" [attr.aria-label]="'evolution.mode' | translate">
+        <button
+          type="button"
+          class="rounded-md px-3 py-1.5 text-sm font-medium transition"
+          [class.bg-brand-600]="mode() === EvolutionMode.Month"
+          [class.text-white]="mode() === EvolutionMode.Month"
+          [class.text-slate-600]="mode() !== EvolutionMode.Month"
+          (click)="setMode(EvolutionMode.Month)"
+        >{{ 'evolution.modeMonth' | translate }}</button>
+        <button
+          type="button"
+          class="rounded-md px-3 py-1.5 text-sm font-medium transition"
+          [class.bg-brand-600]="mode() === EvolutionMode.Year"
+          [class.text-white]="mode() === EvolutionMode.Year"
+          [class.text-slate-600]="mode() !== EvolutionMode.Year"
+          (click)="setMode(EvolutionMode.Year)"
+        >{{ 'evolution.modeYear' | translate }}</button>
+      </div>
+
+      @if (mode() === EvolutionMode.Month) {
+        <div class="w-44">
+          <label class="field-label" for="evolutionMonth">{{ 'evolution.month' | translate }}</label>
+          <app-select inputId="evolutionMonth" [compact]="true" [options]="monthOptions()" [ngModel]="month()" (ngModelChange)="month.set($event)" />
+        </div>
+      }
+
+      <div class="w-28">
+        <label class="field-label" for="fromYear">{{ 'evolution.fromYear' | translate }}</label>
+        <app-select inputId="fromYear" [compact]="true" [options]="yearOptions()" [ngModel]="fromYear()" (ngModelChange)="fromYear.set($event)" />
+      </div>
+      <div class="w-28">
+        <label class="field-label" for="toYear">{{ 'evolution.toYear' | translate }}</label>
+        <app-select inputId="toYear" [compact]="true" [options]="yearOptions()" [ngModel]="toYear()" (ngModelChange)="toYear.set($event)" />
+      </div>
+    </div>
+
+    @if (filterError(); as error) {
+      <p class="field-error">{{ 'errors.fields.' + error | translate }}</p>
+    }
+  </section>
+
+  <section class="card">
+    @if (loading()) {
+      <div class="flex justify-center py-16 text-brand-600 dark:text-brand-500">
+        <app-spinner size="lg" [label]="'common.loading' | translate" />
+      </div>
+    } @else if (!hasData()) {
+      <p class="py-12 text-center text-sm text-slate-500 dark:text-slate-400">{{ 'evolution.empty' | translate }}</p>
+    } @else {
+      <app-line-chart
+        [labels]="chart().labels"
+        [datasets]="datasets()"
+        [yTickFormatter]="yFormatter"
+        [ariaLabel]="'evolution.chartLabel' | translate"
+      />
+    }
+  </section>
+
+  <div class="grid gap-4 sm:grid-cols-3">
+    <app-stat-card [label]="'evolution.maxNet' | translate" [value]="maxNetDisplay()" icon="banknotes" [tone]="StatTone.Emerald" />
+    <app-stat-card [label]="'evolution.minNet' | translate" [value]="minNetDisplay()" icon="banknotes" [tone]="StatTone.Slate" />
+    <app-stat-card [label]="'evolution.variation' | translate" [value]="variationDisplay()" icon="chart-bar" [tone]="StatTone.Brand" />
+  </div>
+</div>

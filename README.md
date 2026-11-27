@@ -24,17 +24,16 @@
 
 ## Purpose of this repository
 
-This repository is the **base skeleton (template)** for new enterprise applications built with **.NET 10** and **Angular 22**. It contains everything that every project needs and nothing that belongs to a specific business:
+This repository is **Salary360**, a full-stack application built with **.NET 10** and **Angular 22** to organize monthly salaries (gross → benefits/deductions → net) and show evolution charts by month and year.
+
+It still ships the shared platform pieces useful as a template:
 
 - a clean, layered backend architecture;
 - a complete **authentication** flow (sign-up with e-mail confirmation, resend of the confirmation link, login with JWT Bearer, roles);
 - an Angular client with an application **shell (sidebar + navbar)**, a **real-time notification bell** (SignalR), Heroicons, the standard libraries already configured, **light/dark theme** and full **internationalization** (pt-BR, en-US, es-ES);
+- the **Salaries** domain (CRUD + evolution charts);
 - **automated tests** for the backend (xUnit unit and integration tests) and the frontend (Vitest);
 - **secrets kept out of the repository** with `dotnet user-secrets` and setup scripts.
-
-To start a new project you only change the **project name** and **description**, and then implement your domain on top of the skeleton. **No business entities, use cases or screens are included on purpose.**
-
-The instance in this repository is named **Salary360**: a project to organize, plan and manage the monthly salary, so that every salary received has a plan, a purpose and a defined destination. The business features of Salary360 are not part of the skeleton.
 
 ## What is included
 
@@ -164,22 +163,25 @@ Permissions follow the `Resource.Action` format and live in `AppPermissions` (Ap
 | Profile | View, Update | ✔ | ✔ |
 | Users | View, Create, Update, Delete | ✔ | ✘ |
 | Roles | View, Create, Update, Delete | ✔ | ✘ |
+| Salaries | View, Create, Update, Delete | ✔ | ✔ |
 
-At login the API returns `roles` and `permissions`, and the JWT carries one `permission` claim for each. Controllers use `[Authorize(Policy = AppPermissions.Users.View)]`; the Angular app uses `permissionGuard` and `AuthService.hasPermission(...)`. The admin screen (`/admin`) shows the roles/permissions matrix, editable only by users with `Roles.Update` (the `Admin` role is locked; changes apply at the next login, and the seed only sets permissions when a role is first created). The Dashboard (`/`, full-width) holds the summary cards (total, active, inactive, administrators), the user list and a sample chart (`Users.View` for the user parts). The app uses a custom thin scrollbar in both themes. To add a resource, add its constants and the role mapping in `AppPermissions`, then protect your endpoints with the matching policy.
+At login the API returns `roles` and `permissions`, and the JWT carries one `permission` claim for each. Controllers use `[Authorize(Policy = AppPermissions.Users.View)]`; the Angular app uses `permissionGuard` and `AuthService.hasPermission(...)`. The admin screen (`/admin`) shows the roles/permissions matrix, editable only by users with `Roles.Update` (the `Admin` role is locked; changes apply at the next login). **The seed applies role permissions only when a role is first created.** After pulling new permissions (for example `Salaries.*`), delete `salary360.db` so roles are recreated, or grant them on the admin permissions screen and sign in again. The Dashboard (`/`, full-width) holds the summary cards (total, active, inactive, administrators), the user list and a sample chart (`Users.View` for the user parts). The app uses a custom thin scrollbar in both themes. To add a resource, add its constants and the role mapping in `AppPermissions`, then protect your endpoints with the matching policy.
 
 ## User experience features
 
 - **Remember me:** the login checkbox keeps the session in `localStorage` and remembers the e-mail (never the password). Unchecked, the session lives in `sessionStorage`.
 - **Inactive accounts:** an inactive user cannot sign in (`403` with code `user_inactive`, shown as a toast). Each request also checks that the token's user still exists and is active, so deactivated or deleted users are rejected (401) and the client signs out.
 - **Profile:** `/profile` is a single tabbed card (Personal data, Address, Account). Personal data and Address are editable; Account shows e-mail-bound info, roles, status and dates. Read-only fields are rendered as disabled (dashed, greyed) inputs.
-- **Form components (Tailwind, no native pickers):** `app-date-picker` (typed mask by language, `dd/mm/yyyy` or `mm/dd/yyyy`, plus a calendar with month and year navigation and min/max), `app-select` (searchable dropdown with optional flags, also used for the language switcher and the address country), and `app-phone-input`. Every input has a placeholder and a `maxlength`; required labels show a red asterisk and optional ones an "(optional)" tag.
+- **Form components (Tailwind, no native pickers):** `app-date-picker` (typed mask by language, `dd/mm/yyyy` or `mm/dd/yyyy`, plus a calendar with month and year navigation and min/max), `app-month-year-picker` (competence `{ year, month }`, blocks future months), `app-money-input` (BRL numeric value with locale-aware display), `app-select` (searchable dropdown with optional flags, also used for the language switcher and the address country), and `app-phone-input`. Every input has a placeholder and a `maxlength`; required labels show a red asterisk and optional ones an "(optional)" tag.
+- **Salaries:** `/salaries` lists monthly records; `/salaries/new` and `/salaries/:id` create or edit gross amount, optional notes and up to 50 benefit/deduction items; live net summary uses banker's rounding to 2 decimals (same as the API). Net may be negative (UI warns; API accepts). Unique competence per user (`UserId` + year + month); duplicate create returns `409`.
+- **Evolution:** `/evolution` charts net and gross over time (`mode=month` for the same month across years, `mode=year` for yearly aggregates). Years without data are chart gaps (`null`, not zero). Stat cards show max net, min net and percent change between the first and last point with data.
 - **Masks and limits:** postal codes are masked per selected country (e.g. `00000-000` for BR, `00000-0000` for US, `A0A 0A0` for CA) and validated for completeness; the phone mask and the maximum number of digits follow the selected country.
 - **International phone input:** a country selector (flag, name, dialing code, searchable) applies the correct mask per country with `libphonenumber-js`; the value is stored in E.164 (e.g. `+5581999990001`). Flags come from `flag-icons` (4x3 SVGs copied as assets).
 - **Error pages:** `/error/403`, `/error/404`, `/error/500` (and a generic one). Unknown routes go to 404, missing permission to 403, and server failures to 500.
 - **Loading:** `app-spinner` is used in a global route-loading overlay, inside submit buttons, in pages that fetch data, and in the `index.html` boot screen.
 - **Birthday:** on the user's birthday, a confetti and cake animation is shown once per day and a cake icon stays in the navbar (click it to replay). To try it, set your date of birth to today on the profile screen.
 
-> **Database note:** the schema is created with `EnsureCreated`, which does not alter an existing SQLite file. After pulling model changes (new user columns, role claims), delete the development database file `salary360.db` (or add EF Core migrations) so it is recreated.
+> **Database note:** the schema is created with `EnsureCreated`, which does not alter an existing SQLite file. After pulling model changes (new tables such as `SalaryRecords` / `SalaryItems`, role claims), delete the development database file `salary360.db` (or add EF Core migrations) so it is recreated.
 
 ## Running the tests
 
@@ -233,6 +235,12 @@ The confirmation token is valid for 24 hours.
 | PUT | `/api/users/{id}/status` | Bearer + `Users.Update` | Activates or deactivates a user (you cannot deactivate yourself) |
 | PUT | `/api/roles/{name}/permissions` | Bearer + `Roles.Update` | Replaces the permissions of a role (the `Admin` role is locked) |
 | POST | `/api/notifications/test` | Bearer | Pushes a test notification to the caller through SignalR |
+| POST | `/api/salaries` | Bearer + `Salaries.Create` | Creates a salary for a competence (`201` + Location); `409` if the month already exists |
+| GET | `/api/salaries` | Bearer + `Salaries.View` | Paged list (`year`, `page`, `pageSize` ≤ 50), newest competence first |
+| GET | `/api/salaries/evolution` | Bearer + `Salaries.View` | Chart series (`mode=Month\|Year`, `month`, `fromYear`, `toYear`; gaps as `null`) |
+| GET | `/api/salaries/{id}` | Bearer + `Salaries.View` | Own salary only (`404` for another user's id) |
+| PUT | `/api/salaries/{id}` | Bearer + `Salaries.Update` | Replaces details and items (`409` on competence conflict) |
+| DELETE | `/api/salaries/{id}` | Bearer + `Salaries.Delete` | Deletes own salary (`204`) |
 | WS | `/hubs/notifications` | Bearer | SignalR hub; clients receive `ReceiveNotification` |
 | GET | `/health` | Public | Health check |
 | GET | `/swagger` | Public (Development) | Swagger UI, with an **Authorize** button for the JWT |

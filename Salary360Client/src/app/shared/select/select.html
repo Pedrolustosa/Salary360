@@ -24,7 +24,13 @@
   </button>
 
   @if (open()) {
-    <div class="absolute left-0 top-full z-40 mt-1 w-full min-w-48 rounded-xl border border-slate-200 bg-white p-2 shadow-lg dark:border-slate-700 dark:bg-slate-900">
+    <div
+      class="fixed z-50 min-w-48 rounded-xl border border-slate-200 bg-white p-2 shadow-lg dark:border-slate-700 dark:bg-slate-900"
+      [style.left.px]="panelLeft()"
+      [style.width.px]="panelWidth()"
+      [style.top]="panelTop() === null ? null : panelTop() + 'px'"
+      [style.bottom]="panelBottom() === null ? null : panelBottom() + 'px'"
+    >
       @if (searchable()) {
         <input class="field mb-2" type="search" maxlength="60" [placeholder]="searchPlaceholder()" [value]="query()" (input)="onSearch($event)" />
       }
@@ -43,7 +49,7 @@
               @if (option.flagUrl) {
                 <span class="select-flag" [style.background-image]="option.flagUrl"></span>
               }
-              <span class="flex-1 truncate">{{ option.label }}</span>
+              <span class="flex-1 truncate" [class]="option.textClass ?? ''">{{ option.label }}</span>
             </button>
           </li>
         } @empty {

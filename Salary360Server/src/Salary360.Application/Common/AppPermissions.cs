@@ -26,17 +26,32 @@ public static class AppPermissions
         public const string Delete = "Roles.Delete";
     }
 
+    public static class Salaries
+    {
+        public const string View = "Salaries.View";
+        public const string Create = "Salaries.Create";
+        public const string Update = "Salaries.Update";
+        public const string Delete = "Salaries.Delete";
+    }
+
     public static IReadOnlyList<string> All { get; } =
     [
         Profile.View, Profile.Update,
         Users.View, Users.Create, Users.Update, Users.Delete,
-        Roles.View, Roles.Create, Roles.Update, Roles.Delete
+        Roles.View, Roles.Create, Roles.Update, Roles.Delete,
+        Salaries.View, Salaries.Create, Salaries.Update, Salaries.Delete
+    ];
+
+    private static readonly IReadOnlyList<string> UserPermissions =
+    [
+        Profile.View, Profile.Update,
+        Salaries.View, Salaries.Create, Salaries.Update, Salaries.Delete
     ];
 
     public static IReadOnlyDictionary<string, IReadOnlyList<string>> ByRole { get; } =
         new Dictionary<string, IReadOnlyList<string>>
         {
             [AppRoles.Admin] = All,
-            [AppRoles.User] = [Profile.View, Profile.Update]
+            [AppRoles.User] = UserPermissions
         };
 }

@@ -8,7 +8,9 @@
     "expand": "Expandir menú lateral",
     "collapse": "Contraer menú lateral",
     "toggleMenu": "Alternar menú lateral",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "salaries": "Salarios",
+    "evolution": "Evolución"
   },
   "auth": {
     "loginSubtitle": "Cada salario con un propósito.",
@@ -54,7 +56,10 @@
     "errorTitle": "¡Vaya!",
     "confirmationSent": "Si el correo está pendiente de confirmación, se envió un nuevo enlace.",
     "warningTitle": "Atención",
-    "infoTitle": "Aviso"
+    "infoTitle": "Aviso",
+    "salaryCreated": "Salario guardado correctamente.",
+    "salaryUpdated": "Salario actualizado correctamente.",
+    "salaryDeleted": "Salario eliminado correctamente."
   },
   "errors": {
     "network": "No se pudo conectar con el servidor.",
@@ -101,7 +106,13 @@
       "invalid": "Valor no válido.",
       "password_lowercase": "Usa al menos una letra minúscula.",
       "password_uppercase": "Usa al menos una letra mayúscula.",
-      "password_digit": "Usa al menos un número."
+      "password_digit": "Usa al menos un número.",
+      "must_be_positive": "Introduce un valor mayor que cero.",
+      "invalid_month": "Mes no válido.",
+      "invalid_year": "Año no válido.",
+      "future_competence": "La competencia no puede ser futura.",
+      "too_many_items": "Máximo de 50 ítems por salario.",
+      "duplicate_item_name": "Ya existe un ítem con este nombre."
     }
   },
   "home": {
@@ -180,7 +191,70 @@
   },
   "common": {
     "loading": "Cargando...",
-    "optional": "(opcional)"
+    "optional": "(opcional)",
+    "cancel": "Cancelar"
+  },
+  "salaries": {
+    "title": "Salarios",
+    "subtitle": "Sigue el bruto, beneficios, descuentos y líquido por competencia.",
+    "new": "Nuevo salario",
+    "empty": "Todavía no hay salarios registrados.",
+    "emptyCta": "Registrar el primer salario",
+    "competence": "Competencia",
+    "gross": "Bruto",
+    "benefits": "Beneficios",
+    "deductions": "Descuentos",
+    "net": "Líquido",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "deleteTitle": "Eliminar salario",
+    "deleteMessage": "¿Seguro que deseas eliminar este registro? Esta acción no se puede deshacer.",
+    "allYears": "Todos los años",
+    "pageOf": "Página {{page}} de {{total}}",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "createTitle": "Nuevo salario",
+    "editTitle": "Editar salario",
+    "formHint": "Introduce el bruto y los ítems para calcular el líquido.",
+    "back": "Volver",
+    "notes": "Notas",
+    "items": "Ítems",
+    "itemName": "Nombre",
+    "itemTypeLabel": "Tipo",
+    "itemAmount": "Importe",
+    "addItem": "Añadir ítem",
+    "removeItem": "Quitar ítem",
+    "save": "Guardar",
+    "negativeNet": "El líquido quedó negativo.",
+    "unsavedChanges": "Hay cambios sin guardar. ¿Salir de todos modos?",
+    "conflictTitle": "La competencia ya existe",
+    "conflictMessage": "Ya existe un salario para este mes. ¿Abrir el registro existente?",
+    "openExisting": "Abrir existente",
+    "itemType": {
+      "Benefit": "Beneficio",
+      "Deduction": "Descuento"
+    }
+  },
+  "evolution": {
+    "title": "Evolución salarial",
+    "subtitle": "Compara el mismo mes a lo largo de los años o el consolidado anual.",
+    "mode": "Modo de evolución",
+    "modeMonth": "Mismo mes",
+    "modeYear": "Años",
+    "month": "Mes",
+    "fromYear": "Desde",
+    "toYear": "Hasta",
+    "empty": "Ningún registro en este período.",
+    "chartLabel": "Gráfico de evolución salarial",
+    "maxNet": "Mayor líquido",
+    "minNet": "Menor líquido",
+    "variation": "Variación"
+  },
+  "monthYear": {
+    "placeholder": "Selecciona mes/año",
+    "open": "Abrir selector de competencia",
+    "previousYear": "Año anterior",
+    "nextYear": "Año siguiente"
   },
   "profile": {
     "title": "Mi perfil",
@@ -209,7 +283,8 @@
     "resources": {
       "Profile": "Perfil",
       "Users": "Usuarios",
-      "Roles": "Roles"
+      "Roles": "Roles",
+      "Salaries": "Salarios"
     },
     "actions": {
       "View": "Ver",
@@ -279,7 +354,10 @@
     "neighborhood": "Centro",
     "city": "Madrid",
     "state": "Madrid",
-    "country": "Selecciona el país"
+    "country": "Selecciona el país",
+    "money": "R$ 0,00",
+    "notes": "Ej.: aumento, bonus",
+    "itemName": "Ej.: Vale comida"
   },
   "date": {
     "placeholderDmy": "dd/mm/aaaa",

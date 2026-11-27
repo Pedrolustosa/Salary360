@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Permission } from './core/auth/enums/permission.enum';
 import { authGuard, guestGuard, permissionGuard } from './core/auth/auth.guard';
+import { canDeactivateGuard } from './core/forms/can-deactivate.guard';
 
 export const routes: Routes = [
   {
@@ -46,6 +47,28 @@ export const routes: Routes = [
         path: 'admin',
         canActivate: [permissionGuard(Permission.RolesView)],
         loadComponent: () => import('./features/admin/admin-page').then((m) => m.AdminPage),
+      },
+      {
+        path: 'salaries',
+        canActivate: [permissionGuard(Permission.SalariesView)],
+        loadComponent: () => import('./features/salaries/salary-list/salary-list').then((m) => m.SalaryList),
+      },
+      {
+        path: 'salaries/new',
+        canActivate: [permissionGuard(Permission.SalariesCreate)],
+        canDeactivate: [canDeactivateGuard],
+        loadComponent: () => import('./features/salaries/salary-form/salary-form').then((m) => m.SalaryForm),
+      },
+      {
+        path: 'salaries/:id',
+        canActivate: [permissionGuard(Permission.SalariesUpdate)],
+        canDeactivate: [canDeactivateGuard],
+        loadComponent: () => import('./features/salaries/salary-form/salary-form').then((m) => m.SalaryForm),
+      },
+      {
+        path: 'evolution',
+        canActivate: [permissionGuard(Permission.SalariesView)],
+        loadComponent: () => import('./features/evolution/evolution-page').then((m) => m.EvolutionPage),
       },
     ],
   },

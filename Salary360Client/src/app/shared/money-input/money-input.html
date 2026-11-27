@@ -1,0 +1,12 @@
+<input
+  class="field"
+  type="text"
+  inputmode="decimal"
+  autocomplete="off"
+  [id]="inputId()"
+  [value]="display()"
+  [placeholder]="placeholder()"
+  [disabled]="disabled()"
+  (input)="onInput($event)"
+  (blur)="onBlur()"
+/>

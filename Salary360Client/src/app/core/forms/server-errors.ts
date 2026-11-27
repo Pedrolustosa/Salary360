@@ -3,11 +3,15 @@ import { apiFieldErrors } from '../api/api-error';
 
 export const SERVER_ERROR_KEY = 'serverError';
 
+export function toFormPath(field: string): string {
+  return field.replace(/\[(\d+)\]/g, '.$1');
+}
+
 export function applyServerErrors(form: FormGroup, error: unknown): boolean {
   let applied = false;
 
   for (const [field, codes] of Object.entries(apiFieldErrors(error))) {
-    const control = form.get(field);
+    const control = form.get(toFormPath(field));
     if (!control || codes.length === 0) continue;
 
     control.setErrors({ ...(control.errors ?? {}), [SERVER_ERROR_KEY]: codes[0] });

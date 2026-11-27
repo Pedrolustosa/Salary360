@@ -8,7 +8,9 @@
     "expand": "Expand sidebar",
     "collapse": "Collapse sidebar",
     "toggleMenu": "Toggle sidebar",
-    "profile": "Profile"
+    "profile": "Profile",
+    "salaries": "Salaries",
+    "evolution": "Evolution"
   },
   "auth": {
     "loginSubtitle": "Every paycheck with a purpose.",
@@ -54,7 +56,10 @@
     "errorTitle": "Oops!",
     "confirmationSent": "If the e-mail is pending confirmation, a new link was sent.",
     "warningTitle": "Attention",
-    "infoTitle": "Notice"
+    "infoTitle": "Notice",
+    "salaryCreated": "Salary saved successfully.",
+    "salaryUpdated": "Salary updated successfully.",
+    "salaryDeleted": "Salary deleted successfully."
   },
   "errors": {
     "network": "Could not reach the server.",
@@ -101,7 +106,13 @@
       "invalid": "Invalid value.",
       "password_lowercase": "Use at least one lowercase letter.",
       "password_uppercase": "Use at least one uppercase letter.",
-      "password_digit": "Use at least one number."
+      "password_digit": "Use at least one number.",
+      "must_be_positive": "Enter a value greater than zero.",
+      "invalid_month": "Invalid month.",
+      "invalid_year": "Invalid year.",
+      "future_competence": "Competence cannot be in the future.",
+      "too_many_items": "Maximum of 50 items per salary.",
+      "duplicate_item_name": "An item with this name already exists."
     }
   },
   "home": {
@@ -180,7 +191,70 @@
   },
   "common": {
     "loading": "Loading...",
-    "optional": "(optional)"
+    "optional": "(optional)",
+    "cancel": "Cancel"
+  },
+  "salaries": {
+    "title": "Salaries",
+    "subtitle": "Track gross pay, benefits, deductions and net by competence.",
+    "new": "New salary",
+    "empty": "No salaries recorded yet.",
+    "emptyCta": "Add your first salary",
+    "competence": "Competence",
+    "gross": "Gross",
+    "benefits": "Benefits",
+    "deductions": "Deductions",
+    "net": "Net",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteTitle": "Delete salary",
+    "deleteMessage": "Are you sure you want to delete this record? This action cannot be undone.",
+    "allYears": "All years",
+    "pageOf": "Page {{page}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next",
+    "createTitle": "New salary",
+    "editTitle": "Edit salary",
+    "formHint": "Enter gross pay and items to calculate the net amount.",
+    "back": "Back",
+    "notes": "Notes",
+    "items": "Items",
+    "itemName": "Name",
+    "itemTypeLabel": "Type",
+    "itemAmount": "Amount",
+    "addItem": "Add item",
+    "removeItem": "Remove item",
+    "save": "Save",
+    "negativeNet": "Net amount is negative.",
+    "unsavedChanges": "You have unsaved changes. Leave anyway?",
+    "conflictTitle": "Competence already exists",
+    "conflictMessage": "A salary already exists for this month. Open the existing record?",
+    "openExisting": "Open existing",
+    "itemType": {
+      "Benefit": "Benefit",
+      "Deduction": "Deduction"
+    }
+  },
+  "evolution": {
+    "title": "Salary evolution",
+    "subtitle": "Compare the same month across years or view yearly totals.",
+    "mode": "Evolution mode",
+    "modeMonth": "Same month",
+    "modeYear": "Years",
+    "month": "Month",
+    "fromYear": "From",
+    "toYear": "To",
+    "empty": "No records in this period.",
+    "chartLabel": "Salary evolution chart",
+    "maxNet": "Highest net",
+    "minNet": "Lowest net",
+    "variation": "Variation"
+  },
+  "monthYear": {
+    "placeholder": "Select month/year",
+    "open": "Open competence picker",
+    "previousYear": "Previous year",
+    "nextYear": "Next year"
   },
   "profile": {
     "title": "My profile",
@@ -209,7 +283,8 @@
     "resources": {
       "Profile": "Profile",
       "Users": "Users",
-      "Roles": "Roles"
+      "Roles": "Roles",
+      "Salaries": "Salaries"
     },
     "actions": {
       "View": "View",
@@ -279,7 +354,10 @@
     "neighborhood": "Downtown",
     "city": "New York",
     "state": "NY",
-    "country": "Select a country"
+    "country": "Select a country",
+    "money": "R$ 0.00",
+    "notes": "E.g. raise, bonus",
+    "itemName": "E.g. Meal voucher"
   },
   "date": {
     "placeholderDmy": "dd/mm/yyyy",

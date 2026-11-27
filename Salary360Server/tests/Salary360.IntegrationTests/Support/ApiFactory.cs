@@ -20,10 +20,10 @@ public class ApiFactory : WebApplicationFactory<Program>
 
     protected virtual IReadOnlyDictionary<string, string> Settings => new Dictionary<string, string>
     {
-        ["RateLimiting:LoginPermitLimit"] = "1000",
+        ["RateLimiting:LoginPermitLimit"] = "100",
         ["RateLimiting:LoginIpPermitLimit"] = "1000",
-        ["RateLimiting:RegisterPermitLimit"] = "1000",
-        ["RateLimiting:ApiPermitLimit"] = "100000"
+        ["RateLimiting:RegisterPermitLimit"] = "100",
+        ["RateLimiting:ApiPermitLimit"] = "10000"
     };
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -62,8 +62,14 @@ public class ApiFactory : WebApplicationFactory<Program>
         foreach (var suffix in new[] { string.Empty, "-shm", "-wal" })
         {
             var path = databasePath + suffix;
-            if (File.Exists(path))
-                File.Delete(path);
+            try
+            {
+                if (File.Exists(path))
+                    File.Delete(path);
+            }
+            catch (IOException)
+            {
+            }
         }
     }
 }

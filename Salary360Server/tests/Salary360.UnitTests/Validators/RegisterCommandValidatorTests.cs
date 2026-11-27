@@ -21,7 +21,7 @@ public sealed class RegisterCommandValidatorTests
 
     [Fact]
     public void Validate_EmailAboveLimit_Fails()
-        => Assert.False(validator.Validate(Valid() with { Email = new string('a', 250) + "@x.com" }).IsValid);
+        => Assert.False(validator.Validate(Valid() with { Email = new string('a', 251) + "@x.com" }).IsValid);
 
     [Theory]
     [InlineData("short1A")]

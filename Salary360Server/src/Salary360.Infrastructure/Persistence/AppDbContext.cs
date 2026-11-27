@@ -12,6 +12,10 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, IDomain
 {
     public DbSet<UserAddress> UserAddresses => Set<UserAddress>();
 
+    public DbSet<SalaryRecord> SalaryRecords => Set<SalaryRecord>();
+
+    public DbSet<SalaryItem> SalaryItems => Set<SalaryItem>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
