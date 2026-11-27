@@ -1,4 +1,4 @@
-# Salary360 – Full-Stack Project Skeleton
+# Salary360
 
 <p align="center">
   <img src="https://img.shields.io/badge/version-v0.2.0-blue?style=for-the-badge" alt="Version v0.2.0" />
