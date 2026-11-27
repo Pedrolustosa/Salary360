@@ -1,0 +1,63 @@
+<div class="relative">
+  <div
+    class="field phone-field flex items-center p-0!"
+    [attr.aria-disabled]="disabled()"
+  >
+    <button
+      type="button"
+      class="phone-country"
+      [disabled]="disabled()"
+      [attr.aria-label]="'phone.country' | translate"
+      aria-haspopup="listbox"
+      [attr.aria-expanded]="open()"
+      (click)="toggle()"
+    >
+      <span class="phone-flag" [style.background-image]="selected()?.flagUrl"></span>
+      <span class="text-sm">{{ selected()?.dialCode }}</span>
+      <app-icon name="chevron-down" />
+    </button>
+    <input
+      class="phone-number"
+      type="tel"
+      autocomplete="tel-national"
+      [id]="inputId()"
+      [value]="national()"
+      [placeholder]="placeholder()"
+      [disabled]="disabled()"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+    />
+  </div>
+
+  @if (open()) {
+    <div class="phone-panel">
+      <input
+        class="field"
+        type="search"
+        [placeholder]="'phone.search' | translate"
+        [value]="query()"
+        (input)="onSearch($event)"
+      />
+      <ul role="listbox" class="phone-list">
+        @for (country of filtered(); track country.code) {
+          <li>
+            <button
+              type="button"
+              role="option"
+              class="phone-option"
+              [class.phone-option-active]="country.code === selected()?.code"
+              [attr.aria-selected]="country.code === selected()?.code"
+              (click)="select(country)"
+            >
+              <span class="phone-flag" [style.background-image]="country.flagUrl"></span>
+              <span class="flex-1 truncate text-left">{{ country.name }}</span>
+              <span class="text-slate-500 dark:text-slate-400">{{ country.dialCode }}</span>
+            </button>
+          </li>
+        } @empty {
+          <li class="px-3 py-2 text-sm text-slate-500 dark:text-slate-400">{{ 'phone.noResults' | translate }}</li>
+        }
+      </ul>
+    </div>
+  }
+</div>

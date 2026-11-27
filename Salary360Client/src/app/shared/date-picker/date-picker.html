@@ -1,0 +1,94 @@
+<div class="relative">
+  <div class="field flex items-center p-0!" [attr.aria-disabled]="disabled()">
+    <input
+      class="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm outline-none disabled:cursor-not-allowed"
+      type="text"
+      inputmode="numeric"
+      autocomplete="off"
+      [id]="inputId()"
+      [value]="text()"
+      [placeholder]="placeholderKey() | translate"
+      [disabled]="disabled()"
+      [attr.maxlength]="maskLength"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+    />
+    <button
+      type="button"
+      class="flex h-full shrink-0 items-center border-l border-slate-300 px-3 py-2 text-slate-500 hover:text-brand-600 disabled:cursor-not-allowed dark:border-slate-600 dark:text-slate-400"
+      [disabled]="disabled()"
+      [attr.aria-label]="'date.open' | translate"
+      aria-haspopup="dialog"
+      [attr.aria-expanded]="open()"
+      (click)="toggle()"
+    >
+      <app-icon name="calendar-days" />
+    </button>
+  </div>
+
+  @if (open()) {
+    <div class="absolute left-0 top-full z-40 mt-1 w-72 rounded-xl border border-slate-200 bg-white p-3 shadow-lg dark:border-slate-700 dark:bg-slate-900" role="dialog" [attr.aria-label]="'date.open' | translate">
+      <div class="mb-2 flex items-center justify-between gap-1">
+        <button type="button" class="cal-nav" [attr.aria-label]="'date.previous' | translate" (click)="previous()">
+          <app-icon name="arrow-left" />
+        </button>
+
+        <div class="flex items-center gap-1 text-sm font-semibold">
+          @switch (view()) {
+            @case (CalendarView.Days) {
+              <button type="button" class="cal-title" (click)="showMonths()">{{ monthNames()[viewMonth()] }}</button>
+              <button type="button" class="cal-title" (click)="showYears()">{{ viewYear() }}</button>
+            }
+            @case (CalendarView.Months) {
+              <button type="button" class="cal-title" (click)="showYears()">{{ viewYear() }}</button>
+            }
+            @case (CalendarView.Years) {
+              <span class="px-2 py-1">{{ years()[0] }} - {{ years()[years().length - 1] }}</span>
+            }
+          }
+        </div>
+
+        <button type="button" class="cal-nav" [attr.aria-label]="'date.next' | translate" (click)="next()">
+          <app-icon name="arrow-right" />
+        </button>
+      </div>
+
+      @switch (view()) {
+        @case (CalendarView.Days) {
+          <div class="grid grid-cols-7 text-center text-xs uppercase text-slate-400">
+            @for (weekday of weekdays(); track $index) {
+              <span class="py-1">{{ weekday }}</span>
+            }
+          </div>
+          <div class="grid grid-cols-7 gap-0.5">
+            @for (day of days(); track day.iso) {
+              <button
+                type="button"
+                class="cal-day"
+                [class.cal-day-out]="!day.inMonth"
+                [class.cal-day-today]="day.today && !day.selected"
+                [class.cal-day-selected]="day.selected"
+                [disabled]="day.disabled"
+                (click)="pick(day)"
+              >{{ day.day }}</button>
+            }
+          </div>
+        }
+        @case (CalendarView.Months) {
+          <div class="grid grid-cols-3 gap-1">
+            @for (name of shortMonthNames(); track $index) {
+              <button type="button" class="cal-cell" [class.cal-day-selected]="$index === viewMonth()" [disabled]="!monthAllowed(viewYear(), $index)" (click)="chooseMonth($index)">{{ name }}</button>
+            }
+          </div>
+        }
+        @case (CalendarView.Years) {
+          <div class="grid grid-cols-3 gap-1">
+            @for (year of years(); track year) {
+              <button type="button" class="cal-cell" [class.cal-day-selected]="year === viewYear()" [disabled]="!yearAllowed(year)" (click)="chooseYear(year)">{{ year }}</button>
+            }
+          </div>
+        }
+      }
+    </div>
+  }
+</div>

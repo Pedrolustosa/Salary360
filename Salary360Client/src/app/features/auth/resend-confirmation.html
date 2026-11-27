@@ -1,0 +1,31 @@
+<main class="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4">
+  <div class="mb-4 flex justify-end"><app-toolbar /></div>
+  <section class="card">
+    <h1 class="text-xl font-bold text-brand-700 dark:text-brand-500">{{ 'auth.resendTitle' | translate }}</h1>
+    <p class="mb-6 mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'auth.resendSubtitle' | translate }}</p>
+
+    @if (done()) {
+      <p class="rounded-lg bg-brand-50 p-3 text-sm text-brand-900 dark:bg-brand-900/40 dark:text-brand-100" role="status">{{ 'auth.resendDone' | translate }}</p>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4" novalidate>
+        <div>
+          <label class="field-label required" for="email">{{ 'auth.email' | translate }}</label>
+          <input id="email" class="field" type="email" autocomplete="email" maxlength="256" [placeholder]="'placeholders.email' | translate" formControlName="email" />
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <p class="field-error">{{ 'validation.email' | translate }}</p>
+          }
+        </div>
+        <button class="btn-primary w-full gap-2" type="submit" [disabled]="loading()">
+          @if (loading()) {
+            <app-spinner size="sm" />
+          }
+          {{ 'auth.resendSubmit' | translate }}
+        </button>
+      </form>
+    }
+
+    <p class="mt-6 text-center text-sm">
+      <a routerLink="/login" class="font-semibold text-brand-700 dark:text-brand-500 hover:underline">{{ 'auth.backToLogin' | translate }}</a>
+    </p>
+  </section>
+</main>

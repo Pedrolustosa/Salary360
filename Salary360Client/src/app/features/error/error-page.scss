@@ -1,0 +1,24 @@
+:host {
+  display: block;
+}
+
+.error-icon {
+  display: inline-flex;
+  width: 4.5rem;
+  height: 4.5rem;
+  padding: 1.1rem;
+  border-radius: 9999px;
+  background: rgb(16 185 129 / 0.12);
+  color: #059669;
+
+  &.error-icon-warn {
+    background: rgb(244 63 94 / 0.12);
+    color: #e11d48;
+  }
+}
+
+
+.error-icon app-icon {
+  width: 100%;
+  height: 100%;
+}

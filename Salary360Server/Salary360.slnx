@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Salary360.API/Salary360.API.csproj" />
+    <Project Path="src/Salary360.Application/Salary360.Application.csproj" />
+    <Project Path="src/Salary360.Domain/Salary360.Domain.csproj" />
+    <Project Path="src/Salary360.Infrastructure/Salary360.Infrastructure.csproj" />
+    <Project Path="src/Salary360.IoC/Salary360.IoC.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Salary360.IntegrationTests/Salary360.IntegrationTests.csproj" />
+    <Project Path="tests/Salary360.UnitTests/Salary360.UnitTests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,21 @@
+<main class="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4">
+  <div class="mb-4 flex justify-end"><app-toolbar /></div>
+  <section class="card text-center" aria-live="polite">
+    @switch (state()) {
+      @case (ConfirmationState.Loading) {
+        <span class="text-brand-600 dark:text-brand-500"><app-spinner size="lg" /></span>
+        <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">{{ 'confirm.loading' | translate }}</p>
+      }
+      @case (ConfirmationState.Success) {
+        <h1 class="text-xl font-bold text-brand-700 dark:text-brand-500">{{ 'confirm.successTitle' | translate }}</h1>
+        <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">{{ 'confirm.successText' | translate }}</p>
+        <a routerLink="/login" class="btn-primary mt-6">{{ 'auth.signIn' | translate }}</a>
+      }
+      @case (ConfirmationState.Error) {
+        <h1 class="text-xl font-bold text-rose-600 dark:text-rose-400">{{ 'confirm.errorTitle' | translate }}</h1>
+        <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">{{ 'confirm.errorText' | translate }}</p>
+        <a routerLink="/resend-confirmation" class="btn-primary mt-6">{{ 'auth.resendLink' | translate }}</a>
+      }
+    }
+  </section>
+</main>

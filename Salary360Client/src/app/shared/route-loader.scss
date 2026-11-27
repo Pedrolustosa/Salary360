@@ -1,0 +1,26 @@
+:host {
+  display: contents;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(248 250 252 / 0.65);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  animation: fade-in 0.15s ease-out 0.2s forwards;
+}
+
+:host-context(.dark) .overlay {
+  background: rgb(2 6 23 / 0.65);
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,21 @@
+<div class="flex h-screen overflow-hidden">
+  <app-sidebar
+    [open]="sidebarOpen()"
+    [collapsed]="sidebarCollapsed()"
+    (closed)="closeSidebar()"
+    (collapseToggle)="toggleCollapsed()"
+  />
+
+  <div class="flex min-w-0 flex-1 flex-col">
+    <app-navbar (menuToggle)="toggleSidebar()" />
+    <main class="flex-1 overflow-y-auto p-4 lg:p-6">
+      <div class="w-full">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
+</div>
+
+@if (birthday.celebrating()) {
+  <app-birthday-celebration />
+}

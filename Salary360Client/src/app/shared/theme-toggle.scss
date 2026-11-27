@@ -1,0 +1,25 @@
+:host {
+  display: inline-block;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--toggle-border, #cbd5e1);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s;
+
+  &:hover {
+    background: rgb(148 163 184 / 0.2);
+  }
+}
+
+:host-context(.dark) .theme-toggle {
+  --toggle-border: #475569;
+}

@@ -1,0 +1,16 @@
+<main class="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4">
+  <div class="mb-4 flex justify-end"><app-toolbar /></div>
+  <section class="card text-center">
+    <h1 class="text-xl font-bold text-brand-700 dark:text-brand-500">{{ 'auth.checkEmailTitle' | translate }}</h1>
+    <p class="mt-3 text-sm text-slate-600 dark:text-slate-300">{{ 'auth.checkEmailText' | translate: { email: email } }}</p>
+
+    @if (email) {
+      <button class="btn-primary mt-6" type="button" [disabled]="sending()" (click)="resend()">
+        {{ 'auth.resendLink' | translate }}
+      </button>
+    }
+    <p class="mt-6 text-sm">
+      <a routerLink="/login" class="font-semibold text-brand-700 dark:text-brand-500 hover:underline">{{ 'auth.backToLogin' | translate }}</a>
+    </p>
+  </section>
+</main>

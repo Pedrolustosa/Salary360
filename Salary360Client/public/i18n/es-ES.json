@@ -1,0 +1,291 @@
+{
+  "nav": {
+    "logout": "Salir",
+    "home": "Dashboard",
+    "admin": "Administración",
+    "sidebar": "Menú lateral",
+    "closeMenu": "Cerrar menú",
+    "expand": "Expandir menú lateral",
+    "collapse": "Contraer menú lateral",
+    "toggleMenu": "Alternar menú lateral",
+    "profile": "Perfil"
+  },
+  "auth": {
+    "loginSubtitle": "Cada salario con un propósito.",
+    "registerSubtitle": "Crea tu cuenta y planifica tu primer salario.",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordHint": "Mínimo 8 caracteres, con mayúscula, minúscula y número.",
+    "name": "Nombre",
+    "signIn": "Entrar",
+    "signUp": "Regístrate",
+    "createAccount": "Crear cuenta",
+    "noAccount": "¿Aún no tienes cuenta?",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "notConfirmed": "Tu correo aún no está confirmado. Usa el enlace enviado o pide uno nuevo.",
+    "resendLink": "Reenviar enlace de confirmación",
+    "backToLogin": "Volver al inicio de sesión",
+    "checkEmailTitle": "Revisa tu correo",
+    "checkEmailText": "Enviamos un enlace de confirmación a {{email}}. Haz clic para activar la cuenta y poder entrar.",
+    "resendTitle": "Reenviar enlace de confirmación",
+    "resendSubtitle": "Introduce el correo del registro y enviaremos un nuevo enlace.",
+    "resendSubmit": "Enviar nuevo enlace",
+    "resendDone": "Si el correo está registrado y sin confirmar, recibirás un nuevo enlace en unos instantes.",
+    "rememberMe": "Recordar mi correo y mantener la sesión",
+    "dateOfBirth": "Fecha de nacimiento",
+    "phone": "Teléfono",
+    "acceptTerms": "He leído y acepto los Términos de Uso.",
+    "acceptPrivacy": "He leído y acepto la Política de Privacidad.",
+    "tryAgainIn": "Demasiados intentos. Inténtalo de nuevo en {{time}}."
+  },
+  "validation": {
+    "required": "Campo obligatorio.",
+    "email": "Introduce un correo válido.",
+    "password": "La contraseña necesita 8+ caracteres, con mayúscula, minúscula y número.",
+    "birthDate": "Introduce una fecha de nacimiento válida.",
+    "phone": "Introduce un teléfono válido para el país seleccionado.",
+    "acceptTerms": "Debes aceptar los Términos de Uso.",
+    "acceptPrivacy": "Debes aceptar la Política de Privacidad.",
+    "pictureUrl": "Introduce una URL válida (http o https).",
+    "addressIncomplete": "Completa código postal, calle, número, barrio, ciudad, estado y país (el complemento es opcional).",
+    "postalCode": "Introduce el código postal completo para el país seleccionado."
+  },
+  "toast": {
+    "errorTitle": "¡Vaya!",
+    "confirmationSent": "Si el correo está pendiente de confirmación, se envió un nuevo enlace.",
+    "warningTitle": "Atención",
+    "infoTitle": "Aviso"
+  },
+  "errors": {
+    "network": "No se pudo conectar con el servidor.",
+    "validation": "Revisa los datos introducidos.",
+    "unauthorized": "Correo o contraseña inválidos, o la sesión expiró.",
+    "notFound": "Registro no encontrado.",
+    "businessRule": "La operación infringe una regla de negocio.",
+    "tooManyRequests": "Demasiados intentos. Inténtalo de nuevo en {{time}}.",
+    "generic": "Ocurrió un error inesperado.",
+    "forbidden": "No tienes permiso para esta acción.",
+    "emailNotConfirmed": "Tu correo aún no está confirmado.",
+    "identity": {
+      "DuplicateEmail": "Este correo ya está registrado.",
+      "DuplicateUserName": "Este correo ya está registrado.",
+      "InvalidEmail": "Introduce un correo válido.",
+      "PasswordTooShort": "La contraseña es demasiado corta.",
+      "PasswordRequiresDigit": "La contraseña necesita al menos un número.",
+      "PasswordRequiresLower": "La contraseña necesita al menos una minúscula.",
+      "PasswordRequiresUpper": "La contraseña necesita al menos una mayúscula.",
+      "PasswordRequiresNonAlphanumeric": "La contraseña necesita al menos un carácter especial.",
+      "InvalidConfirmationLink": "El enlace de confirmación no es válido o ha caducado."
+    },
+    "userInactive": "Esta cuenta está inactiva. Contacta con un administrador.",
+    "checkFields": "Revisa los campos resaltados.",
+    "invalidCredentials": "Correo o contraseña incorrectos.",
+    "sessionExpired": "Tu sesión ha expirado. Inicia sesión de nuevo.",
+    "accountLocked": "Cuenta bloqueada temporalmente. Inténtalo de nuevo en {{time}}.",
+    "conflict": "Este registro ya existe.",
+    "serverError": "Algo salió mal. Inténtalo de nuevo en unos instantes.",
+    "codes": {
+      "cannot_deactivate_self": "No puedes desactivar tu propia cuenta.",
+      "address_incomplete": "Completa la dirección.",
+      "business_rule_violation": "La operación no está permitida.",
+      "identity_failed": "No se pudo completar la operación."
+    },
+    "fields": {
+      "required": "Campo obligatorio.",
+      "max_length": "El texto supera el límite permitido.",
+      "min_length": "El texto es más corto de lo exigido.",
+      "invalid_length": "Longitud no válida.",
+      "invalid_email": "Introduce un correo válido.",
+      "invalid_format": "Formato no válido.",
+      "must_be_accepted": "Debes aceptar para continuar.",
+      "invalid": "Valor no válido.",
+      "password_lowercase": "Usa al menos una letra minúscula.",
+      "password_uppercase": "Usa al menos una letra mayúscula.",
+      "password_digit": "Usa al menos un número."
+    }
+  },
+  "home": {
+    "welcome": "¡Hola, {{name}}!",
+    "sampleTitle": "Gráfico de ejemplo",
+    "sampleHint": "Datos ficticios que muestran Chart.js ya configurado.",
+    "sample": {
+      "a": "Ejemplo A",
+      "b": "Ejemplo B",
+      "c": "Ejemplo C"
+    },
+    "adminArea": "Abrir área de administración",
+    "notificationsTitle": "Notificaciones en tiempo real",
+    "notificationsHint": "La campana de la barra superior recibe mensajes de la API mediante SignalR. Envía una notificación de prueba para ver el contador.",
+    "sendTestNotification": "Enviar notificación de prueba",
+    "usersTitle": "Usuarios",
+    "totalUsers": "Total de usuarios",
+    "adminUsers": "Administradores",
+    "activate": "Activar",
+    "deactivate": "Desactivar",
+    "activeUsers": "Activos",
+    "inactiveUsers": "Inactivos",
+    "ofTotal": "{{percent}}% del total",
+    "allAccounts": "Todas las cuentas"
+  },
+  "confirm": {
+    "loading": "Confirmando tu correo...",
+    "successTitle": "¡Correo confirmado!",
+    "successText": "Tu cuenta está activa. Ya puedes entrar.",
+    "errorTitle": "Enlace inválido o caducado",
+    "errorText": "No se pudo confirmar el correo. Pide un nuevo enlace de confirmación."
+  },
+  "admin": {
+    "title": "Área de administración",
+    "rolesTitle": "Roles y permisos",
+    "rolesHint": "Qué puede hacer cada rol en cada recurso: ver, crear, actualizar y eliminar.",
+    "resource": "Recurso",
+    "action": "Acción",
+    "allowed": "Permitido",
+    "denied": "No permitido",
+    "usersTitle": "Usuarios",
+    "rolesHintEdit": "Marca lo que cada perfil puede hacer en cada recurso y guarda. Los cambios se aplican en el próximo inicio de sesión.",
+    "saved": "Permisos actualizados.",
+    "save": "Guardar cambios",
+    "discard": "Descartar",
+    "lockedHint": "El perfil Administrador no se puede modificar.",
+    "readOnlyHint": "Solo los administradores pueden editar los permisos."
+  },
+  "app": {
+    "description": "Salary360 ayuda a organizar, planificar y gestionar de forma inteligente el salario que recibes cada mes. Objetivo principal: que cada salario tenga un plan, un propósito y un destino definido."
+  },
+  "theme": {
+    "switchToLight": "Cambiar al tema claro",
+    "switchToDark": "Cambiar al tema oscuro"
+  },
+  "language": {
+    "label": "Idioma"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "empty": "No hay notificaciones.",
+    "markAllRead": "Marcar todas como leídas",
+    "clear": "Borrar notificaciones",
+    "status": {
+      "connected": "Conectado en tiempo real",
+      "connecting": "Conectando...",
+      "reconnecting": "Reconectando...",
+      "disconnected": "Desconectado"
+    },
+    "types": {
+      "test": {
+        "title": "Notificación de prueba",
+        "message": "Las notificaciones en tiempo real funcionan."
+      }
+    }
+  },
+  "common": {
+    "loading": "Cargando...",
+    "optional": "(opcional)"
+  },
+  "profile": {
+    "title": "Mi perfil",
+    "save": "Guardar cambios",
+    "saved": "Perfil actualizado correctamente.",
+    "roles": "Roles",
+    "createdAt": "Creado el",
+    "updatedAt": "Actualizado el",
+    "readOnlyHint": "Los campos deshabilitados no se pueden modificar.",
+    "pictureUrl": "URL de la foto de perfil",
+    "pictureLoadFailed": "No se pudo cargar la imagen de esta URL.",
+    "status": "Estado",
+    "termsAcceptedAt": "Términos de Uso aceptados el",
+    "privacyAcceptedAt": "Política de Privacidad aceptada el",
+    "tab": {
+      "personal": "Datos personales",
+      "address": "Dirección",
+      "account": "Cuenta"
+    }
+  },
+  "roles": {
+    "Admin": "Administrador",
+    "User": "Usuario"
+  },
+  "permissions": {
+    "resources": {
+      "Profile": "Perfil",
+      "Users": "Usuarios",
+      "Roles": "Roles"
+    },
+    "actions": {
+      "View": "Ver",
+      "Create": "Crear",
+      "Update": "Actualizar",
+      "Delete": "Eliminar"
+    }
+  },
+  "birthday": {
+    "title": "¡Feliz cumpleaños, {{name}}!",
+    "message": "¡Hoy es tu día! Te deseamos un día muy especial.",
+    "close": "¡Gracias!",
+    "navbarTitle": "¡Hoy es tu cumpleaños!"
+  },
+  "errorPage": {
+    "403": {
+      "title": "Acceso denegado",
+      "text": "No tienes permiso para acceder a este recurso."
+    },
+    "404": {
+      "title": "Página no encontrada",
+      "text": "La dirección que intentaste abrir no existe o fue movida."
+    },
+    "500": {
+      "title": "Error del servidor",
+      "text": "Algo salió mal de nuestro lado. Inténtalo de nuevo en unos instantes."
+    },
+    "generic": {
+      "title": "Algo salió mal",
+      "text": "Ocurrió un error inesperado."
+    },
+    "goHome": "Ir al inicio",
+    "goBack": "Volver",
+    "retry": "Intentar de nuevo"
+  },
+  "phone": {
+    "country": "País y prefijo",
+    "search": "Buscar país o prefijo",
+    "noResults": "No se encontraron países."
+  },
+  "address": {
+    "title": "Dirección",
+    "hint": "Opcional. Si la completas, rellena todos los campos excepto el complemento.",
+    "postalCode": "Código postal",
+    "street": "Calle",
+    "number": "Número",
+    "complement": "Complemento",
+    "neighborhood": "Barrio",
+    "city": "Ciudad",
+    "state": "Estado",
+    "country": "País",
+    "searchCountry": "Buscar país"
+  },
+  "status": {
+    "Active": "Activo",
+    "Inactive": "Inactivo"
+  },
+  "placeholders": {
+    "name": "María García",
+    "email": "nombre@ejemplo.com",
+    "password": "Mínimo 8 caracteres",
+    "pictureUrl": "https://ejemplo.com/foto.jpg",
+    "postalCode": "Código postal",
+    "street": "Calle de las Flores",
+    "number": "123",
+    "complement": "Piso 1, puerta A",
+    "neighborhood": "Centro",
+    "city": "Madrid",
+    "state": "Madrid",
+    "country": "Selecciona el país"
+  },
+  "date": {
+    "placeholderDmy": "dd/mm/aaaa",
+    "placeholderMdy": "mm/dd/aaaa",
+    "open": "Abrir calendario",
+    "previous": "Anterior",
+    "next": "Siguiente"
+  }
+}

@@ -1,0 +1,9 @@
+<button
+  type="button"
+  class="theme-toggle"
+  [attr.aria-label]="(isDark() ? 'theme.switchToLight' : 'theme.switchToDark') | translate"
+  [attr.title]="(isDark() ? 'theme.switchToLight' : 'theme.switchToDark') | translate"
+  (click)="theme.toggle()"
+>
+  <app-icon [name]="isDark() ? 'sun' : 'moon'" />
+</button>

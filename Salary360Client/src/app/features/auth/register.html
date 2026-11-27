@@ -1,0 +1,80 @@
+<main class="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4">
+  <div class="mb-4 flex justify-end"><app-toolbar /></div>
+  <section class="card">
+    <h1 class="text-2xl font-bold text-brand-700 dark:text-brand-500">{{ appName }}</h1>
+    <p class="mb-6 mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'auth.registerSubtitle' | translate }}</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4" novalidate>
+      <div>
+        <label class="field-label required" for="displayName">{{ 'auth.name' | translate }}</label>
+        <input id="displayName" class="field" type="text" autocomplete="name" maxlength="100" [placeholder]="'placeholders.name' | translate" formControlName="displayName" />
+        <app-field-error [control]="form.controls.displayName" />
+        @if (form.controls.displayName.touched && form.controls.displayName.invalid && !form.controls.displayName.hasError('serverError')) {
+          <p class="field-error">{{ 'validation.required' | translate }}</p>
+        }
+      </div>
+      <div>
+        <label class="field-label required" for="email">{{ 'auth.email' | translate }}</label>
+        <input id="email" class="field" type="email" autocomplete="email" maxlength="256" [placeholder]="'placeholders.email' | translate" formControlName="email" />
+        <app-field-error [control]="form.controls.email" />
+        @if (form.controls.email.touched && form.controls.email.invalid && !form.controls.email.hasError('serverError')) {
+          <p class="field-error">{{ 'validation.email' | translate }}</p>
+        }
+      </div>
+      <div class="grid gap-4">
+        <div>
+          <label class="field-label required" for="dateOfBirth">{{ 'auth.dateOfBirth' | translate }}</label>
+          <app-date-picker inputId="dateOfBirth" min="1900-01-01" [max]="today" formControlName="dateOfBirth" />
+          <app-field-error [control]="form.controls.dateOfBirth" />
+          @if (form.controls.dateOfBirth.touched && form.controls.dateOfBirth.invalid && !form.controls.dateOfBirth.hasError('serverError')) {
+            <p class="field-error">{{ 'validation.birthDate' | translate }}</p>
+          }
+        </div>
+        <div>
+          <label class="field-label" for="phoneNumber">{{ 'auth.phone' | translate }}<span class="field-optional">{{ 'common.optional' | translate }}</span></label>
+          <app-phone-input inputId="phoneNumber" formControlName="phoneNumber" />
+          <app-field-error [control]="form.controls.phoneNumber" />
+          @if (form.controls.phoneNumber.touched && form.controls.phoneNumber.invalid && !form.controls.phoneNumber.hasError('serverError')) {
+            <p class="field-error">{{ 'validation.phone' | translate }}</p>
+          }
+        </div>
+      </div>
+      <div>
+        <label class="field-label required" for="password">{{ 'auth.password' | translate }}</label>
+        <input id="password" class="field" type="password" autocomplete="new-password" maxlength="128" [placeholder]="'placeholders.password' | translate" formControlName="password" />
+        <app-field-error [control]="form.controls.password" />
+        <p class="mt-1 text-xs text-slate-400">{{ 'auth.passwordHint' | translate }}</p>
+        @if (form.controls.password.touched && form.controls.password.invalid && !form.controls.password.hasError('serverError')) {
+          <p class="field-error">{{ 'validation.password' | translate }}</p>
+        }
+      </div>
+      <div class="space-y-2">
+        <label class="flex items-start gap-2 text-sm">
+          <input type="checkbox" class="consent-check mt-0.5" formControlName="acceptedTerms" />
+          <span>{{ 'auth.acceptTerms' | translate }}</span>
+        </label>
+        @if (form.controls.acceptedTerms.touched && form.controls.acceptedTerms.invalid && !form.controls.acceptedTerms.hasError('serverError')) {
+          <p class="field-error">{{ 'validation.acceptTerms' | translate }}</p>
+        }
+        <label class="flex items-start gap-2 text-sm">
+          <input type="checkbox" class="consent-check mt-0.5" formControlName="acceptedPrivacyPolicy" />
+          <span>{{ 'auth.acceptPrivacy' | translate }}</span>
+        </label>
+        @if (form.controls.acceptedPrivacyPolicy.touched && form.controls.acceptedPrivacyPolicy.invalid && !form.controls.acceptedPrivacyPolicy.hasError('serverError')) {
+          <p class="field-error">{{ 'validation.acceptPrivacy' | translate }}</p>
+        }
+      </div>
+      <button class="btn-primary w-full gap-2" type="submit" [disabled]="loading()">
+        @if (loading()) {
+          <app-spinner size="sm" />
+        }
+        {{ 'auth.createAccount' | translate }}
+      </button>
+    </form>
+
+    <p class="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
+      {{ 'auth.haveAccount' | translate }}
+      <a routerLink="/login" class="font-semibold text-brand-700 dark:text-brand-500 hover:underline">{{ 'auth.signIn' | translate }}</a>
+    </p>
+  </section>
+</main>

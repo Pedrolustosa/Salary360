@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.stat-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+
+  app-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}

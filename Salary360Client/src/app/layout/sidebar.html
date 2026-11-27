@@ -1,0 +1,54 @@
+@if (open()) {
+  <div class="fixed inset-0 z-30 bg-slate-900/50 lg:hidden" (click)="closed.emit()" aria-hidden="true"></div>
+}
+
+<aside
+  class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-slate-200 bg-white transition-all duration-200 dark:border-slate-800 dark:bg-slate-900 lg:static lg:translate-x-0"
+  [class.-translate-x-full]="!open()"
+  [class.lg:w-16]="collapsed()"
+  [attr.aria-label]="'nav.sidebar' | translate"
+>
+  <div
+    class="flex h-16 items-center justify-between border-b border-slate-200 px-4 dark:border-slate-800"
+    [class.lg:justify-center]="collapsed()"
+    [class.lg:px-2]="collapsed()"
+  >
+    <span class="text-xl font-bold text-brand-700 dark:text-brand-500" [class.lg:hidden]="collapsed()">{{ appName }}</span>
+
+    <div class="lg:hidden">
+      <button type="button" class="close-button" [attr.aria-label]="'nav.closeMenu' | translate" (click)="closed.emit()">
+        <app-icon name="x-mark" />
+      </button>
+    </div>
+
+    <div class="hidden lg:block">
+      <button
+        type="button"
+        class="close-button"
+        [attr.title]="(collapsed() ? 'nav.expand' : 'nav.collapse') | translate"
+        [attr.aria-label]="(collapsed() ? 'nav.expand' : 'nav.collapse') | translate"
+        [attr.aria-expanded]="!collapsed()"
+        (click)="collapseToggle.emit()"
+      >
+        <app-icon [name]="collapsed() ? 'chevron-double-right' : 'chevron-double-left'" />
+      </button>
+    </div>
+  </div>
+
+  <nav class="flex-1 space-y-1 overflow-y-auto overflow-x-hidden p-3" [class.lg:px-2]="collapsed()">
+    @for (item of items(); track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="nav-active"
+        [routerLinkActiveOptions]="{ exact: item.exact }"
+        class="nav-link"
+        [class.lg:justify-center]="collapsed()"
+        [attr.title]="item.labelKey | translate"
+        (click)="closed.emit()"
+      >
+        <app-icon [name]="item.icon" />
+        <span [class.lg:hidden]="collapsed()">{{ item.labelKey | translate }}</span>
+      </a>
+    }
+  </nav>
+</aside>

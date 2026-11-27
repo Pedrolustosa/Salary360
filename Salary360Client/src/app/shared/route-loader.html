@@ -1,0 +1,6 @@
+@if (loading()) {
+  <div class="overlay" role="status" aria-live="polite">
+    <span class="text-brand-600 dark:text-brand-500"><app-spinner size="lg" [label]="'common.loading' | translate" /></span>
+    <span class="sr-only">{{ 'common.loading' | translate }}</span>
+  </div>
+}

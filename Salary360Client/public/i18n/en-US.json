@@ -1,0 +1,291 @@
+{
+  "nav": {
+    "logout": "Sign out",
+    "home": "Dashboard",
+    "admin": "Administration",
+    "sidebar": "Sidebar",
+    "closeMenu": "Close menu",
+    "expand": "Expand sidebar",
+    "collapse": "Collapse sidebar",
+    "toggleMenu": "Toggle sidebar",
+    "profile": "Profile"
+  },
+  "auth": {
+    "loginSubtitle": "Every paycheck with a purpose.",
+    "registerSubtitle": "Create your account and plan your first salary.",
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "At least 8 characters, with upper case, lower case and a number.",
+    "name": "Name",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "createAccount": "Create account",
+    "noAccount": "Don't have an account yet?",
+    "haveAccount": "Already have an account?",
+    "notConfirmed": "Your e-mail is not confirmed yet. Use the link we sent or request a new one.",
+    "resendLink": "Resend confirmation link",
+    "backToLogin": "Back to sign in",
+    "checkEmailTitle": "Check your e-mail",
+    "checkEmailText": "We sent a confirmation link to {{email}}. Click it to activate your account and sign in.",
+    "resendTitle": "Resend confirmation link",
+    "resendSubtitle": "Enter the e-mail you signed up with and we will send a new link.",
+    "resendSubmit": "Send new link",
+    "resendDone": "If the e-mail is registered and still unconfirmed, you will receive a new link shortly.",
+    "rememberMe": "Remember my e-mail and keep me signed in",
+    "dateOfBirth": "Date of birth",
+    "phone": "Phone",
+    "acceptTerms": "I have read and accept the Terms of Use.",
+    "acceptPrivacy": "I have read and accept the Privacy Policy.",
+    "tryAgainIn": "Too many attempts. Try again in {{time}}."
+  },
+  "validation": {
+    "required": "This field is required.",
+    "email": "Enter a valid email.",
+    "password": "Password needs 8+ characters, with upper case, lower case and a number.",
+    "birthDate": "Enter a valid date of birth.",
+    "phone": "Enter a valid phone number for the selected country.",
+    "acceptTerms": "You must accept the Terms of Use.",
+    "acceptPrivacy": "You must accept the Privacy Policy.",
+    "pictureUrl": "Enter a valid URL (http or https).",
+    "addressIncomplete": "Fill in postal code, street, number, neighborhood, city, state and country (complement is optional).",
+    "postalCode": "Enter the complete postal code for the selected country."
+  },
+  "toast": {
+    "errorTitle": "Oops!",
+    "confirmationSent": "If the e-mail is pending confirmation, a new link was sent.",
+    "warningTitle": "Attention",
+    "infoTitle": "Notice"
+  },
+  "errors": {
+    "network": "Could not reach the server.",
+    "validation": "Please check the data you entered.",
+    "unauthorized": "Invalid email or password, or the session expired.",
+    "notFound": "Record not found.",
+    "businessRule": "The operation violates a business rule.",
+    "tooManyRequests": "Too many attempts. Try again in {{time}}.",
+    "generic": "An unexpected error occurred.",
+    "forbidden": "You are not allowed to do this.",
+    "emailNotConfirmed": "Your e-mail is not confirmed yet.",
+    "identity": {
+      "DuplicateEmail": "This e-mail is already registered.",
+      "DuplicateUserName": "This e-mail is already registered.",
+      "InvalidEmail": "Enter a valid e-mail.",
+      "PasswordTooShort": "The password is too short.",
+      "PasswordRequiresDigit": "The password needs at least one number.",
+      "PasswordRequiresLower": "The password needs at least one lower case letter.",
+      "PasswordRequiresUpper": "The password needs at least one upper case letter.",
+      "PasswordRequiresNonAlphanumeric": "The password needs at least one special character.",
+      "InvalidConfirmationLink": "The confirmation link is invalid or has expired."
+    },
+    "userInactive": "This account is inactive. Please contact an administrator.",
+    "checkFields": "Please review the highlighted fields.",
+    "invalidCredentials": "Incorrect e-mail or password.",
+    "sessionExpired": "Your session has expired. Please sign in again.",
+    "accountLocked": "Account temporarily locked. Try again in {{time}}.",
+    "conflict": "This record already exists.",
+    "serverError": "Something went wrong. Please try again shortly.",
+    "codes": {
+      "cannot_deactivate_self": "You cannot deactivate your own account.",
+      "address_incomplete": "Please fill in the complete address.",
+      "business_rule_violation": "This operation is not allowed.",
+      "identity_failed": "The operation could not be completed."
+    },
+    "fields": {
+      "required": "This field is required.",
+      "max_length": "Text exceeds the allowed length.",
+      "min_length": "Text is shorter than required.",
+      "invalid_length": "Invalid length.",
+      "invalid_email": "Enter a valid e-mail.",
+      "invalid_format": "Invalid format.",
+      "must_be_accepted": "You must accept to continue.",
+      "invalid": "Invalid value.",
+      "password_lowercase": "Use at least one lowercase letter.",
+      "password_uppercase": "Use at least one uppercase letter.",
+      "password_digit": "Use at least one number."
+    }
+  },
+  "home": {
+    "welcome": "Hello, {{name}}!",
+    "sampleTitle": "Sample chart",
+    "sampleHint": "Fictitious data showing Chart.js already configured.",
+    "sample": {
+      "a": "Sample A",
+      "b": "Sample B",
+      "c": "Sample C"
+    },
+    "adminArea": "Open admin area",
+    "notificationsTitle": "Real-time notifications",
+    "notificationsHint": "The bell in the top bar receives messages from the API through SignalR. Send a test notification to see the counter.",
+    "sendTestNotification": "Send test notification",
+    "usersTitle": "Users",
+    "totalUsers": "Total users",
+    "adminUsers": "Administrators",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "activeUsers": "Active",
+    "inactiveUsers": "Inactive",
+    "ofTotal": "{{percent}}% of total",
+    "allAccounts": "All accounts"
+  },
+  "confirm": {
+    "loading": "Confirming your e-mail...",
+    "successTitle": "E-mail confirmed!",
+    "successText": "Your account is active. You can sign in now.",
+    "errorTitle": "Invalid or expired link",
+    "errorText": "We could not confirm the e-mail. Request a new confirmation link."
+  },
+  "admin": {
+    "title": "Admin area",
+    "rolesTitle": "Roles and permissions",
+    "rolesHint": "What each role can do on each resource: view, create, update and delete.",
+    "resource": "Resource",
+    "action": "Action",
+    "allowed": "Allowed",
+    "denied": "Not allowed",
+    "usersTitle": "Users",
+    "rolesHintEdit": "Check what each role can do on each resource and save. Changes apply the next time users sign in.",
+    "saved": "Permissions updated.",
+    "save": "Save changes",
+    "discard": "Discard",
+    "lockedHint": "The Administrator role cannot be modified.",
+    "readOnlyHint": "Only administrators can edit permissions."
+  },
+  "app": {
+    "description": "Salary360 helps you organize, plan and intelligently manage the salary you receive every month. Main goal: give every paycheck a plan, a purpose and a defined destination."
+  },
+  "theme": {
+    "switchToLight": "Switch to light theme",
+    "switchToDark": "Switch to dark theme"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications.",
+    "markAllRead": "Mark all as read",
+    "clear": "Clear notifications",
+    "status": {
+      "connected": "Connected in real time",
+      "connecting": "Connecting...",
+      "reconnecting": "Reconnecting...",
+      "disconnected": "Disconnected"
+    },
+    "types": {
+      "test": {
+        "title": "Test notification",
+        "message": "Real-time notifications are working."
+      }
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "optional": "(optional)"
+  },
+  "profile": {
+    "title": "My profile",
+    "save": "Save changes",
+    "saved": "Profile updated successfully.",
+    "roles": "Roles",
+    "createdAt": "Created at",
+    "updatedAt": "Updated at",
+    "readOnlyHint": "Disabled fields cannot be changed.",
+    "pictureUrl": "Profile picture URL",
+    "pictureLoadFailed": "The image at this URL could not be loaded.",
+    "status": "Status",
+    "termsAcceptedAt": "Terms of Use accepted at",
+    "privacyAcceptedAt": "Privacy Policy accepted at",
+    "tab": {
+      "personal": "Personal data",
+      "address": "Address",
+      "account": "Account"
+    }
+  },
+  "roles": {
+    "Admin": "Administrator",
+    "User": "User"
+  },
+  "permissions": {
+    "resources": {
+      "Profile": "Profile",
+      "Users": "Users",
+      "Roles": "Roles"
+    },
+    "actions": {
+      "View": "View",
+      "Create": "Create",
+      "Update": "Update",
+      "Delete": "Delete"
+    }
+  },
+  "birthday": {
+    "title": "Happy birthday, {{name}}!",
+    "message": "Today is your day! We wish you a very special one.",
+    "close": "Thank you!",
+    "navbarTitle": "It's your birthday today!"
+  },
+  "errorPage": {
+    "403": {
+      "title": "Access denied",
+      "text": "You are not allowed to access this resource."
+    },
+    "404": {
+      "title": "Page not found",
+      "text": "The address you tried to open does not exist or was moved."
+    },
+    "500": {
+      "title": "Server error",
+      "text": "Something went wrong on our side. Please try again shortly."
+    },
+    "generic": {
+      "title": "Something went wrong",
+      "text": "An unexpected error occurred."
+    },
+    "goHome": "Go to home",
+    "goBack": "Go back",
+    "retry": "Try again"
+  },
+  "phone": {
+    "country": "Country and dialing code",
+    "search": "Search country or code",
+    "noResults": "No countries found."
+  },
+  "address": {
+    "title": "Address",
+    "hint": "Optional. If you fill it in, complete every field except the complement.",
+    "postalCode": "Postal code",
+    "street": "Street",
+    "number": "Number",
+    "complement": "Complement",
+    "neighborhood": "Neighborhood",
+    "city": "City",
+    "state": "State",
+    "country": "Country",
+    "searchCountry": "Search country"
+  },
+  "status": {
+    "Active": "Active",
+    "Inactive": "Inactive"
+  },
+  "placeholders": {
+    "name": "Jane Doe",
+    "email": "name@example.com",
+    "password": "At least 8 characters",
+    "pictureUrl": "https://example.com/photo.jpg",
+    "postalCode": "Postal code",
+    "street": "Main Street",
+    "number": "123",
+    "complement": "Apt 101",
+    "neighborhood": "Downtown",
+    "city": "New York",
+    "state": "NY",
+    "country": "Select a country"
+  },
+  "date": {
+    "placeholderDmy": "dd/mm/yyyy",
+    "placeholderMdy": "mm/dd/yyyy",
+    "open": "Open calendar",
+    "previous": "Previous",
+    "next": "Next"
+  }
+}

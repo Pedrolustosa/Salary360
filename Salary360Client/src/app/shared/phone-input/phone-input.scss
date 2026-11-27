@@ -1,0 +1,108 @@
+:host {
+  display: block;
+}
+
+.phone-field:focus-within {
+  border-color: var(--color-brand-500);
+  box-shadow: 0 0 0 2px var(--color-brand-100);
+}
+
+:host-context(.dark) .phone-field:focus-within {
+  box-shadow: 0 0 0 2px var(--color-brand-900);
+}
+
+.phone-country {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-right: 1px solid rgb(203 213 225);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  app-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+:host-context(.dark) .phone-country {
+  border-right-color: rgb(71 85 105);
+}
+
+.phone-flag {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1.333rem;
+  height: 1rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 0.125rem;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.1);
+}
+
+.phone-number {
+  min-width: 0;
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  color: inherit;
+  font-size: 0.875rem;
+  outline: none;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.phone-panel {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 0.25rem);
+  z-index: 40;
+  width: min(22rem, calc(100vw - 2rem));
+  padding: 0.5rem;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 10px 25px rgb(0 0 0 / 0.15);
+}
+
+:host-context(.dark) .phone-panel {
+  border-color: rgb(51 65 85);
+  background: rgb(15 23 42);
+}
+
+.phone-list {
+  max-height: 14rem;
+  margin-top: 0.5rem;
+  overflow-y: auto;
+}
+
+.phone-option {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+
+  &:hover,
+  &.phone-option-active {
+    background: rgb(241 245 249);
+  }
+}
+
+:host-context(.dark) .phone-option:hover,
+:host-context(.dark) .phone-option.phone-option-active {
+  background: rgb(30 41 59);
+}

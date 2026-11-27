@@ -1,0 +1,36 @@
+<header class="flex h-16 items-center gap-3 border-b border-slate-200 bg-white px-4 dark:border-slate-800 dark:bg-slate-900">
+  <button type="button" class="menu-button" [attr.aria-label]="'nav.toggleMenu' | translate" (click)="menuToggle.emit()">
+    <app-icon name="bars-3" />
+  </button>
+
+  <div class="flex-1"></div>
+
+  @if (birthday.isBirthday()) {
+    <button
+      type="button"
+      class="menu-button birthday-button"
+      [attr.title]="'birthday.navbarTitle' | translate"
+      [attr.aria-label]="'birthday.navbarTitle' | translate"
+      (click)="birthday.celebrate()"
+    >
+      <app-icon name="cake" />
+    </button>
+  }
+
+  <app-notification-bell />
+  <app-toolbar />
+
+  <div class="flex items-center gap-2 border-l border-slate-200 pl-3 dark:border-slate-700">
+    @if (pictureUrl(); as url) {
+      <img class="h-8 w-8 rounded-full object-cover" [src]="url" alt="" referrerpolicy="no-referrer" />
+    } @else {
+      <span class="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-sm font-semibold text-white" aria-hidden="true">
+        {{ initial() }}
+      </span>
+    }
+    <span class="hidden max-w-40 truncate text-sm font-medium sm:inline">{{ userName() }}</span>
+    <button type="button" class="menu-button" [attr.title]="'nav.logout' | translate" [attr.aria-label]="'nav.logout' | translate" (click)="logout()">
+      <app-icon name="arrow-right-start-on-rectangle" />
+    </button>
+  </div>
+</header>

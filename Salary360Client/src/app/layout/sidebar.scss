@@ -1,0 +1,37 @@
+:host {
+  display: contents;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    background: rgb(148 163 184 / 0.18);
+  }
+
+  &.nav-active {
+    background: rgb(16 185 129 / 0.15);
+    color: #047857;
+  }
+}
+
+:host-context(.dark) .nav-link.nav-active {
+  color: #34d399;
+}
+
+.close-button {
+  display: inline-flex;
+  padding: 0.35rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}

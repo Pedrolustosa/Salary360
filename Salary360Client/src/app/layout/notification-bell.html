@@ -1,0 +1,62 @@
+<button
+  type="button"
+  class="bell-button"
+  [attr.aria-label]="'notifications.title' | translate"
+  [attr.aria-expanded]="open()"
+  (click)="toggle()"
+>
+  <app-icon name="bell" />
+  @if (notifications.unreadCount() > 0) {
+    <span class="badge">{{ notifications.unreadCount() > 9 ? '9+' : notifications.unreadCount() }}</span>
+  }
+</button>
+
+@if (open()) {
+  <div class="panel card !p-0" role="dialog" [attr.aria-label]="'notifications.title' | translate">
+    <div class="flex items-center justify-between border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+      <h2 class="text-sm font-semibold">{{ 'notifications.title' | translate }}</h2>
+      <div class="flex items-center gap-1">
+        <button
+          type="button"
+          class="icon-action"
+          [attr.title]="'notifications.markAllRead' | translate"
+          [attr.aria-label]="'notifications.markAllRead' | translate"
+          (click)="notifications.markAllAsRead()"
+        >
+          <app-icon name="check" />
+        </button>
+        <button
+          type="button"
+          class="icon-action"
+          [attr.title]="'notifications.clear' | translate"
+          [attr.aria-label]="'notifications.clear' | translate"
+          (click)="notifications.clear()"
+        >
+          <app-icon name="trash" />
+        </button>
+      </div>
+    </div>
+
+    @if (notifications.items().length === 0) {
+      <p class="px-4 py-8 text-center text-sm text-slate-500 dark:text-slate-400">{{ 'notifications.empty' | translate }}</p>
+    } @else {
+      <ul class="max-h-80 overflow-y-auto">
+        @for (item of notifications.items(); track item.id) {
+          <li>
+            <button type="button" class="item" [class.item-unread]="!item.read" (click)="notifications.markAsRead(item.id)">
+              <span class="mt-0.5 text-brand-600 dark:text-brand-500"><app-icon name="information-circle" /></span>
+              <span class="min-w-0 flex-1 text-left">
+                <span class="block truncate text-sm font-medium">{{ title(item) }}</span>
+                <span class="block text-xs text-slate-600 dark:text-slate-300">{{ message(item) }}</span>
+                <span class="mt-1 block text-[11px] text-slate-400">{{ time(item) }}</span>
+              </span>
+              @if (!item.read) {
+                <span class="mt-1 h-2 w-2 rounded-full bg-brand-500"></span>
+              }
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+}

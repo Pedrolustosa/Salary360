@@ -1,0 +1,25 @@
+<div class="backdrop" role="dialog" aria-modal="true" [attr.aria-label]="'birthday.title' | translate: { name: firstName() }">
+  <div class="confetti-layer" aria-hidden="true">
+    @for (piece of confetti; track $index) {
+      <span
+        class="confetti"
+        [class.confetti-round]="piece.round"
+        [style.left.%]="piece.left"
+        [style.width.px]="piece.size"
+        [style.height.px]="piece.size * 1.6"
+        [style.background]="piece.color"
+        [style.animation-delay.s]="piece.delay"
+        [style.animation-duration.s]="piece.duration"
+      ></span>
+    }
+  </div>
+
+  <div class="card celebration-card">
+    <span class="cake"><app-icon name="cake" [strokeWidth]="1.25" /></span>
+    <h2 class="mt-3 text-2xl font-extrabold text-brand-700 dark:text-brand-500">
+      {{ 'birthday.title' | translate: { name: firstName() } }}
+    </h2>
+    <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">{{ 'birthday.message' | translate }}</p>
+    <button type="button" class="btn-primary mt-5" (click)="birthday.dismiss()">{{ 'birthday.close' | translate }}</button>
+  </div>
+</div>

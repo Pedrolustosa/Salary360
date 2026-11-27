@@ -1,0 +1,200 @@
+<h1 class="mb-4 text-xl font-bold">{{ 'profile.title' | translate }}</h1>
+
+@if (loading()) {
+  <div class="flex justify-center py-16 text-brand-600 dark:text-brand-500"><app-spinner size="lg" [label]="'common.loading' | translate" /></div>
+} @else if (profile(); as data) {
+  <form [formGroup]="form" (ngSubmit)="save()" class="card" novalidate>
+    <div class="mb-5 flex gap-1 border-b border-slate-200 dark:border-slate-800" role="tablist">
+      @for (tab of tabs; track tab) {
+        <button
+          type="button"
+          role="tab"
+          class="-mb-px border-b-2 px-4 py-2 text-sm font-medium transition"
+          [class.border-brand-600]="activeTab() === tab"
+          [class.text-brand-700]="activeTab() === tab"
+          [class.dark:text-brand-100]="activeTab() === tab"
+          [class.border-transparent]="activeTab() !== tab"
+          [class.text-slate-500]="activeTab() !== tab"
+          [attr.aria-selected]="activeTab() === tab"
+          (click)="selectTab(tab)"
+        >
+          {{ 'profile.tab.' + tab | translate }}
+        </button>
+      }
+    </div>
+
+    @switch (activeTab()) {
+      @case (ProfileTab.Personal) {
+        <div class="grid gap-4 sm:grid-cols-2">
+        <div class="flex items-center gap-4 sm:col-span-2">
+          @if (picturePreview() && !pictureFailed()) {
+            <img class="h-16 w-16 rounded-full object-cover" [src]="picturePreview()" alt="" referrerpolicy="no-referrer" (error)="onPictureError()" />
+          } @else {
+            <span class="flex h-16 w-16 items-center justify-center rounded-full bg-slate-200 text-xl font-semibold text-slate-500 dark:bg-slate-700 dark:text-slate-300" aria-hidden="true">
+              {{ data.displayName.charAt(0).toUpperCase() }}
+            </span>
+          }
+          <div class="flex-1">
+            <label class="field-label" for="profilePictureUrl">{{ 'profile.pictureUrl' | translate }}<span class="field-optional">{{ 'common.optional' | translate }}</span></label>
+            <input id="profilePictureUrl" class="field" type="url" maxlength="2048" [placeholder]="'placeholders.pictureUrl' | translate" formControlName="profilePictureUrl" />
+            <app-field-error [control]="form.controls.profilePictureUrl" />
+            @if (form.controls.profilePictureUrl.touched && form.controls.profilePictureUrl.invalid && !form.controls.profilePictureUrl.hasError('serverError')) {
+              <p class="field-error">{{ 'validation.pictureUrl' | translate }}</p>
+            } @else if (pictureFailed()) {
+              <p class="field-error">{{ 'profile.pictureLoadFailed' | translate }}</p>
+            }
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label required" for="displayName">{{ 'auth.name' | translate }}</label>
+          <input id="displayName" class="field" type="text" autocomplete="name" maxlength="100" [placeholder]="'placeholders.name' | translate" formControlName="displayName" />
+          <app-field-error [control]="form.controls.displayName" />
+          @if (form.controls.displayName.touched && form.controls.displayName.invalid && !form.controls.displayName.hasError('serverError')) {
+            <p class="field-error">{{ 'validation.required' | translate }}</p>
+          }
+        </div>
+
+        <div>
+          <label class="field-label required" for="email">{{ 'auth.email' | translate }}</label>
+          <input id="email" class="field" type="email" [value]="data.email" disabled />
+        </div>
+
+          <div>
+            <label class="field-label required" for="dateOfBirth">{{ 'auth.dateOfBirth' | translate }}</label>
+            <app-date-picker inputId="dateOfBirth" min="1900-01-01" [max]="today" formControlName="dateOfBirth" />
+            <app-field-error [control]="form.controls.dateOfBirth" />
+            @if (form.controls.dateOfBirth.touched && form.controls.dateOfBirth.invalid && !form.controls.dateOfBirth.hasError('serverError')) {
+              <p class="field-error">{{ 'validation.birthDate' | translate }}</p>
+            }
+          </div>
+          <div>
+            <label class="field-label" for="phoneNumber">{{ 'auth.phone' | translate }}<span class="field-optional">{{ 'common.optional' | translate }}</span></label>
+            <app-phone-input inputId="phoneNumber" formControlName="phoneNumber" />
+            <app-field-error [control]="form.controls.phoneNumber" />
+            @if (form.controls.phoneNumber.touched && form.controls.phoneNumber.invalid && !form.controls.phoneNumber.hasError('serverError')) {
+              <p class="field-error">{{ 'validation.phone' | translate }}</p>
+            }
+          </div>
+        </div>
+      }
+      @case (ProfileTab.Address) {
+        <div formGroupName="address">
+        <div class="grid gap-4 sm:grid-cols-12">
+          <div class="sm:col-span-4">
+            <label class="field-label required" for="country">{{ 'address.country' | translate }}</label>
+            <app-select
+              inputId="country"
+              formControlName="country"
+              [options]="countryOptions()"
+              [searchable]="true"
+              [placeholder]="'placeholders.country' | translate"
+              [searchPlaceholder]="'address.searchCountry' | translate"
+              [emptyLabel]="'phone.noResults' | translate"
+            />
+            <app-field-error [control]="form.controls.address.controls.country" />
+          </div>
+          <div class="sm:col-span-3">
+            <label class="field-label required" for="postalCode">{{ 'address.postalCode' | translate }}</label>
+            <input
+              id="postalCode"
+              class="field"
+              type="text"
+              autocomplete="postal-code"
+              [attr.maxlength]="postalMaxLength()"
+              [placeholder]="postalPlaceholder()"
+              [value]="form.controls.address.controls.postalCode.value"
+              [disabled]="form.controls.address.controls.postalCode.disabled"
+              (input)="onPostalInput($event)"
+              (blur)="form.controls.address.controls.postalCode.markAsTouched()"
+            />
+            @if (form.controls.address.controls.postalCode.touched && form.controls.address.controls.postalCode.hasError('postalCode')) {
+              <p class="field-error">{{ 'validation.postalCode' | translate }}</p>
+            }
+            <app-field-error [control]="form.controls.address.controls.postalCode" />
+          </div>
+          <div class="sm:col-span-5">
+            <label class="field-label required" for="street">{{ 'address.street' | translate }}</label>
+            <input id="street" class="field" type="text" autocomplete="address-line1" maxlength="200" [placeholder]="'placeholders.street' | translate" formControlName="street" />
+            <app-field-error [control]="form.controls.address.controls.street" />
+          </div>
+          <div class="sm:col-span-2">
+            <label class="field-label required" for="number">{{ 'address.number' | translate }}</label>
+            <input id="number" class="field" type="text" maxlength="10" [placeholder]="'placeholders.number' | translate" formControlName="number" />
+            <app-field-error [control]="form.controls.address.controls.number" />
+          </div>
+          <div class="sm:col-span-3">
+            <label class="field-label" for="complement">{{ 'address.complement' | translate }}<span class="field-optional">{{ 'common.optional' | translate }}</span></label>
+            <input id="complement" class="field" type="text" autocomplete="address-line2" maxlength="100" [placeholder]="'placeholders.complement' | translate" formControlName="complement" />
+            <app-field-error [control]="form.controls.address.controls.complement" />
+          </div>
+          <div class="sm:col-span-3">
+            <label class="field-label required" for="neighborhood">{{ 'address.neighborhood' | translate }}</label>
+            <input id="neighborhood" class="field" type="text" maxlength="100" [placeholder]="'placeholders.neighborhood' | translate" formControlName="neighborhood" />
+            <app-field-error [control]="form.controls.address.controls.neighborhood" />
+          </div>
+          <div class="sm:col-span-2">
+            <label class="field-label required" for="city">{{ 'address.city' | translate }}</label>
+            <input id="city" class="field" type="text" autocomplete="address-level2" maxlength="100" [placeholder]="'placeholders.city' | translate" formControlName="city" />
+            <app-field-error [control]="form.controls.address.controls.city" />
+          </div>
+          <div class="sm:col-span-2">
+            <label class="field-label required" for="state">{{ 'address.state' | translate }}</label>
+            <input id="state" class="field" type="text" autocomplete="address-level1" maxlength="100" [placeholder]="'placeholders.state' | translate" formControlName="state" />
+            <app-field-error [control]="form.controls.address.controls.state" />
+          </div>
+        </div>
+        @if (form.controls.address.touched && form.controls.address.hasError('addressIncomplete')) {
+          <p class="field-error">{{ 'validation.addressIncomplete' | translate }}</p>
+        }
+        </div>
+      }
+      @case (ProfileTab.Account) {
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div>
+        <p class="field-label">{{ 'profile.roles' | translate }}</p>
+        <div class="field flex flex-wrap gap-2" aria-disabled="true">
+          @for (role of data.roles; track role) {
+            <span class="rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+              {{ 'roles.' + role | translate }}
+            </span>
+          }
+        </div>
+      </div>
+      <div>
+        <label class="field-label" for="status">{{ 'profile.status' | translate }}</label>
+        <input id="status" class="field" type="text" [value]="'status.' + data.status | translate" disabled />
+      </div>
+      <div>
+        <label class="field-label" for="createdAt">{{ 'profile.createdAt' | translate }}</label>
+        <input id="createdAt" class="field" type="text" [value]="created()" disabled />
+      </div>
+      <div>
+        <label class="field-label" for="updatedAt">{{ 'profile.updatedAt' | translate }}</label>
+        <input id="updatedAt" class="field" type="text" [value]="updated() || '-'" disabled />
+      </div>
+      <div>
+        <label class="field-label" for="termsAcceptedAt">{{ 'profile.termsAcceptedAt' | translate }}</label>
+        <input id="termsAcceptedAt" class="field" type="text" [value]="formatted(data.termsAcceptedAt)" disabled />
+      </div>
+      <div>
+        <label class="field-label" for="privacyAcceptedAt">{{ 'profile.privacyAcceptedAt' | translate }}</label>
+        <input id="privacyAcceptedAt" class="field" type="text" [value]="formatted(data.privacyPolicyAcceptedAt)" disabled />
+      </div>
+        </div>
+        <p class="mt-4 text-xs text-slate-400">{{ 'profile.readOnlyHint' | translate }}</p>
+      }
+    }
+
+    @if (canUpdate() && activeTab() !== ProfileTab.Account) {
+      <div class="mt-5 flex justify-end border-t border-slate-200 pt-4 dark:border-slate-800">
+        <button class="btn-primary gap-2" type="submit" [disabled]="saving()">
+          @if (saving()) {
+            <app-spinner size="sm" />
+          }
+          {{ 'profile.save' | translate }}
+        </button>
+      </div>
+    }
+  </form>
+}

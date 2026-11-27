@@ -1,0 +1,57 @@
+<main class="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4">
+  <div class="mb-4 flex justify-end"><app-toolbar /></div>
+  <section class="card">
+    <h1 class="text-2xl font-bold text-brand-700 dark:text-brand-500">{{ appName }}</h1>
+    <p class="mb-6 mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'auth.loginSubtitle' | translate }}</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4" novalidate>
+      <div>
+        <label class="field-label required" for="email">{{ 'auth.email' | translate }}</label>
+        <input id="email" class="field" type="email" autocomplete="email" maxlength="256" [placeholder]="'placeholders.email' | translate" formControlName="email" />
+        <app-field-error [control]="form.controls.email" />
+        @if (form.controls.email.touched && form.controls.email.invalid && !form.controls.email.hasError('serverError')) {
+          <p class="field-error">{{ 'validation.email' | translate }}</p>
+        }
+      </div>
+      <div>
+        <label class="field-label required" for="password">{{ 'auth.password' | translate }}</label>
+        <input id="password" class="field" type="password" autocomplete="current-password" maxlength="128" [placeholder]="'placeholders.password' | translate" formControlName="password" />
+        <app-field-error [control]="form.controls.password" />
+        @if (form.controls.password.touched && form.controls.password.invalid && !form.controls.password.hasError('serverError')) {
+          <p class="field-error">{{ 'validation.required' | translate }}</p>
+        }
+      </div>
+      <label class="flex cursor-pointer items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+        <input type="checkbox" class="h-4 w-4 rounded border-slate-300 accent-emerald-600" formControlName="remember" />
+        {{ 'auth.rememberMe' | translate }}
+      </label>
+      @if (unconfirmedEmail(); as email) {
+        <div class="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200" role="alert">
+          <p>{{ 'auth.notConfirmed' | translate }}</p>
+          <a routerLink="/resend-confirmation" [queryParams]="{ email }" class="font-semibold underline">
+            {{ 'auth.resendLink' | translate }}
+          </a>
+        </div>
+      }
+      @if (invalidCredentials()) {
+        <p class="field-error" role="alert">{{ 'errors.invalidCredentials' | translate }}</p>
+      }
+      @if (blocked()) {
+        <div class="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200" role="alert">
+          {{ 'auth.tryAgainIn' | translate: { time: blockedTime() } }}
+        </div>
+      }
+      <button class="btn-primary w-full gap-2" type="submit" [disabled]="loading() || blocked()">
+        @if (loading()) {
+          <app-spinner size="sm" />
+        }
+        {{ 'auth.signIn' | translate }}
+      </button>
+    </form>
+
+    <p class="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
+      {{ 'auth.noAccount' | translate }}
+      <a routerLink="/register" class="font-semibold text-brand-700 dark:text-brand-500 hover:underline">{{ 'auth.signUp' | translate }}</a>
+    </p>
+  </section>
+</main>
