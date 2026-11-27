@@ -34,18 +34,28 @@ public static class AppPermissions
         public const string Delete = "Salaries.Delete";
     }
 
+    public static class Expenses
+    {
+        public const string View = "Expenses.View";
+        public const string Create = "Expenses.Create";
+        public const string Update = "Expenses.Update";
+        public const string Delete = "Expenses.Delete";
+    }
+
     public static IReadOnlyList<string> All { get; } =
     [
         Profile.View, Profile.Update,
         Users.View, Users.Create, Users.Update, Users.Delete,
         Roles.View, Roles.Create, Roles.Update, Roles.Delete,
-        Salaries.View, Salaries.Create, Salaries.Update, Salaries.Delete
+        Salaries.View, Salaries.Create, Salaries.Update, Salaries.Delete,
+        Expenses.View, Expenses.Create, Expenses.Update, Expenses.Delete
     ];
 
     private static readonly IReadOnlyList<string> UserPermissions =
     [
         Profile.View, Profile.Update,
-        Salaries.View, Salaries.Create, Salaries.Update, Salaries.Delete
+        Salaries.View, Salaries.Create, Salaries.Update, Salaries.Delete,
+        Expenses.View, Expenses.Create, Expenses.Update, Expenses.Delete
     ];
 
     public static IReadOnlyDictionary<string, IReadOnlyList<string>> ByRole { get; } =

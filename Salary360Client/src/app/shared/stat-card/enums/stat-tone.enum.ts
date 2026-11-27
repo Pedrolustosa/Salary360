@@ -3,4 +3,5 @@ export enum StatTone {
   Emerald = 'emerald',
   Slate = 'slate',
   Violet = 'violet',
+  Rose = 'rose',
 }

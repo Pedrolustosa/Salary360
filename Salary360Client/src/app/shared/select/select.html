@@ -15,6 +15,9 @@
         @if (current.flagUrl) {
           <span class="select-flag" [style.background-image]="current.flagUrl"></span>
         }
+        @if (current.dotClass) {
+          <span class="h-2.5 w-2.5 shrink-0 rounded-full" [class]="current.dotClass"></span>
+        }
         <span class="truncate">{{ current.label }}</span>
       } @else {
         <span class="truncate text-slate-400 dark:text-slate-500">{{ placeholder() }}</span>
@@ -48,6 +51,9 @@
             >
               @if (option.flagUrl) {
                 <span class="select-flag" [style.background-image]="option.flagUrl"></span>
+              }
+              @if (option.dotClass) {
+                <span class="h-2.5 w-2.5 shrink-0 rounded-full" [class]="option.dotClass"></span>
               }
               <span class="flex-1 truncate" [class]="option.textClass ?? ''">{{ option.label }}</span>
             </button>

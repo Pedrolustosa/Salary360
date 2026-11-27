@@ -16,6 +16,10 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, IDomain
 
     public DbSet<SalaryItem> SalaryItems => Set<SalaryItem>();
 
+    public DbSet<ExpenseCategory> ExpenseCategories => Set<ExpenseCategory>();
+
+    public DbSet<Expense> Expenses => Set<Expense>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

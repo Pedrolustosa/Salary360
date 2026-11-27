@@ -26,4 +26,10 @@ export const STAT_TONES: Record<StatTone, StatToneClasses> = {
     bar: 'bg-violet-500',
     glow: 'from-violet-500/10',
   },
+  [StatTone.Rose]: {
+    icon: 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-200',
+    value: 'text-rose-700 dark:text-rose-300',
+    bar: 'bg-rose-500',
+    glow: 'from-rose-500/10',
+  },
 };

@@ -10,6 +10,7 @@ import { Icon } from '../shared/icon';
 const NAV_ITEMS: readonly NavItem[] = [
   { labelKey: 'nav.home', route: '/', icon: 'home', exact: true },
   { labelKey: 'nav.salaries', route: '/salaries', icon: 'banknotes', exact: false, permission: Permission.SalariesView },
+  { labelKey: 'nav.expenses', route: '/expenses', icon: 'receipt-percent', exact: false, permission: Permission.ExpensesView },
   { labelKey: 'nav.evolution', route: '/evolution', icon: 'chart-bar', exact: false, permission: Permission.SalariesView },
   {
     labelKey: 'nav.salaryIntelligence',

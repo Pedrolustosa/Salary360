@@ -1,0 +1,61 @@
+<app-modal
+  [open]="open()"
+  [title]="title()"
+  [dirty]="form.dirty"
+  [confirmClose]="confirmClose"
+  (cancelled)="cancel()"
+>
+  <form class="space-y-4" [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <div>
+      <label class="field-label" [class.required]="!isSystem()" for="categoryName">{{ 'expenseCategories.name' | translate }}</label>
+      <input id="categoryName" class="field" type="text" formControlName="name" [attr.maxlength]="MaxName" [placeholder]="'placeholders.categoryName' | translate" />
+      <app-field-error [control]="form.controls.name" />
+      @if (form.controls.name.touched && form.controls.name.hasError('required') && !form.controls.name.hasError('serverError')) {
+        <p class="field-error">{{ 'validation.required' | translate }}</p>
+      }
+    </div>
+
+    <div>
+      <p class="field-label required">{{ 'expenseCategories.color' | translate }}</p>
+      <app-color-swatch-picker formControlName="colorKey" [ariaLabel]="'expenseCategories.color' | translate" />
+      <app-field-error [control]="form.controls.colorKey" />
+    </div>
+
+    <div>
+      <p class="field-label required">{{ 'expenseCategories.icon' | translate }}</p>
+      <div class="grid grid-cols-5 gap-2">
+        @for (icon of icons; track icon) {
+          <button
+            type="button"
+            class="flex h-10 items-center justify-center rounded-xl border transition"
+            [class.border-brand-500]="form.controls.iconKey.value === icon"
+            [class.bg-brand-50]="form.controls.iconKey.value === icon"
+            [class.dark:bg-brand-900/40]="form.controls.iconKey.value === icon"
+            [class.border-slate-200]="form.controls.iconKey.value !== icon"
+            [class.dark:border-slate-700]="form.controls.iconKey.value !== icon"
+            [attr.aria-pressed]="form.controls.iconKey.value === icon"
+            [attr.aria-label]="icon"
+            (click)="selectIcon(icon)"
+          >
+            <app-icon [name]="iconName(icon)" />
+          </button>
+        }
+      </div>
+      <app-field-error [control]="form.controls.iconKey" />
+    </div>
+
+    <div class="flex justify-end gap-2 pt-2">
+      <button type="button" class="btn-secondary" (click)="cancel()">{{ 'common.cancel' | translate }}</button>
+      <button type="submit" class="btn-primary" [disabled]="saving()">{{ 'expenseCategories.save' | translate }}</button>
+    </div>
+  </form>
+</app-modal>
+
+<app-confirm-dialog
+  [open]="discardOpen()"
+  [title]="'expenses.unsavedTitle' | translate"
+  [message]="'expenses.unsavedMessage' | translate"
+  [confirmLabel]="'expenses.discard' | translate"
+  (confirmed)="discardConfirmed()"
+  (cancelled)="discardCancelled()"
+/>

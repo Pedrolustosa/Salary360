@@ -1,0 +1,126 @@
+<app-modal
+  [open]="open()"
+  [title]="title()"
+  [dirty]="form.dirty"
+  [confirmClose]="confirmClose"
+  maxWidthClass="max-w-xl"
+  (cancelled)="cancel()"
+>
+  @if (loading()) {
+    <p class="py-8 text-center text-sm text-slate-500">{{ 'common.loading' | translate }}</p>
+  } @else {
+    <form class="space-y-4" [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <div>
+        <label class="field-label required" for="expenseName">{{ 'expenses.name' | translate }}</label>
+        <input id="expenseName" class="field" type="text" formControlName="name" [attr.maxlength]="MaxName" [placeholder]="'placeholders.expenseName' | translate" />
+        <app-field-error [control]="form.controls.name" />
+        @if (form.controls.name.touched && form.controls.name.hasError('required') && !form.controls.name.hasError('serverError')) {
+          <p class="field-error">{{ 'validation.required' | translate }}</p>
+        }
+      </div>
+
+      <div>
+        <label class="field-label required" for="expenseCategory">{{ 'expenses.category' | translate }}</label>
+        <app-select
+          inputId="expenseCategory"
+          formControlName="categoryId"
+          [options]="categoryOptions()"
+          [placeholder]="'expenses.category' | translate"
+          [searchable]="true"
+        />
+        <app-field-error [control]="form.controls.categoryId" />
+      </div>
+
+      <div>
+        <p class="field-label required">{{ 'expenses.typeLabel' | translate }}</p>
+        <app-segmented-control formControlName="type" [options]="typeOptions" [ariaLabel]="'expenses.typeLabel' | translate" />
+        <app-field-error [control]="form.controls.type" />
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label class="field-label required" for="expenseAmount">{{ 'expenses.amount' | translate }}</label>
+          <app-money-input inputId="expenseAmount" formControlName="amount" [placeholder]="'placeholders.money' | translate" />
+          <app-field-error [control]="form.controls.amount" />
+          @if (form.controls.amount.touched && form.controls.amount.invalid && !form.controls.amount.hasError('serverError')) {
+            <p class="field-error">{{ 'errors.fields.must_be_positive' | translate }}</p>
+          }
+        </div>
+        <div>
+          <label class="field-label required" for="expenseCompetence">{{ 'expenses.competence' | translate }}</label>
+          <app-month-year-picker inputId="expenseCompetence" formControlName="competence" />
+          <app-field-error [control]="form.controls.competence" />
+        </div>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label class="field-label" for="expenseDueDay">{{ 'expenses.dueDay' | translate }}<span class="field-optional">{{ 'common.optional' | translate }}</span></label>
+          <app-select inputId="expenseDueDay" formControlName="dueDay" [options]="dueDayOptions()" [placeholder]="'expenses.noDueDay' | translate" />
+          <app-field-error [control]="form.controls.dueDay" />
+        </div>
+        <div class="flex items-end justify-between gap-3 pb-1">
+          <label class="field-label mb-0" for="expensePaid">{{ 'expenses.paid' | translate }}</label>
+          <app-toggle-switch inputId="expensePaid" formControlName="isPaid" [ariaLabel]="'expenses.paid' | translate" />
+        </div>
+      </div>
+
+      <div>
+        <label class="field-label" for="expenseNotes">{{ 'expenses.notes' | translate }}<span class="field-optional">{{ 'common.optional' | translate }}</span></label>
+        <textarea id="expenseNotes" class="field min-h-20" formControlName="notes" [attr.maxlength]="MaxNotes" [placeholder]="'placeholders.expenseNotes' | translate"></textarea>
+        <app-field-error [control]="form.controls.notes" />
+      </div>
+
+      @if (showRecurrence()) {
+        <div class="space-y-3 rounded-xl border border-slate-200 p-3 dark:border-slate-700">
+          <div class="flex items-center justify-between gap-3">
+            <label class="field-label mb-0" for="expenseRecurrence">{{ 'expenses.recurrence' | translate }}</label>
+            <app-toggle-switch inputId="expenseRecurrence" formControlName="recurrenceEnabled" [ariaLabel]="'expenses.recurrence' | translate" />
+          </div>
+          @if (form.controls.recurrenceEnabled.value) {
+            <div>
+              <label class="field-label" for="expenseRecurrenceCount">{{ 'expenses.recurrenceCount' | translate }}</label>
+              <app-select
+                inputId="expenseRecurrenceCount"
+                formControlName="recurrenceCount"
+                [options]="recurrenceCountOptions()"
+              />
+              <app-field-error [control]="form.controls.recurrenceCount" />
+              @if (recurrencePreview()) {
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ 'expenses.recurrencePreview' | translate: { range: recurrencePreview() } }}</p>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (showScope()) {
+        <div>
+          <p class="field-label">{{ 'expenses.editScope' | translate }}</p>
+          <app-segmented-control formControlName="scope" [options]="scopeOptions" [ariaLabel]="'expenses.editScope' | translate" />
+        </div>
+      }
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" class="btn-secondary" (click)="cancel()">{{ 'common.cancel' | translate }}</button>
+        <button type="submit" class="btn-primary" [disabled]="saving()">{{ 'expenses.save' | translate }}</button>
+      </div>
+    </form>
+  }
+</app-modal>
+
+<app-category-form-dialog
+  [open]="categoryDialogOpen()"
+  [category]="null"
+  (closed)="onCategoryDialogClosed()"
+  (saved)="onCategorySaved($event)"
+/>
+
+<app-confirm-dialog
+  [open]="discardOpen()"
+  [title]="'expenses.unsavedTitle' | translate"
+  [message]="'expenses.unsavedMessage' | translate"
+  [confirmLabel]="'expenses.discard' | translate"
+  (confirmed)="discardConfirmed()"
+  (cancelled)="discardCancelled()"
+/>

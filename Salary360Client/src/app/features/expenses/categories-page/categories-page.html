@@ -1,0 +1,115 @@
+<div class="space-y-4">
+  <section class="card flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-lg font-semibold">{{ 'expenseCategories.title' | translate }}</h1>
+      <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'expenseCategories.subtitle' | translate }}</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <a routerLink="/expenses" class="btn-secondary gap-2">
+        <app-icon name="arrow-left" />
+        {{ 'expenseCategories.back' | translate }}
+      </a>
+      @if (canCreate()) {
+        <button type="button" class="btn-primary gap-2" (click)="openCreate()">
+          <app-icon name="plus" />
+          {{ 'expenseCategories.new' | translate }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <section class="card">
+    @if (loading()) {
+      <app-skeleton [lines]="6" />
+    } @else if (error()) {
+      <div class="space-y-2 py-10 text-center">
+        <p class="text-sm text-slate-500">{{ 'expenseCategories.states.error' | translate }}</p>
+        <button type="button" class="btn-secondary text-xs" (click)="retry()">{{ 'expenseCategories.states.retry' | translate }}</button>
+      </div>
+    } @else if (items().length === 0) {
+      <div class="flex flex-col items-center gap-3 py-12 text-center">
+        <app-icon name="tag" class="text-slate-400" />
+        <p class="text-sm text-slate-500 dark:text-slate-400">{{ 'expenseCategories.empty' | translate }}</p>
+        @if (canCreate()) {
+          <button type="button" class="btn-primary gap-2" [disabled]="creatingDefaults()" (click)="createDefaults()">
+            <app-icon name="sparkles" />
+            {{ 'expenseCategories.createDefaults' | translate }}
+          </button>
+        }
+      </div>
+    } @else {
+      <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        @for (item of items(); track item.id) {
+          <article class="flex items-start justify-between gap-3 rounded-2xl border border-slate-200 p-4 dark:border-slate-700">
+            <div class="flex min-w-0 items-start gap-3">
+              <span class="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" [class]="categoryColorClasses(item.colorKey).bg + ' text-white'">
+                <app-icon [name]="categoryIconName(item.iconKey)" />
+              </span>
+              <div class="min-w-0">
+                <h2 class="truncate font-medium text-slate-800 dark:text-slate-100">{{ displayName(item) }}</h2>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  {{ 'expenseCategories.expenseCount' | translate: { count: item.expenseCount } }}
+                </p>
+              </div>
+            </div>
+            @if (canUpdate() || canDelete()) {
+              <div class="flex shrink-0 gap-1">
+                @if (canUpdate()) {
+                  <button type="button" class="btn-secondary px-2 py-1 text-xs" (click)="openEdit(item)">{{ 'expenseCategories.edit' | translate }}</button>
+                }
+                @if (canDelete()) {
+                  <button type="button" class="btn-secondary px-2 py-1 text-xs text-rose-600 dark:text-rose-400" [attr.aria-label]="'expenseCategories.delete' | translate" (click)="askDelete(item)">
+                    <app-icon name="trash" />
+                  </button>
+                }
+              </div>
+            }
+          </article>
+        }
+      </div>
+    }
+  </section>
+</div>
+
+<app-category-form-dialog
+  [open]="formOpen()"
+  [category]="editing()"
+  (closed)="closeForm()"
+  (saved)="onSaved()"
+/>
+
+<app-confirm-dialog
+  [open]="confirmOpen()"
+  [title]="'expenseCategories.deleteTitle' | translate"
+  [message]="'expenseCategories.deleteMessage' | translate"
+  [confirmLabel]="'expenseCategories.delete' | translate"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()"
+/>
+
+<app-modal
+  [open]="reassignOpen()"
+  [title]="'expenseCategories.reassignTitle' | translate"
+  maxWidthClass="max-w-sm"
+  (cancelled)="cancelDelete()"
+>
+  <div class="space-y-4">
+    <p class="text-sm text-slate-600 dark:text-slate-300">{{ 'expenseCategories.reassignMessage' | translate }}</p>
+    <div>
+      <label class="field-label required" for="reassignTo">{{ 'expenseCategories.reassignTo' | translate }}</label>
+      <app-select
+        inputId="reassignTo"
+        [options]="reassignOptions()"
+        [ngModel]="reassignTo()"
+        (ngModelChange)="reassignTo.set($event)"
+        [placeholder]="'expenseCategories.reassignTo' | translate"
+      />
+    </div>
+    <div class="flex justify-end gap-2">
+      <button type="button" class="btn-secondary" (click)="cancelDelete()">{{ 'common.cancel' | translate }}</button>
+      <button type="button" class="btn-primary bg-rose-600 hover:bg-rose-700" [disabled]="!reassignTo()" (click)="confirmDelete()">
+        {{ 'expenseCategories.delete' | translate }}
+      </button>
+    </div>
+  </div>
+</app-modal>

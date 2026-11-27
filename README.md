@@ -1,7 +1,7 @@
 # Salary360 – Full-Stack Project Skeleton
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-v0.1.0-blue?style=for-the-badge" alt="Version v0.1.0" />
+  <img src="https://img.shields.io/badge/version-v0.2.0-blue?style=for-the-badge" alt="Version v0.2.0" />
   <img src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET" />
   <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="C%23" />
   <img src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular" />
@@ -25,14 +25,14 @@
 
 ## Purpose of this repository
 
-This repository is **Salary360**, a full-stack application built with **.NET 10** and **Angular 22** to organize monthly salaries (gross → benefits/deductions → net) and show evolution charts by month and year.
+This repository is **Salary360**, a full-stack application built with **.NET 10** and **Angular 22** to organize monthly salaries (gross → benefits/deductions → net), show evolution and salary intelligence, and track **categories and monthly expenses** against the net of the same competence.
 
 It still ships the shared platform pieces useful as a template:
 
 - a clean, layered backend architecture;
 - a complete **authentication** flow (sign-up with e-mail confirmation, resend of the confirmation link, login with JWT Bearer, roles);
 - an Angular client with an application **shell (sidebar + navbar)**, a **real-time notification bell** (SignalR), Heroicons, the standard libraries already configured, **light/dark theme** and full **internationalization** (pt-BR, en-US, es-ES);
-- the **Salaries** domain (CRUD + evolution charts);
+- the **Salaries** domain (CRUD + evolution charts) and **Expenses** domain (categories, fixed/variable expenses with recurrence, month summary vs net);
 - **automated tests** for the backend (xUnit unit and integration tests) and the frontend (Vitest);
 - **secrets kept out of the repository** with `dotnet user-secrets` and setup scripts.
 
@@ -61,9 +61,9 @@ Salary360/
 │   └── src/app/
 │       ├── core/                    auth, API helpers, interceptors, language and theme services (each with interfaces/, enums/, constants/)
 │       ├── layout/                  shell, sidebar, navbar, notification bell
-│       ├── features/                login, register, check-email, confirm-email,
-│       │                            resend-confirmation, home, admin
-│       └── shared/                  icon (Heroicons), toolbar, language switcher, theme toggle, doughnut chart
+│       ├── features/                auth, home, admin, profile, salaries, evolution,
+│       │                            salary-intelligence, expenses
+│       └── shared/                  icon (Heroicons), charts, form controls, modal, theme toggle
 └── Salary360Server/
     ├── src/
     │   ├── Salary360.API/           controllers, JWT setup, CORS, rate limiting, exception handler
@@ -108,6 +108,7 @@ After identity seed, Development can load idempotent fictional sample data so ev
 | Admin / User accounts | Yes (`IdentitySeeder`) | Requires configured passwords |
 | User addresses | Yes (with identity users) | From `Seed:*:Address` |
 | Salaries (`SalaryRecord` / `SalaryItem`) | Yes (`SalarySampleDataSeeder`) | Only when sample data is enabled |
+| Expenses (`ExpenseCategory` / `Expense`) | Yes (`ExpensesSampleDataSeeder`) | Default categories; fixed series (rent/streaming); variables; paid mix; over-net month; gap month without salary; max amount + max notes; education series; smaller admin set; never future competences |
 | Salary intelligence | Computed | Fed by salary sample data; IPCA comes from IBGE at runtime |
 | Notifications | No | Ephemeral SignalR messages |
 
@@ -199,8 +200,9 @@ Permissions follow the `Resource.Action` format and live in `AppPermissions` (Ap
 | Users | View, Create, Update, Delete | ✔ | ✘ |
 | Roles | View, Create, Update, Delete | ✔ | ✘ |
 | Salaries | View, Create, Update, Delete | ✔ | ✔ |
+| Expenses | View, Create, Update, Delete | ✔ | ✔ |
 
-At login the API returns `roles` and `permissions`, and the JWT carries one `permission` claim for each. Controllers use `[Authorize(Policy = AppPermissions.Users.View)]`; the Angular app uses `permissionGuard` and `AuthService.hasPermission(...)`. The admin screen (`/admin`) shows the roles/permissions matrix, editable only by users with `Roles.Update` (the `Admin` role is locked; changes apply at the next login). **The seed applies role permissions only when a role is first created.** After pulling new permissions (for example `Salaries.*`), delete `salary360.db` so roles are recreated, or grant them on the admin permissions screen and sign in again. The Dashboard (`/`, full-width) holds the summary cards (total, active, inactive, administrators), the user list and a sample chart (`Users.View` for the user parts). The app uses a custom thin scrollbar in both themes. To add a resource, add its constants and the role mapping in `AppPermissions`, then protect your endpoints with the matching policy.
+At login the API returns `roles` and `permissions`, and the JWT carries one `permission` claim for each. Controllers use `[Authorize(Policy = AppPermissions.Users.View)]`; the Angular app uses `permissionGuard` and `AuthService.hasPermission(...)`. The admin screen (`/admin`) shows the roles/permissions matrix, editable only by users with `Roles.Update` (the `Admin` role is locked; changes apply at the next login). **The seed applies role permissions only when a role is first created.** After pulling new permissions (for example `Expenses.*`), delete `salary360.db` so roles are recreated, or grant them on the admin permissions screen and sign in again. The Dashboard (`/`, full-width) holds the summary cards (total, active, inactive, administrators), the user list and a sample chart (`Users.View` for the user parts). The app uses a custom thin scrollbar in both themes. To add a resource, add its constants and the role mapping in `AppPermissions`, then protect your endpoints with the matching policy.
 
 ## User experience features
 
@@ -211,13 +213,15 @@ At login the API returns `roles` and `permissions`, and the JWT carries one `per
 - **Salaries:** `/salaries` lists monthly records; `/salaries/new` and `/salaries/:id` create or edit gross amount, optional notes and up to 50 benefit/deduction items; live net summary uses banker's rounding to 2 decimals (same as the API). Net may be negative (UI warns; API accepts). Unique competence per user (`UserId` + year + month); duplicate create returns `409`.
 - **Evolution:** `/evolution` charts net and gross over time (`mode=month` for the same month across years, `mode=year` for yearly aggregates). Years without data are chart gaps (`null`, not zero). Stat cards show max net, min net and percent change between the first and last point with data.
 - **Salary intelligence:** `/salary-intelligence` turns the authenticated user's `SalaryRecord` history into indicators, IPCA purchasing-power comparison, deterministic insights and OLS projection estimates. Five independent API sections load in parallel (summary, series, purchasing power, insights, projection) with skeleton / error / empty / insufficient-data states. Filters use competence range (`yyyy-MM`) and basis (`Net` default or `Gross`). Nothing is persisted: the API recalculates on every request; the client reloads after salary create/update/delete via `SalaryService.changed$`.
-- **Masks and limits:** postal codes are masked per selected country (e.g. `00000-000` for BR, `00000-0000` for US, `A0A 0A0` for CA) and validated for completeness; the phone mask and the maximum number of digits follow the selected country.
+- **Expenses:** `/expenses` manages the competence month (prev/next + month-year picker): summary cards (net, total expenses, committed %, available — available turns red when negative), doughnut by category, stacked fixed×variable bars (last 12 months from `/api/expenses/series`), filters, and a compact scrollable list. Without a salary for the competence, net/available show "—" with a link to create one. `/expenses/categories` manages personal and system categories (`SystemKey`: housing, food, transport, health, education, leisure, subscriptions, taxes, debts, other); empty state can call `POST /api/expense-categories/defaults`. Expenses support unique or monthly recurrence (`SeriesId`); updates/deletes take `scope=This|ThisAndFollowing|All` (competence changes only with `This`). `POST /api/expenses/copy` copies from another month (optional fixed-only), skipping same name+category. Month summary (`GET /api/expenses/summary`) uses the existing `SalaryRecord.NetAmount` for the same year/month — it does not recalculate net with another rule. Max 100 categories/user, 200 expenses/user/month; future competence up to 60 months ahead.
+- **Masks and limits:**
+ postal codes are masked per selected country (e.g. `00000-000` for BR, `00000-0000` for US, `A0A 0A0` for CA) and validated for completeness; the phone mask and the maximum number of digits follow the selected country.
 - **International phone input:** a country selector (flag, name, dialing code, searchable) applies the correct mask per country with `libphonenumber-js`; the value is stored in E.164 (e.g. `+5581999990001`). Flags come from `flag-icons` (4x3 SVGs copied as assets).
 - **Error pages:** `/error/403`, `/error/404`, `/error/500` (and a generic one). Unknown routes go to 404, missing permission to 403, and server failures to 500.
 - **Loading:** `app-spinner` is used in a global route-loading overlay, inside submit buttons, in pages that fetch data, and in the `index.html` boot screen.
 - **Birthday:** on the user's birthday, a confetti and cake animation is shown once per day and a cake icon stays in the navbar (click it to replay). To try it, set your date of birth to today on the profile screen.
 
-> **Database note:** the schema is created with `EnsureCreated`, which does not alter an existing SQLite file. After pulling model changes (new tables such as `SalaryRecords` / `SalaryItems`, role claims), delete the development database file `salary360.db` (or add EF Core migrations) so it is recreated.
+> **Database note:** the schema is applied with EF Core migrations (`DatabaseInitializer` → `MigrateAsync`). After pulling new migrations (for example `AddExpensesAndCategories`), restart the API so they apply. For new **role permissions** on an existing database, delete `salary360.db` so roles are recreated, or grant them on the admin screen.
 
 ## Running the tests
 

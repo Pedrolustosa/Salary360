@@ -1,4 +1,5 @@
 using FluentValidation;
+using Salary360.Application.Expenses.Interfaces;
 using Salary360.Application.Interfaces.Identity;
 using Salary360.Application.Interfaces.Messaging;
 
@@ -27,13 +28,15 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
     }
 }
 
-public sealed class RegisterCommandHandler(IIdentityService identityService)
+public sealed class RegisterCommandHandler(
+    IIdentityService identityService,
+    IDefaultExpenseCategoryService defaultExpenseCategories)
     : ICommandHandler<RegisterCommand, UserProfileDto>
 {
-    public Task<UserProfileDto> HandleAsync(RegisterCommand request, CancellationToken cancellationToken = default)
+    public async Task<UserProfileDto> HandleAsync(RegisterCommand request, CancellationToken cancellationToken = default)
     {
         var acceptedAt = DateTimeOffset.UtcNow;
-        return identityService.RegisterAsync(
+        var profile = await identityService.RegisterAsync(
             request.Email,
             request.Password,
             request.DisplayName,
@@ -42,5 +45,8 @@ public sealed class RegisterCommandHandler(IIdentityService identityService)
             acceptedAt,
             acceptedAt,
             cancellationToken);
+
+        await defaultExpenseCategories.EnsureDefaultsAsync(profile.UserId, cancellationToken);
+        return profile;
     }
 }

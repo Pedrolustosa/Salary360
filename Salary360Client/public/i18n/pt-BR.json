@@ -11,7 +11,8 @@
     "profile": "Perfil",
     "salaries": "Salários",
     "evolution": "Evolução",
-    "salaryIntelligence": "Inteligência salarial"
+    "salaryIntelligence": "Inteligência salarial",
+    "expenses": "Despesas"
   },
   "auth": {
     "loginSubtitle": "Cada salário com um propósito.",
@@ -60,7 +61,15 @@
     "infoTitle": "Aviso",
     "salaryCreated": "Salário salvo com sucesso.",
     "salaryUpdated": "Salário atualizado com sucesso.",
-    "salaryDeleted": "Salário excluído com sucesso."
+    "salaryDeleted": "Salário excluído com sucesso.",
+    "expenseCreated": "Despesa salva com sucesso.",
+    "expenseUpdated": "Despesa atualizada com sucesso.",
+    "expenseDeleted": "Despesa excluída com sucesso.",
+    "expensesCopied": "{{created}} despesas copiadas ({{skipped}} ignoradas).",
+    "categoryCreated": "Categoria criada com sucesso.",
+    "categoryUpdated": "Categoria atualizada com sucesso.",
+    "categoryDeleted": "Categoria excluída com sucesso.",
+    "defaultsCreated": "{{created}} categorias padrão criadas."
   },
   "errors": {
     "network": "Não foi possível conectar ao servidor.",
@@ -94,7 +103,12 @@
       "cannot_deactivate_self": "Você não pode desativar a própria conta.",
       "address_incomplete": "Preencha o endereço completo.",
       "business_rule_violation": "A operação não é permitida.",
-      "identity_failed": "Não foi possível concluir a operação."
+      "identity_failed": "Não foi possível concluir a operação.",
+      "duplicate_category_name": "Já existe uma categoria com este nome.",
+      "category_in_use": "A categoria está em uso e precisa ser reatribuída.",
+      "category_not_found": "Categoria não encontrada.",
+      "too_many_categories": "Limite de categorias atingido.",
+      "too_many_expenses_in_month": "Limite de despesas no mês atingido."
     },
     "fields": {
       "required": "Campo obrigatório.",
@@ -117,7 +131,13 @@
       "invalid_period": "Informe um período válido (de/até).",
       "period_too_long": "O período máximo é de 120 meses.",
       "invalid_basis": "Base salarial inválida.",
-      "invalid_horizon": "Horizonte de projeção inválido."
+      "invalid_horizon": "Horizonte de projeção inválido.",
+      "future_competence_limit": "A competência futura excede o limite permitido.",
+      "invalid_due_day": "Dia de vencimento inválido.",
+      "invalid_recurrence_count": "Quantidade de recorrência inválida.",
+      "invalid_scope": "Escopo inválido.",
+      "invalid_color": "Cor inválida.",
+      "invalid_icon": "Ícone inválido."
     }
   },
   "home": {
@@ -374,7 +394,8 @@
       "Profile": "Perfil",
       "Users": "Usuários",
       "Roles": "Perfis de acesso",
-      "Salaries": "Salários"
+      "Salaries": "Salários",
+      "Expenses": "Despesas"
     },
     "actions": {
       "View": "Visualizar",
@@ -447,7 +468,10 @@
     "country": "Selecione o país",
     "money": "R$ 0,00",
     "notes": "Ex.: Dissídio, 13º",
-    "itemName": "Ex.: Vale-refeição"
+    "itemName": "Ex.: Vale-refeição",
+    "categoryName": "Ex.: Academia",
+    "expenseName": "Ex.: Aluguel",
+    "expenseNotes": "Ex.: Débito automático"
   },
   "date": {
     "placeholderDmy": "dd/mm/aaaa",
@@ -455,5 +479,115 @@
     "open": "Abrir calendário",
     "previous": "Anterior",
     "next": "Próximo"
+  },
+  "expenses": {
+    "title": "Despesas",
+    "subtitle": "Acompanhe o comprometimento do líquido por competência.",
+    "new": "Nova despesa",
+    "copyPrevious": "Copiar do mês anterior",
+    "categories": "Categorias",
+    "previousMonth": "Mês anterior",
+    "nextMonth": "Próximo mês",
+    "noSalaryWarning": "Não há salário lançado para este mês.",
+    "addSalary": "Lançar salário",
+    "byCategory": "Por categoria",
+    "byCategoryChart": "Gráfico de despesas por categoria",
+    "last12Months": "Últimos 12 meses",
+    "seriesChart": "Gráfico de despesas dos últimos 12 meses",
+    "listTitle": "Lançamentos",
+    "empty": "Nenhuma despesa neste mês.",
+    "name": "Nome",
+    "category": "Categoria",
+    "typeLabel": "Tipo",
+    "amount": "Valor",
+    "competence": "Competência",
+    "dueDay": "Dia de vencimento",
+    "noDueDay": "Sem dia",
+    "paid": "Paga",
+    "notes": "Observações",
+    "recurrence": "Repetir mensalmente",
+    "recurrenceCount": "Quantidade de meses",
+    "recurrencePreview": "Período: {{range}}",
+    "editScope": "Aplicar alteração",
+    "createCategoryOption": "Criar nova categoria…",
+    "createTitle": "Nova despesa",
+    "editTitle": "Editar despesa",
+    "save": "Salvar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "deleteTitle": "Excluir despesa",
+    "deleteMessage": "Tem certeza de que deseja excluir esta despesa?",
+    "deleteScopeTitle": "Excluir série",
+    "deleteScopeMessage": "Esta despesa faz parte de uma série. Escolha o escopo da exclusão.",
+    "continue": "Continuar",
+    "unsavedTitle": "Alterações não salvas",
+    "unsavedMessage": "Há alterações não salvas. Deseja descartá-las?",
+    "discard": "Descartar",
+    "allCategories": "Todas as categorias",
+    "allTypes": "Todos os tipos",
+    "allPaidStatus": "Todas",
+    "paidOnly": "Pagas",
+    "unpaidOnly": "Em aberto",
+    "pageOf": "Página {{page}} de {{total}}",
+    "previous": "Anterior",
+    "next": "Próxima",
+    "stats": {
+      "net": "Líquido",
+      "total": "Total de despesas",
+      "committed": "Comprometido",
+      "available": "Disponível"
+    },
+    "type": {
+      "Fixed": "Fixa",
+      "Variable": "Variável"
+    },
+    "scope": {
+      "This": "Somente esta",
+      "ThisAndFollowing": "Esta e seguintes",
+      "All": "Toda a série"
+    },
+    "states": {
+      "error": "Não foi possível carregar estes dados.",
+      "retry": "Tentar novamente",
+      "emptyChart": "Sem dados para o gráfico."
+    },
+    "systemCategories": {
+      "housing": "Moradia",
+      "food": "Alimentação",
+      "transport": "Transporte",
+      "health": "Saúde",
+      "education": "Educação",
+      "leisure": "Lazer",
+      "subscriptions": "Assinaturas",
+      "taxes": "Impostos",
+      "debts": "Dívidas",
+      "other": "Outros"
+    }
+  },
+  "expenseCategories": {
+    "title": "Categorias de despesa",
+    "subtitle": "Organize suas despesas com cores e ícones.",
+    "back": "Voltar",
+    "new": "Nova categoria",
+    "empty": "Nenhuma categoria cadastrada.",
+    "createDefaults": "Criar categorias padrão",
+    "name": "Nome",
+    "color": "Cor",
+    "icon": "Ícone",
+    "save": "Salvar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "createTitle": "Nova categoria",
+    "editTitle": "Editar categoria",
+    "expenseCount": "{{count}} despesas",
+    "deleteTitle": "Excluir categoria",
+    "deleteMessage": "Tem certeza de que deseja excluir esta categoria?",
+    "reassignTitle": "Reatribuir despesas",
+    "reassignMessage": "Esta categoria possui despesas. Escolha para onde movê-las.",
+    "reassignTo": "Nova categoria",
+    "states": {
+      "error": "Não foi possível carregar as categorias.",
+      "retry": "Tentar novamente"
+    }
   }
 }
