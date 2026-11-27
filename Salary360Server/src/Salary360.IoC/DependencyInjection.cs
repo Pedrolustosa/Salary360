@@ -9,6 +9,7 @@ using Salary360.Application.Common;
 using Salary360.Application.Interfaces.Email;
 using Salary360.Application.Interfaces.Identity;
 using Salary360.Application.Interfaces.Messaging;
+using Salary360.Application.Interfaces.Persistence;
 using Salary360.Application.Settings;
 using Salary360.Domain.Interfaces;
 using Salary360.Infrastructure.Email;
@@ -95,6 +96,7 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<AppDbContext>());
+        services.AddScoped<ISalaryRecordRepository, SalaryRecordRepository>();
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
         services.AddIdentityCore<ApplicationUser>(options =>

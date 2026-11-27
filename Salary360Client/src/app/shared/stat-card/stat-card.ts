@@ -13,7 +13,7 @@ import { StatTone } from './enums/stat-tone.enum';
 })
 export class StatCard {
   readonly label = input.required<string>();
-  readonly value = input.required<number>();
+  readonly value = input.required<string | number>();
   readonly icon = input.required<IconName>();
   readonly tone = input(StatTone.Brand);
   readonly percent = input<number | null>(null);

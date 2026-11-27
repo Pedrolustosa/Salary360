@@ -1,0 +1,135 @@
+@if (loading()) {
+  <div class="flex justify-center py-16 text-brand-600 dark:text-brand-500">
+    <app-spinner size="lg" [label]="'common.loading' | translate" />
+  </div>
+} @else {
+  <form class="card space-y-5" [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <div>
+        <h1 class="text-lg font-semibold">{{ (editId() ? 'salaries.editTitle' : 'salaries.createTitle') | translate }}</h1>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'salaries.formHint' | translate }}</p>
+      </div>
+      <a routerLink="/salaries" class="btn-secondary gap-2">
+        <app-icon name="arrow-left" />
+        {{ 'salaries.back' | translate }}
+      </a>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-3">
+      <div>
+        <label class="field-label required" for="competence">{{ 'salaries.competence' | translate }}</label>
+        <app-month-year-picker inputId="competence" formControlName="competence" />
+        <app-field-error [control]="form.controls.competence" />
+        @if (form.controls.competence.touched && form.controls.competence.invalid && !form.controls.competence.hasError('serverError')) {
+          <p class="field-error">{{ 'validation.required' | translate }}</p>
+        }
+      </div>
+      <div>
+        <label class="field-label required" for="grossAmount">{{ 'salaries.gross' | translate }}</label>
+        <app-money-input inputId="grossAmount" formControlName="grossAmount" [placeholder]="'placeholders.money' | translate" />
+        <app-field-error [control]="form.controls.grossAmount" />
+        @if (form.controls.grossAmount.touched && form.controls.grossAmount.invalid && !form.controls.grossAmount.hasError('serverError')) {
+          <p class="field-error">{{ 'errors.fields.must_be_positive' | translate }}</p>
+        }
+      </div>
+      <div>
+        <label class="field-label" for="notes">{{ 'salaries.notes' | translate }}<span class="field-optional">{{ 'common.optional' | translate }}</span></label>
+        <input id="notes" class="field" type="text" formControlName="notes" [attr.maxlength]="MaxNotes" [placeholder]="'placeholders.notes' | translate" />
+        <app-field-error [control]="form.controls.notes" />
+      </div>
+    </div>
+
+    <div>
+      <div class="mb-2 flex items-center justify-between gap-2">
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'salaries.items' | translate }}</h2>
+        <button type="button" class="btn-secondary gap-1 px-2 py-1" [disabled]="items.length >= MaxItems" [attr.aria-label]="'salaries.addItem' | translate" (click)="addItem()">
+          <app-icon name="plus" />
+        </button>
+      </div>
+
+      <div class="max-h-64 overflow-y-auto rounded-xl border border-slate-200 dark:border-slate-700" formArrayName="items">
+        <div class="sticky top-0 grid grid-cols-[minmax(0,1.4fr)_minmax(8rem,9rem)_8rem_2.5rem] gap-2 border-b border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium uppercase tracking-wide text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">
+          <span>{{ 'salaries.itemName' | translate }}</span>
+          <span>{{ 'salaries.itemTypeLabel' | translate }}</span>
+          <span>{{ 'salaries.itemAmount' | translate }}</span>
+          <span></span>
+        </div>
+
+        @for (group of items.controls; track $index; let index = $index) {
+          <div class="grid grid-cols-[minmax(0,1.4fr)_minmax(8rem,9rem)_8rem_2.5rem] items-start gap-2 border-b border-slate-100 px-3 py-2 last:border-b-0 dark:border-slate-800" [formGroupName]="index">
+            <div>
+              <input
+                #itemName
+                class="field"
+                type="text"
+                formControlName="name"
+                [attr.maxlength]="MaxName"
+                [placeholder]="'placeholders.itemName' | translate"
+                [attr.aria-label]="'salaries.itemName' | translate"
+              />
+              <app-field-error [control]="itemGroup(index).get('name')" />
+            </div>
+            <div>
+              <app-select
+                [inputId]="'itemType' + index"
+                [options]="typeOptions()"
+                formControlName="type"
+                [placeholder]="'salaries.itemTypeLabel' | translate"
+              />
+              <app-field-error [control]="itemGroup(index).get('type')" />
+            </div>
+            <div>
+              <app-money-input [inputId]="'itemAmount' + index" formControlName="amount" [placeholder]="'placeholders.money' | translate" />
+              <app-field-error [control]="itemGroup(index).get('amount')" />
+            </div>
+            <button type="button" class="btn-secondary mt-0.5 px-2 py-2 text-rose-600 dark:text-rose-400" [attr.aria-label]="'salaries.removeItem' | translate" (click)="removeItem(index)">
+              <app-icon name="trash" />
+            </button>
+          </div>
+        }
+      </div>
+      <app-field-error [control]="form.controls.items" />
+    </div>
+
+    <div class="grid gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-4 dark:border-slate-700 dark:bg-slate-800/60">
+      <div>
+        <p class="text-xs uppercase tracking-wide text-slate-500">{{ 'salaries.gross' | translate }}</p>
+        <p class="mt-1 text-base font-semibold tabular-nums">{{ money(summary().gross) }}</p>
+      </div>
+      <div>
+        <p class="text-xs uppercase tracking-wide text-slate-500">{{ 'salaries.benefits' | translate }}</p>
+        <p class="mt-1 text-base font-semibold tabular-nums text-emerald-600 dark:text-emerald-400">+ {{ money(summary().benefits) }}</p>
+      </div>
+      <div>
+        <p class="text-xs uppercase tracking-wide text-slate-500">{{ 'salaries.deductions' | translate }}</p>
+        <p class="mt-1 text-base font-semibold tabular-nums text-rose-600 dark:text-rose-400">− {{ money(summary().deductions) }}</p>
+      </div>
+      <div>
+        <p class="text-xs uppercase tracking-wide text-slate-500">{{ 'salaries.net' | translate }}</p>
+        <p class="mt-1 text-lg font-bold tabular-nums" [class.text-rose-600]="summary().net < 0" [class.dark:text-rose-400]="summary().net < 0">{{ money(summary().net) }}</p>
+        @if (summary().net < 0) {
+          <p class="mt-1 text-xs text-rose-600 dark:text-rose-400">{{ 'salaries.negativeNet' | translate }}</p>
+        }
+      </div>
+    </div>
+
+    <div class="flex flex-wrap justify-end gap-2">
+      <button type="button" class="btn-secondary" (click)="cancel()">{{ 'common.cancel' | translate }}</button>
+      <button type="submit" class="btn-primary gap-2" [disabled]="saving()">
+        @if (saving()) {
+          <app-spinner size="sm" />
+        }
+        {{ 'salaries.save' | translate }}
+      </button>
+    </div>
+  </form>
+}
+
+<app-confirm-dialog
+  [open]="conflictOpen()"
+  [title]="'salaries.conflictTitle' | translate"
+  [message]="'salaries.conflictMessage' | translate"
+  [confirmLabel]="(conflictId() ? 'salaries.openExisting' : 'common.cancel') | translate"
+  (confirmed)="conflictId() ? openConflict() : dismissConflict()"
+  (cancelled)="dismissConflict()"
+/>

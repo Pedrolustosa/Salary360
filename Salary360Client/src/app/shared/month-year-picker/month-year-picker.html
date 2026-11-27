@@ -1,0 +1,60 @@
+<div class="relative">
+  <div class="field flex items-center p-0!" [attr.aria-disabled]="disabled()">
+    <input
+      class="min-w-0 flex-1 cursor-pointer bg-transparent px-3 py-2 text-sm outline-none disabled:cursor-not-allowed"
+      type="text"
+      readonly
+      autocomplete="off"
+      [id]="inputId()"
+      [value]="text()"
+      [placeholder]="'monthYear.placeholder' | translate"
+      [disabled]="disabled()"
+      (click)="toggle()"
+      (blur)="markTouched()"
+    />
+    <button
+      type="button"
+      class="flex h-full shrink-0 items-center border-l border-slate-300 px-3 py-2 text-slate-500 hover:text-brand-600 disabled:cursor-not-allowed dark:border-slate-600 dark:text-slate-400"
+      [disabled]="disabled()"
+      [attr.aria-label]="'monthYear.open' | translate"
+      aria-haspopup="dialog"
+      [attr.aria-expanded]="open()"
+      (click)="toggle()"
+    >
+      <app-icon name="calendar-days" />
+    </button>
+  </div>
+
+  @if (open()) {
+    <div
+      class="absolute left-0 top-full z-40 mt-1 w-72 rounded-xl border border-slate-200 bg-white p-3 shadow-lg dark:border-slate-700 dark:bg-slate-900"
+      role="dialog"
+      [attr.aria-label]="'monthYear.open' | translate"
+    >
+      <div class="mb-2 flex items-center justify-between gap-1">
+        <button type="button" class="cal-nav" [attr.aria-label]="'monthYear.previousYear' | translate" (click)="previousYear()">
+          <app-icon name="arrow-left" />
+        </button>
+        <span class="px-2 py-1 text-sm font-semibold">{{ viewYear() }}</span>
+        <button type="button" class="cal-nav" [attr.aria-label]="'monthYear.nextYear' | translate" (click)="nextYear()">
+          <app-icon name="arrow-right" />
+        </button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-1" role="listbox">
+        @for (name of shortMonthNames(); track $index) {
+          <button
+            type="button"
+            role="option"
+            class="cal-cell capitalize"
+            [class.cal-day-selected]="isSelected($index + 1)"
+            [disabled]="!monthAllowed($index + 1)"
+            [attr.aria-selected]="isSelected($index + 1)"
+            [attr.aria-label]="monthNames()[$index]"
+            (click)="pick($index + 1)"
+          >{{ name }}</button>
+        }
+      </div>
+    </div>
+  }
+</div>

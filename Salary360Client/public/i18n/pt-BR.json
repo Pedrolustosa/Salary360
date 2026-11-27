@@ -8,7 +8,9 @@
     "expand": "Expandir menu lateral",
     "collapse": "Recolher menu lateral",
     "toggleMenu": "Alternar menu lateral",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "salaries": "Salários",
+    "evolution": "Evolução"
   },
   "auth": {
     "loginSubtitle": "Cada salário com um propósito.",
@@ -54,7 +56,10 @@
     "errorTitle": "Ops!",
     "confirmationSent": "Se o e-mail estiver pendente de confirmação, um novo link foi enviado.",
     "warningTitle": "Atenção",
-    "infoTitle": "Aviso"
+    "infoTitle": "Aviso",
+    "salaryCreated": "Salário salvo com sucesso.",
+    "salaryUpdated": "Salário atualizado com sucesso.",
+    "salaryDeleted": "Salário excluído com sucesso."
   },
   "errors": {
     "network": "Não foi possível conectar ao servidor.",
@@ -101,7 +106,13 @@
       "invalid": "Valor inválido.",
       "password_lowercase": "Use ao menos uma letra minúscula.",
       "password_uppercase": "Use ao menos uma letra maiúscula.",
-      "password_digit": "Use ao menos um número."
+      "password_digit": "Use ao menos um número.",
+      "must_be_positive": "Informe um valor maior que zero.",
+      "invalid_month": "Mês inválido.",
+      "invalid_year": "Ano inválido.",
+      "future_competence": "A competência não pode ser futura.",
+      "too_many_items": "Máximo de 50 itens por salário.",
+      "duplicate_item_name": "Já existe um item com este nome."
     }
   },
   "home": {
@@ -180,7 +191,70 @@
   },
   "common": {
     "loading": "Carregando...",
-    "optional": "(opcional)"
+    "optional": "(opcional)",
+    "cancel": "Cancelar"
+  },
+  "salaries": {
+    "title": "Salários",
+    "subtitle": "Acompanhe o bruto, benefícios, descontos e líquido por competência.",
+    "new": "Novo salário",
+    "empty": "Nenhum salário lançado ainda.",
+    "emptyCta": "Lançar primeiro salário",
+    "competence": "Competência",
+    "gross": "Bruto",
+    "benefits": "Benefícios",
+    "deductions": "Descontos",
+    "net": "Líquido",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "deleteTitle": "Excluir salário",
+    "deleteMessage": "Tem certeza de que deseja excluir este lançamento? Esta ação não pode ser desfeita.",
+    "allYears": "Todos os anos",
+    "pageOf": "Página {{page}} de {{total}}",
+    "previous": "Anterior",
+    "next": "Próxima",
+    "createTitle": "Novo salário",
+    "editTitle": "Editar salário",
+    "formHint": "Informe o bruto e os itens para calcular o líquido.",
+    "back": "Voltar",
+    "notes": "Observações",
+    "items": "Itens",
+    "itemName": "Nome",
+    "itemTypeLabel": "Tipo",
+    "itemAmount": "Valor",
+    "addItem": "Adicionar item",
+    "removeItem": "Remover item",
+    "save": "Salvar",
+    "negativeNet": "O líquido ficou negativo.",
+    "unsavedChanges": "Há alterações não salvas. Deseja sair mesmo assim?",
+    "conflictTitle": "Competência já existe",
+    "conflictMessage": "Já existe um salário para este mês. Deseja abrir o lançamento existente?",
+    "openExisting": "Abrir existente",
+    "itemType": {
+      "Benefit": "Benefício",
+      "Deduction": "Desconto"
+    }
+  },
+  "evolution": {
+    "title": "Evolução salarial",
+    "subtitle": "Compare o mesmo mês ao longo dos anos ou veja o consolidado anual.",
+    "mode": "Modo de evolução",
+    "modeMonth": "Mesmo mês",
+    "modeYear": "Anos",
+    "month": "Mês",
+    "fromYear": "De",
+    "toYear": "Até",
+    "empty": "Nenhum lançamento neste período.",
+    "chartLabel": "Gráfico de evolução salarial",
+    "maxNet": "Maior líquido",
+    "minNet": "Menor líquido",
+    "variation": "Variação"
+  },
+  "monthYear": {
+    "placeholder": "Selecione o mês/ano",
+    "open": "Abrir seletor de competência",
+    "previousYear": "Ano anterior",
+    "nextYear": "Próximo ano"
   },
   "profile": {
     "title": "Meu perfil",
@@ -209,7 +283,8 @@
     "resources": {
       "Profile": "Perfil",
       "Users": "Usuários",
-      "Roles": "Perfis de acesso"
+      "Roles": "Perfis de acesso",
+      "Salaries": "Salários"
     },
     "actions": {
       "View": "Visualizar",
@@ -279,7 +354,10 @@
     "neighborhood": "Centro",
     "city": "São Paulo",
     "state": "SP",
-    "country": "Selecione o país"
+    "country": "Selecione o país",
+    "money": "R$ 0,00",
+    "notes": "Ex.: Dissídio, 13º",
+    "itemName": "Ex.: Vale-refeição"
   },
   "date": {
     "placeholderDmy": "dd/mm/aaaa",

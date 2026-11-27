@@ -1,0 +1,103 @@
+<div class="space-y-4">
+  <section class="card flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-lg font-semibold">{{ 'salaries.title' | translate }}</h1>
+      <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'salaries.subtitle' | translate }}</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-3">
+      <div class="w-36">
+        <app-select
+          inputId="yearFilter"
+          [options]="yearOptions()"
+          [placeholder]="'salaries.allYears' | translate"
+          [ngModel]="yearFilter()"
+          (ngModelChange)="onYearChange($event)"
+        />
+      </div>
+      @if (canCreate()) {
+        <a routerLink="/salaries/new" class="btn-primary gap-2">
+          <app-icon name="plus" />
+          {{ 'salaries.new' | translate }}
+        </a>
+      }
+    </div>
+  </section>
+
+  <section class="card">
+    @if (loading()) {
+      <div class="flex justify-center py-12 text-brand-600 dark:text-brand-500">
+        <app-spinner size="lg" [label]="'common.loading' | translate" />
+      </div>
+    } @else if (items().length === 0) {
+      <div class="flex flex-col items-center gap-3 py-12 text-center">
+        <app-icon name="banknotes" class="text-slate-400" />
+        <p class="text-sm text-slate-500 dark:text-slate-400">{{ 'salaries.empty' | translate }}</p>
+        @if (canCreate()) {
+          <a routerLink="/salaries/new" class="btn-primary gap-2">
+            <app-icon name="plus" />
+            {{ 'salaries.emptyCta' | translate }}
+          </a>
+        }
+      </div>
+    } @else {
+      <div class="max-h-[28rem] overflow-auto">
+        <table class="w-full min-w-[40rem] text-sm">
+          <thead class="sticky top-0 bg-white dark:bg-slate-900">
+            <tr class="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-500 dark:border-slate-700 dark:text-slate-400">
+              <th class="py-2 pr-4">{{ 'salaries.competence' | translate }}</th>
+              <th class="py-2 pr-4">{{ 'salaries.gross' | translate }}</th>
+              <th class="py-2 pr-4">{{ 'salaries.benefits' | translate }}</th>
+              <th class="py-2 pr-4">{{ 'salaries.deductions' | translate }}</th>
+              <th class="py-2 pr-4">{{ 'salaries.net' | translate }}</th>
+              @if (canUpdate() || canDelete()) {
+                <th class="py-2"></th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of items(); track item.id) {
+              <tr class="border-b border-slate-100 dark:border-slate-800">
+                <td class="py-2.5 pr-4 font-medium">{{ competence(item) }}</td>
+                <td class="py-2.5 pr-4 tabular-nums">{{ money(item.grossAmount) }}</td>
+                <td class="py-2.5 pr-4 tabular-nums text-emerald-600 dark:text-emerald-400">{{ money(item.totalBenefits) }}</td>
+                <td class="py-2.5 pr-4 tabular-nums text-rose-600 dark:text-rose-400">{{ money(item.totalDeductions) }}</td>
+                <td class="py-2.5 pr-4 tabular-nums font-semibold" [class.text-rose-600]="item.netAmount < 0" [class.dark:text-rose-400]="item.netAmount < 0">{{ money(item.netAmount) }}</td>
+                @if (canUpdate() || canDelete()) {
+                  <td class="py-2.5">
+                    <div class="flex justify-end gap-2">
+                      @if (canUpdate()) {
+                        <a class="btn-secondary px-2 py-1 text-xs" [routerLink]="['/salaries', item.id]">{{ 'salaries.edit' | translate }}</a>
+                      }
+                      @if (canDelete()) {
+                        <button type="button" class="btn-secondary px-2 py-1 text-xs text-rose-600 dark:text-rose-400" [attr.aria-label]="'salaries.delete' | translate" (click)="askDelete(item.id)">
+                          <app-icon name="trash" />
+                        </button>
+                      }
+                    </div>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-4 flex items-center justify-between gap-3 text-sm text-slate-500 dark:text-slate-400">
+        <span>{{ 'salaries.pageOf' | translate: { page: page(), total: totalPages() } }}</span>
+        <div class="flex gap-2">
+          <button type="button" class="btn-secondary px-3 py-1" [disabled]="page() <= 1" (click)="previousPage()">{{ 'salaries.previous' | translate }}</button>
+          <button type="button" class="btn-secondary px-3 py-1" [disabled]="page() >= totalPages()" (click)="nextPage()">{{ 'salaries.next' | translate }}</button>
+        </div>
+      </div>
+    }
+  </section>
+</div>
+
+<app-confirm-dialog
+  [open]="confirmOpen()"
+  [title]="'salaries.deleteTitle' | translate"
+  [message]="'salaries.deleteMessage' | translate"
+  [confirmLabel]="'salaries.delete' | translate"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()"
+/>

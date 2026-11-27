@@ -57,6 +57,8 @@ public sealed class GlobalExceptionHandler(
             StatusCodes.Status422UnprocessableEntity, "A business rule was violated.", domain.Code),
         NotFoundException => ApiProblem.Create(
             StatusCodes.Status404NotFound, "The resource was not found.", ErrorCodes.NotFound),
+        ConflictException => ApiProblem.Create(
+            StatusCodes.Status409Conflict, "The resource already exists.", ErrorCodes.Conflict),
         EmailNotConfirmedException => ApiProblem.Create(
             StatusCodes.Status403Forbidden, "The e-mail address has not been confirmed.", ErrorCodes.EmailNotConfirmed),
         UserInactiveException => ApiProblem.Create(

@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, computed, forwardRef, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  HostListener,
+  computed,
+  forwardRef,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Icon } from '../icon';
 import { SelectOption } from './interfaces/select-option.interface';
@@ -13,6 +24,7 @@ import { SelectOption } from './interfaces/select-option.interface';
 })
 export class Select implements ControlValueAccessor {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly options = input.required<SelectOption[]>();
   readonly inputId = input('select');
@@ -27,6 +39,10 @@ export class Select implements ControlValueAccessor {
   protected readonly open = signal(false);
   protected readonly query = signal('');
   protected readonly disabled = signal(false);
+  protected readonly panelTop = signal<number | null>(null);
+  protected readonly panelBottom = signal<number | null>(null);
+  protected readonly panelLeft = signal(0);
+  protected readonly panelWidth = signal(0);
 
   protected readonly selected = computed(() => this.options().find((option) => option.value === this.value()));
   protected readonly filtered = computed(() => {
@@ -37,6 +53,14 @@ export class Select implements ControlValueAccessor {
 
   private onChange: (value: string) => void = () => undefined;
   private onTouched: () => void = () => undefined;
+  private readonly onScroll = (): void => {
+    if (this.open()) this.reposition();
+  };
+
+  constructor() {
+    document.addEventListener('scroll', this.onScroll, true);
+    this.destroyRef.onDestroy(() => document.removeEventListener('scroll', this.onScroll, true));
+  }
 
   @HostListener('document:click', ['$event'])
   protected onDocumentClick(event: MouseEvent): void {
@@ -46,6 +70,11 @@ export class Select implements ControlValueAccessor {
   @HostListener('keydown.escape')
   protected onEscape(): void {
     if (this.open()) this.close();
+  }
+
+  @HostListener('window:resize')
+  protected onResize(): void {
+    if (this.open()) this.reposition();
   }
 
   writeValue(value: string | null): void {
@@ -72,6 +101,7 @@ export class Select implements ControlValueAccessor {
       return;
     }
     this.query.set('');
+    this.reposition();
     this.open.set(true);
   }
 
@@ -83,6 +113,29 @@ export class Select implements ControlValueAccessor {
 
   protected onSearch(event: Event): void {
     this.query.set((event.target as HTMLInputElement).value);
+  }
+
+  private reposition(): void {
+    const trigger = this.host.nativeElement.querySelector('button');
+    if (!trigger) return;
+
+    const rect = trigger.getBoundingClientRect();
+    const panelMaxHeight = 224;
+    const gap = 4;
+    const spaceBelow = window.innerHeight - rect.bottom - gap;
+    const spaceAbove = rect.top - gap;
+    const openUpward = spaceBelow < panelMaxHeight && spaceAbove > spaceBelow;
+
+    this.panelLeft.set(rect.left);
+    this.panelWidth.set(Math.max(rect.width, 192));
+
+    if (openUpward) {
+      this.panelTop.set(null);
+      this.panelBottom.set(window.innerHeight - rect.top + gap);
+    } else {
+      this.panelTop.set(rect.bottom + gap);
+      this.panelBottom.set(null);
+    }
   }
 
   private close(): void {

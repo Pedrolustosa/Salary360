@@ -9,4 +9,8 @@ export enum Permission {
   RolesCreate = 'Roles.Create',
   RolesUpdate = 'Roles.Update',
   RolesDelete = 'Roles.Delete',
+  SalariesView = 'Salaries.View',
+  SalariesCreate = 'Salaries.Create',
+  SalariesUpdate = 'Salaries.Update',
+  SalariesDelete = 'Salaries.Delete',
 }

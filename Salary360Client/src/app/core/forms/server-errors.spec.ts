@@ -1,12 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { FormControl, FormGroup } from '@angular/forms';
-import { applyServerErrors, serverErrorCode } from './server-errors';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { applyServerErrors, serverErrorCode, toFormPath } from './server-errors';
 
 describe('server-errors', () => {
   function form(): FormGroup {
     return new FormGroup({
       email: new FormControl(''),
       address: new FormGroup({ city: new FormControl('') }),
+      items: new FormArray([new FormGroup({ name: new FormControl('') })]),
     });
   }
 
@@ -23,6 +24,14 @@ describe('server-errors', () => {
     expect(serverErrorCode(group.get('email'))).toBe('required');
     expect(serverErrorCode(group.get('address.city'))).toBe('max_length');
     expect(group.get('email')?.touched).toBe(true);
+  });
+
+  it('should map bracket paths to FormArray dot paths', () => {
+    expect(toFormPath('items[0].name')).toBe('items.0.name');
+    const group = form();
+    const applied = applyServerErrors(group, problem({ 'items[0].name': ['required'] }));
+    expect(applied).toBe(true);
+    expect(serverErrorCode(group.get('items.0.name'))).toBe('required');
   });
 
   it('should ignore fields that do not exist in the form', () => {
