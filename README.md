@@ -1,6 +1,7 @@
 # Salary360 – Full-Stack Project Skeleton
 
 <p align="center">
+  <img src="https://img.shields.io/badge/version-v0.1.0-blue?style=for-the-badge" alt="Version v0.1.0" />
   <img src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET" />
   <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="C%23" />
   <img src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular" />
@@ -97,6 +98,40 @@ After the backend starts, the seed creates two confirmed accounts (when their pa
 
 No password is stored in the repository. The e-mails and profile data of the seed accounts live in `Salary360.API/appsettings.json` (`Seed:Admin` / `Seed:User`); the passwords come from user-secrets or environment variables. Without a password the seed skips that account and logs a warning.
 
+## Sample data seed (Development only)
+
+After identity seed, Development can load idempotent fictional sample data so every screen (lists, charts, salary intelligence) is usable without manual entry.
+
+| Flow / entity | Seeded? | Notes |
+| --- | --- | --- |
+| Roles + permissions | Yes (`IdentitySeeder`) | Always at startup when roles are missing |
+| Admin / User accounts | Yes (`IdentitySeeder`) | Requires configured passwords |
+| User addresses | Yes (with identity users) | From `Seed:*:Address` |
+| Salaries (`SalaryRecord` / `SalaryItem`) | Yes (`SalarySampleDataSeeder`) | Only when sample data is enabled |
+| Salary intelligence | Computed | Fed by salary sample data; IPCA comes from IBGE at runtime |
+| Notifications | No | Ephemeral SignalR messages |
+
+Configuration under `Seed:SampleData`:
+
+| Key | Default | Purpose |
+| --- | --- | --- |
+| `Enabled` | `false` in `appsettings.json`; `true` in `appsettings.Development.json` | Master switch |
+| `Volume` | `medium` | `small` (~12 / ~1 year), `medium` (~48 / ~4 years), or `large` (~120 / ~10 years) salary competences for the standard user; admin gets a smaller multi-year set |
+
+Rules:
+
+- Runs only in **Development** and only when `Seed:SampleData:Enabled` is true. Never in Production or Testing (integration tests create their own salaries).
+- Idempotent by natural key `(UserId, Year, Month)`: a second startup creates nothing new.
+- Deterministic (`Random` with a fixed seed; competences relative to the current UTC month, never in the future).
+- Creates data through domain constructors (same validations as the API). Does not seed IPCA or other external data.
+- Logs only counts (created / skipped), never personal or sensitive values.
+
+### Adding sample data for a new flow
+
+1. Create `<Flow>SampleDataSeeder` implementing `ISampleDataSeeder` (`Order`, `SeedAsync`) under `Salary360.Infrastructure/Seed/`.
+2. Register it in `DependencyInjection` next to `SalarySampleDataSeeder`.
+3. Update the inventory table in this section and keep the seeder Development-gated via the orchestrator.
+
 ## Secrets
 
 Nothing sensitive is committed: `Jwt:Secret`, `Seed:Admin:Password`, `Seed:User:Password` and `Email:Password` are empty in every `appsettings*.json`. The API has a `UserSecretsId`, so in `Development` they are read from the .NET user-secrets store on your machine.
@@ -175,6 +210,7 @@ At login the API returns `roles` and `permissions`, and the JWT carries one `per
 - **Form components (Tailwind, no native pickers):** `app-date-picker` (typed mask by language, `dd/mm/yyyy` or `mm/dd/yyyy`, plus a calendar with month and year navigation and min/max), `app-month-year-picker` (competence `{ year, month }`, blocks future months), `app-money-input` (BRL numeric value with locale-aware display), `app-select` (searchable dropdown with optional flags, also used for the language switcher and the address country), and `app-phone-input`. Every input has a placeholder and a `maxlength`; required labels show a red asterisk and optional ones an "(optional)" tag.
 - **Salaries:** `/salaries` lists monthly records; `/salaries/new` and `/salaries/:id` create or edit gross amount, optional notes and up to 50 benefit/deduction items; live net summary uses banker's rounding to 2 decimals (same as the API). Net may be negative (UI warns; API accepts). Unique competence per user (`UserId` + year + month); duplicate create returns `409`.
 - **Evolution:** `/evolution` charts net and gross over time (`mode=month` for the same month across years, `mode=year` for yearly aggregates). Years without data are chart gaps (`null`, not zero). Stat cards show max net, min net and percent change between the first and last point with data.
+- **Salary intelligence:** `/salary-intelligence` turns the authenticated user's `SalaryRecord` history into indicators, IPCA purchasing-power comparison, deterministic insights and OLS projection estimates. Five independent API sections load in parallel (summary, series, purchasing power, insights, projection) with skeleton / error / empty / insufficient-data states. Filters use competence range (`yyyy-MM`) and basis (`Net` default or `Gross`). Nothing is persisted: the API recalculates on every request; the client reloads after salary create/update/delete via `SalaryService.changed$`.
 - **Masks and limits:** postal codes are masked per selected country (e.g. `00000-000` for BR, `00000-0000` for US, `A0A 0A0` for CA) and validated for completeness; the phone mask and the maximum number of digits follow the selected country.
 - **International phone input:** a country selector (flag, name, dialing code, searchable) applies the correct mask per country with `libphonenumber-js`; the value is stored in E.164 (e.g. `+5581999990001`). Flags come from `flag-icons` (4x3 SVGs copied as assets).
 - **Error pages:** `/error/403`, `/error/404`, `/error/500` (and a generic one). Unknown routes go to 404, missing permission to 403, and server failures to 500.
@@ -241,6 +277,11 @@ The confirmation token is valid for 24 hours.
 | GET | `/api/salaries/{id}` | Bearer + `Salaries.View` | Own salary only (`404` for another user's id) |
 | PUT | `/api/salaries/{id}` | Bearer + `Salaries.Update` | Replaces details and items (`409` on competence conflict) |
 | DELETE | `/api/salaries/{id}` | Bearer + `Salaries.Delete` | Deletes own salary (`204`) |
+| GET | `/api/salary-intelligence/summary` | Bearer + `Salaries.View` | Current totals and period variation (`from`, `to`, `basis`); `hasEnoughData` needs ≥ 2 records |
+| GET | `/api/salary-intelligence/series` | Bearer + `Salaries.View` | Month-by-month points with MoM variation (gaps omitted from the series) |
+| GET | `/api/salary-intelligence/purchasing-power` | Bearer + `Salaries.View` | Nominal vs IPCA / real gain; `inflationAvailable`, `isStale`, `inflationCoverage` |
+| GET | `/api/salary-intelligence/insights` | Bearer + `Salaries.View` | Up to 8 insight codes + params (translated on the client) |
+| GET | `/api/salary-intelligence/projection` | Bearer + `Salaries.View` | Estimated scenarios (`horizon` 3\|6\|12); needs ≥ 6 records; `disclaimerCode=projection_estimate` |
 | WS | `/hubs/notifications` | Bearer | SignalR hub; clients receive `ReceiveNotification` |
 | GET | `/health` | Public | Health check |
 | GET | `/swagger` | Public (Development) | Swagger UI, with an **Authorize** button for the JWT |
@@ -258,10 +299,23 @@ Main settings in `Salary360.API/appsettings.json`:
 | `RateLimiting` | `LoginPermitLimit`, `LoginWindowMinutes`, `LoginIpPermitLimit`, `RegisterPermitLimit`, `RegisterWindowMinutes`, `ApiPermitLimit` |
 | `Client:BaseUrl` | URL of the Angular app, used to build the e-mail links |
 | `Email` | `Provider` (`Log` or `Smtp`), `Host`, `Port`, `Username`, `FromAddress`, `FromName`, `ResendIntervalSeconds` |
-| `Seed` | E-mail, display name, password, date of birth, phone (E.164), profile picture URL and address (`Address` section) of the Admin and User accounts; both are created active with terms and privacy policy accepted |
+| `Seed` | E-mail, display name, password, date of birth, phone (E.164), profile picture URL and address (`Address` section) of the Admin and User accounts; both are created active with terms and privacy policy accepted. `SampleData:Enabled` / `SampleData:Volume` control Development-only fictional domain data (see [Sample data seed](#sample-data-seed-development-only)) |
 | `Cors:AllowedOrigins` | Origins allowed to call the API |
+| `Ibge` | Official IPCA SIDRA client: `BaseUrl`, `Table` (`1737`), `Variable` (`2266`), `CacheHours` (12), `StaleCacheHours` (168), `TimeoutSeconds` (10). Not secret. |
 
 **Secrets never go in source control.** Provide `Jwt__Secret`, `Email__Password`, `Seed__Admin__Password` and `Seed__User__Password` through environment variables or user-secrets. Outside `Development`, the application does not start without a JWT secret, and a seed account is skipped when its password is empty.
+
+### Salary intelligence calculations
+
+- **Period:** optional `from` / `to` (`yyyy-MM`). When omitted, the API uses a 12-month window ending at the user's latest competence. Max span 120 months; no future competence.
+- **Evolution:** absolute and percent change for gross and net between the first and last record in the period (ordered by competence), plus MoM series points. Percent is `null` when the base is zero. Money uses `Money.Round` (2 decimals, `MidpointRounding.ToEven`); percents use 2 decimals.
+- **Purchasing power:** IPCA accumulated = `index(final) / index(initial) − 1`. Real gain = `(1 + nominal) / (1 + IPCA) − 1`. If the final competence index is missing, the latest available month is used and `inflationCoverage.isPartial` is set. IBGE failures never return 500: cached series may be served as `isStale`, otherwise `inflationAvailable=false` while other sections still work.
+- **Insights:** deterministic rules with a 5% threshold (`salary_increase` / `salary_decrease`, `real_gain` / `real_loss`, benefits/deductions share, net/gross ratio, best/worst month, or `stable_period`).
+- **Projection:** ordinary least squares on the last ≤ 12 points of the selected basis; conservative / likely / optimistic = projection ± 1 residual std-dev (floored at 0). Optional real likely value uses the average IPCA of the last 12 months as the future inflation criterion.
+
+### IBGE IPCA cache
+
+`IbgeInflationProvider` calls `GET {BaseUrl}/values/t/{Table}/n1/all/v/{Variable}/p/all?formato=json` through a named `IHttpClientFactory` client. The full series is stored in `IMemoryCache` (shared across users) for `CacheHours`, with a `SemaphoreSlim` to coalesce concurrent fetches. On timeout / 5xx / unexpected JSON, the last series is kept until `StaleCacheHours` and marked `isStale`. Integration and unit tests never hit the network (fake `HttpMessageHandler` / `IInflationProvider`).
 
 ### Database and migrations
 

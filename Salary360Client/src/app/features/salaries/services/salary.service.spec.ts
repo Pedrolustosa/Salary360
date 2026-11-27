@@ -29,8 +29,14 @@ describe('SalaryService', () => {
   });
 
   it('should get, create, update and delete salaries', () => {
+    let changeCount = 0;
+    service.changed$.subscribe(() => {
+      changeCount += 1;
+    });
+
     service.get('id-1').subscribe();
     controller.expectOne(`${base}/id-1`).flush({ id: 'id-1' });
+    expect(changeCount).toBe(0);
 
     service
       .create({
@@ -44,6 +50,7 @@ describe('SalaryService', () => {
     const create = controller.expectOne(base);
     expect(create.request.method).toBe('POST');
     create.flush({ id: 'id-1' });
+    expect(changeCount).toBe(1);
 
     service
       .update('id-1', {
@@ -57,12 +64,15 @@ describe('SalaryService', () => {
     const update = controller.expectOne(`${base}/id-1`);
     expect(update.request.method).toBe('PUT');
     update.flush({ id: 'id-1' });
+    expect(changeCount).toBe(2);
 
     service.delete('id-1').subscribe();
     const del = controller.expectOne(`${base}/id-1`);
     expect(del.request.method).toBe('DELETE');
     del.flush(null);
+    expect(changeCount).toBe(3);
   });
+
 
   it('should request evolution with mode filters', () => {
     service.evolution({ mode: EvolutionMode.Month, month: 9, fromYear: 2020, toYear: 2024 }).subscribe();

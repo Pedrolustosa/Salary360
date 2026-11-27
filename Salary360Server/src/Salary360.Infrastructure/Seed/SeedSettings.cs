@@ -7,4 +7,6 @@ public sealed class SeedSettings
     public SeedUserSettings Admin { get; set; } = new();
 
     public SeedUserSettings User { get; set; } = new();
+
+    public SampleDataSeedSettings SampleData { get; set; } = new();
 }

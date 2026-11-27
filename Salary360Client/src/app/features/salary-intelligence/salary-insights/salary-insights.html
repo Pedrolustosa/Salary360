@@ -1,0 +1,34 @@
+<section class="card flex h-full min-h-0 flex-col gap-3 overflow-hidden">
+  <h2 class="shrink-0 text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'salaryIntelligence.insightsTitle' | translate }}</h2>
+
+  @if (loading()) {
+    <app-skeleton class="min-h-0 flex-1" [lines]="6" />
+  } @else if (error()) {
+    <div class="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 py-6 text-center">
+      <p class="text-sm text-slate-500 dark:text-slate-400">{{ 'salaryIntelligence.states.error' | translate }}</p>
+      <button type="button" class="btn-secondary text-xs" (click)="retry.emit()">{{ 'salaryIntelligence.states.retry' | translate }}</button>
+    </div>
+  } @else if (isEmpty()) {
+    <div class="flex min-h-0 flex-1 items-center justify-center py-6">
+      <p class="text-center text-sm text-slate-500 dark:text-slate-400">
+        {{ 'salaryIntelligence.states.empty' | translate }}
+        <a routerLink="/salaries/new" class="ml-1 font-medium text-brand-600 hover:underline">{{ 'salaryIntelligence.states.emptyLink' | translate }}</a>
+      </p>
+    </div>
+  } @else if (isInsufficient()) {
+    <div class="flex min-h-0 flex-1 items-center justify-center py-6">
+      <p class="text-center text-sm text-slate-500 dark:text-slate-400">{{ 'salaryIntelligence.states.insufficientRecords' | translate }}</p>
+    </div>
+  } @else if (hasData()) {
+    <ul class="min-h-0 flex-1 space-y-2 overflow-auto">
+      @for (insight of insights(); track insight.code + (insight.referenceCompetence ?? '')) {
+        <li class="flex items-start gap-2 rounded-lg border px-3 py-2 text-sm" [class]="toneClass(insight.severity)">
+          <app-icon class="mt-0.5 shrink-0" [name]="iconFor(insight.severity)" />
+          <span>{{ 'salaryIntelligence.insights.' + insight.code | translate: params(insight) }}</span>
+        </li>
+      } @empty {
+        <li class="flex h-full items-center justify-center py-6 text-center text-sm text-slate-500 dark:text-slate-400">{{ 'salaryIntelligence.states.emptyInsights' | translate }}</li>
+      }
+    </ul>
+  }
+</section>

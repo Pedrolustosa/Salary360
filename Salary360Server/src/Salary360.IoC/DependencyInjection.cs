@@ -6,18 +6,23 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using FluentValidation;
 using Salary360.Application.Common;
+using Salary360.Application.Common.Interfaces;
 using Salary360.Application.Interfaces.Email;
 using Salary360.Application.Interfaces.Identity;
 using Salary360.Application.Interfaces.Messaging;
 using Salary360.Application.Interfaces.Persistence;
+using Salary360.Application.SalaryIntelligence.Interfaces;
+using Salary360.Application.SalaryIntelligence.Services;
 using Salary360.Application.Settings;
 using Salary360.Domain.Interfaces;
 using Salary360.Infrastructure.Email;
 using Salary360.Infrastructure.Events;
 using Salary360.Infrastructure.Identity;
+using Salary360.Infrastructure.Inflation;
 using Salary360.Infrastructure.Interfaces;
 using Salary360.Infrastructure.Persistence;
 using Salary360.Infrastructure.Seed;
+using Salary360.Infrastructure.Seed.Interfaces;
 
 namespace Salary360.IoC;
 
@@ -32,6 +37,7 @@ public static class DependencyInjection
     {
         await DatabaseInitializer.InitializeAsync(serviceProvider, cancellationToken);
         await IdentitySeeder.SeedAsync(serviceProvider, cancellationToken);
+        await SampleDataSeedOrchestrator.SeedAsync(serviceProvider, cancellationToken);
     }
 
     private static IServiceCollection AddApplicationServices(this IServiceCollection services)
@@ -52,6 +58,11 @@ public static class DependencyInjection
 
         foreach (var (contract, implementation) in handlers)
             services.AddScoped(contract, implementation);
+
+        services.AddSingleton<ISalaryEvolutionCalculator, SalaryEvolutionCalculator>();
+        services.AddSingleton<IPurchasingPowerCalculator, PurchasingPowerCalculator>();
+        services.AddSingleton<ISalaryInsightGenerator, SalaryInsightGenerator>();
+        services.AddSingleton<ISalaryProjectionCalculator, SalaryProjectionCalculator>();
 
         return services;
     }
@@ -75,9 +86,23 @@ public static class DependencyInjection
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
+        services.AddOptions<IbgeSettings>()
+            .BindConfiguration(IbgeSettings.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
         services.AddOptions<SeedSettings>().BindConfiguration(SeedSettings.SectionName);
 
+        services.AddScoped<ISampleDataSeeder, SalarySampleDataSeeder>();
+
         services.AddMemoryCache();
+        services.AddHttpClient(IbgeInflationProvider.HttpClientName, (sp, client) =>
+        {
+            var ibge = sp.GetRequiredService<IOptions<IbgeSettings>>().Value;
+            client.BaseAddress = new Uri(ibge.BaseUrl.TrimEnd('/') + "/");
+            client.Timeout = TimeSpan.FromSeconds(ibge.TimeoutSeconds);
+        });
+        services.AddSingleton<IInflationProvider, IbgeInflationProvider>();
         services.AddSingleton<IEmailTemplateRenderer, EmbeddedEmailTemplateRenderer>();
         services.AddScoped<IEmailSender>(serviceProvider =>
         {

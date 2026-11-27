@@ -157,6 +157,43 @@ public sealed class SalaryRecordRepository(AppDbContext context) : ISalaryRecord
         return points;
     }
 
+    public async Task<(int Year, int Month)?> GetLatestCompetenceAsync(
+        Guid userId, CancellationToken cancellationToken = default)
+    {
+        var latest = await context.SalaryRecords
+            .AsNoTracking()
+            .Where(record => record.UserId == userId)
+            .OrderByDescending(record => record.Year)
+            .ThenByDescending(record => record.Month)
+            .Select(record => new { record.Year, record.Month })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return latest is null ? null : (latest.Year, latest.Month);
+    }
+
+    public async Task<IReadOnlyList<SalaryRecord>> ListByPeriodAsync(
+        Guid userId,
+        int fromYear,
+        int fromMonth,
+        int toYear,
+        int toMonth,
+        CancellationToken cancellationToken = default)
+    {
+        var fromKey = fromYear * 12 + fromMonth;
+        var toKey = toYear * 12 + toMonth;
+
+        return await context.SalaryRecords
+            .AsNoTracking()
+            .Include(record => record.Items)
+            .Where(record =>
+                record.UserId == userId
+                && record.Year * 12 + record.Month >= fromKey
+                && record.Year * 12 + record.Month <= toKey)
+            .OrderBy(record => record.Year)
+            .ThenBy(record => record.Month)
+            .ToListAsync(cancellationToken);
+    }
+
     public void Add(SalaryRecord record) => context.SalaryRecords.Add(record);
 
     public void Remove(SalaryRecord record) => context.SalaryRecords.Remove(record);

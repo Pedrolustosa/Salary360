@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { EvolutionMode } from '../enums/evolution-mode.enum';
 import { CreateSalaryRequest } from '../interfaces/create-salary-request.interface';
@@ -14,6 +14,9 @@ import { UpdateSalaryRequest } from '../interfaces/update-salary-request.interfa
 export class SalaryService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/salaries`;
+  private readonly changedSubject = new Subject<void>();
+
+  readonly changed$: Observable<void> = this.changedSubject.asObservable();
 
   list(year?: number | null, page = 1, pageSize = 20): Observable<PagedSalaries> {
     let params = new HttpParams().set('page', page).set('pageSize', pageSize);
@@ -26,15 +29,15 @@ export class SalaryService {
   }
 
   create(request: CreateSalaryRequest): Observable<SalaryRecord> {
-    return this.http.post<SalaryRecord>(this.baseUrl, request);
+    return this.http.post<SalaryRecord>(this.baseUrl, request).pipe(tap(() => this.changedSubject.next()));
   }
 
   update(id: string, request: UpdateSalaryRequest): Observable<SalaryRecord> {
-    return this.http.put<SalaryRecord>(`${this.baseUrl}/${id}`, request);
+    return this.http.put<SalaryRecord>(`${this.baseUrl}/${id}`, request).pipe(tap(() => this.changedSubject.next()));
   }
 
   delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/${id}`).pipe(tap(() => this.changedSubject.next()));
   }
 
   evolution(query: SalaryEvolutionQuery): Observable<SalaryEvolutionPoint[]> {

@@ -55,6 +55,7 @@ export class LineChart {
         data: dataset.data,
         borderColor: dataset.color,
         backgroundColor: dataset.color,
+        borderDash: dataset.borderDash,
         spanGaps: false,
         tension: 0.25,
         pointRadius: 3,

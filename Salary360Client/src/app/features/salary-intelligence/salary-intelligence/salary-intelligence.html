@@ -1,0 +1,48 @@
+<div class="space-y-4">
+  <section class="card space-y-4">
+    <div>
+      <h1 class="text-lg font-semibold">{{ 'salaryIntelligence.title' | translate }}</h1>
+      <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'salaryIntelligence.subtitle' | translate }}</p>
+    </div>
+    <app-salary-analysis-filters [value]="filter()" (filterChange)="onFilterChange($event)" />
+  </section>
+
+  <app-salary-intelligence-summary
+    [data]="summary()"
+    [basis]="filter().basis"
+    [loading]="summaryLoading()"
+    [error]="summaryError()"
+    (retry)="reload()"
+  />
+
+  <app-salary-evolution-chart
+    [data]="series()"
+    [loading]="seriesLoading()"
+    [error]="seriesError()"
+    (retry)="reload()"
+  />
+
+  <div class="grid items-stretch gap-4 lg:grid-cols-2">
+    <app-purchasing-power
+      [data]="purchasingPower()"
+      [loading]="purchasingPowerLoading()"
+      [error]="purchasingPowerError()"
+      (retry)="reload()"
+    />
+    <app-salary-insights
+      [data]="insights()"
+      [loading]="insightsLoading()"
+      [error]="insightsError()"
+      (retry)="reload()"
+    />
+  </div>
+
+  <app-salary-projection
+    [data]="projection()"
+    [loading]="projectionLoading()"
+    [error]="projectionError()"
+    [horizon]="horizon()"
+    (retry)="reload()"
+    (horizonChange)="onHorizonChange($event)"
+  />
+</div>

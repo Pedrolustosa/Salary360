@@ -1,0 +1,48 @@
+<section class="card flex h-full min-h-0 flex-col gap-3 overflow-hidden">
+  <h2 class="shrink-0 text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'salaryIntelligence.purchasingPower.title' | translate }}</h2>
+
+  @if (loading()) {
+    <app-skeleton class="min-h-0 flex-1" [lines]="6" />
+  } @else if (error()) {
+    <div class="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 py-6 text-center">
+      <p class="text-sm text-slate-500 dark:text-slate-400">{{ 'salaryIntelligence.states.error' | translate }}</p>
+      <button type="button" class="btn-secondary text-xs" (click)="retry.emit()">{{ 'salaryIntelligence.states.retry' | translate }}</button>
+    </div>
+  } @else if (isEmpty()) {
+    <div class="flex min-h-0 flex-1 items-center justify-center py-6">
+      <p class="text-center text-sm text-slate-500 dark:text-slate-400">
+        {{ 'salaryIntelligence.states.empty' | translate }}
+        <a routerLink="/salaries/new" class="ml-1 font-medium text-brand-600 hover:underline">{{ 'salaryIntelligence.states.emptyLink' | translate }}</a>
+      </p>
+    </div>
+  } @else if (isInsufficient()) {
+    <div class="flex min-h-0 flex-1 items-center justify-center py-6">
+      <p class="text-center text-sm text-slate-500 dark:text-slate-400">{{ 'salaryIntelligence.states.insufficientRecords' | translate }}</p>
+    </div>
+  } @else if (hasData()) {
+    <div class="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
+      @if (warningKey() === 'stale') {
+        <p class="shrink-0 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
+          {{ 'salaryIntelligence.purchasingPower.stale' | translate }}
+        </p>
+      } @else if (warningKey() === 'partial') {
+        <p class="shrink-0 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
+          {{ 'salaryIntelligence.purchasingPower.partial' | translate: { month: partialUntil() } }}
+        </p>
+      } @else if (warningKey() === 'unavailable') {
+        <p class="shrink-0 rounded-lg bg-slate-100 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+          {{ 'salaryIntelligence.purchasingPower.unavailable' | translate }}
+        </p>
+      }
+
+      <div class="min-h-0 flex-1 overflow-auto">
+        <app-line-chart
+          [labels]="chart().labels"
+          [datasets]="datasets()"
+          [yTickFormatter]="yFormatter"
+          [ariaLabel]="'salaryIntelligence.purchasingPower.chartLabel' | translate"
+        />
+      </div>
+    </div>
+  }
+</section>

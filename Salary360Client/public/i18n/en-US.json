@@ -10,7 +10,8 @@
     "toggleMenu": "Toggle sidebar",
     "profile": "Profile",
     "salaries": "Salaries",
-    "evolution": "Evolution"
+    "evolution": "Evolution",
+    "salaryIntelligence": "Salary intelligence"
   },
   "auth": {
     "loginSubtitle": "Every paycheck with a purpose.",
@@ -112,7 +113,11 @@
       "invalid_year": "Invalid year.",
       "future_competence": "Competence cannot be in the future.",
       "too_many_items": "Maximum of 50 items per salary.",
-      "duplicate_item_name": "An item with this name already exists."
+      "duplicate_item_name": "An item with this name already exists.",
+      "invalid_period": "Enter a valid period (from/to).",
+      "period_too_long": "The maximum period is 120 months.",
+      "invalid_basis": "Invalid salary basis.",
+      "invalid_horizon": "Invalid projection horizon."
     }
   },
   "home": {
@@ -249,6 +254,91 @@
     "maxNet": "Highest net",
     "minNet": "Lowest net",
     "variation": "Variation"
+  },
+  "salaryIntelligence": {
+    "title": "Salary intelligence",
+    "subtitle": "Indicators, purchasing power, insights and projections from your history.",
+    "filters": {
+      "from": "From",
+      "to": "To"
+    },
+    "basis": {
+      "label": "Basis",
+      "net": "Net",
+      "gross": "Gross"
+    },
+    "shortcuts": {
+      "last12": "12 months",
+      "currentYear": "Current year",
+      "all": "All"
+    },
+    "states": {
+      "loading": "Loading...",
+      "error": "Could not load this data.",
+      "retry": "Try again",
+      "empty": "No salaries recorded yet.",
+      "emptyLink": "Add salary",
+      "insufficientRecords": "Not enough records for this analysis.",
+      "emptyInsights": "No insights for this period."
+    },
+    "summary": {
+      "title": "Summary",
+      "currentGross": "Current gross",
+      "currentNet": "Current net",
+      "benefits": "Benefits",
+      "periodEvolution": "Period evolution"
+    },
+    "charts": {
+      "evolutionTitle": "Period evolution",
+      "evolutionLabel": "Salary evolution chart for the period",
+      "gross": "Gross",
+      "net": "Net"
+    },
+    "purchasingPower": {
+      "title": "Purchasing power",
+      "actual": "Nominal",
+      "adjusted": "IPCA-adjusted",
+      "chartLabel": "Purchasing power chart",
+      "stale": "IPCA data may be out of date.",
+      "partial": "Partial IPCA coverage until {{month}}.",
+      "unavailable": "IPCA unavailable for this period."
+    },
+    "insightsTitle": "Insights",
+    "insights": {
+      "salary_increase": "Salary increase of {{percent}}%.",
+      "salary_decrease": "Salary decrease of {{percent}}%.",
+      "real_loss": "Real purchasing-power loss of {{percent}}%.",
+      "real_gain": "Real purchasing-power gain of {{percent}}%.",
+      "deductions_rise": "Deductions rose {{percent}}%.",
+      "deductions_drop": "Deductions fell {{percent}}%.",
+      "benefits_rise": "Benefits rose {{percent}}%.",
+      "benefits_drop": "Benefits fell {{percent}}%.",
+      "net_ratio_change": "Net-to-gross ratio changed by {{percent}}%.",
+      "best_month": "Best month: {{competence}} ({{amount}}).",
+      "worst_month": "Worst month: {{competence}} ({{amount}}).",
+      "stable_period": "Stable period with no relevant changes."
+    },
+    "projection": {
+      "title": "Estimated projection",
+      "disclaimer": "Estimate based on recent history. It is not a guarantee of future results.",
+      "horizon": "Horizon",
+      "horizons": {
+        "3": "3 months",
+        "6": "6 months",
+        "12": "12 months"
+      },
+      "actual": "History",
+      "realValue": "Estimated real value: {{value}}",
+      "chartLabel": "Salary projection chart",
+      "scenarios": {
+        "conservative": "Conservative",
+        "likely": "Likely",
+        "optimistic": "Optimistic"
+      },
+      "criterion": {
+        "average_ipca_last_12_months": "Real adjustment based on the average IPCA of the last 12 months."
+      }
+    }
   },
   "monthYear": {
     "placeholder": "Select month/year",

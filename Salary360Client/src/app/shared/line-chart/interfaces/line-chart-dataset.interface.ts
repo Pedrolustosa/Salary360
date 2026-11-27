@@ -3,4 +3,5 @@ export interface LineChartDataset {
   data: (number | null)[];
   color: string;
   hidden?: boolean;
+  borderDash?: number[];
 }
