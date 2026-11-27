@@ -138,7 +138,8 @@ public sealed class SalaryFlowTests : IClassFixture<ApiFactory>
             permissions = new[]
             {
                 "Profile.View", "Profile.Update",
-                "Salaries.View", "Salaries.Create", "Salaries.Update", "Salaries.Delete"
+                "Salaries.View", "Salaries.Create", "Salaries.Update", "Salaries.Delete",
+                "Expenses.View", "Expenses.Create", "Expenses.Update", "Expenses.Delete"
             }
         });
         Assert.Equal(HttpStatusCode.OK, restore.StatusCode);

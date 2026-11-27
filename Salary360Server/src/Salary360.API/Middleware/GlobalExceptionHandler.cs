@@ -55,10 +55,10 @@ public sealed class GlobalExceptionHandler(
         IdentityOperationException identity => MapIdentity(identity),
         DomainException domain => ApiProblem.Create(
             StatusCodes.Status422UnprocessableEntity, "A business rule was violated.", domain.Code),
-        NotFoundException => ApiProblem.Create(
-            StatusCodes.Status404NotFound, "The resource was not found.", ErrorCodes.NotFound),
-        ConflictException => ApiProblem.Create(
-            StatusCodes.Status409Conflict, "The resource already exists.", ErrorCodes.Conflict),
+        NotFoundException notFound => ApiProblem.Create(
+            StatusCodes.Status404NotFound, "The resource was not found.", notFound.Code),
+        ConflictException conflict => ApiProblem.Create(
+            StatusCodes.Status409Conflict, "The resource already exists.", conflict.Code),
         EmailNotConfirmedException => ApiProblem.Create(
             StatusCodes.Status403Forbidden, "The e-mail address has not been confirmed.", ErrorCodes.EmailNotConfirmed),
         UserInactiveException => ApiProblem.Create(

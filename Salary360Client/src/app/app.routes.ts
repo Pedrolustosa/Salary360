@@ -78,6 +78,17 @@ export const routes: Routes = [
             (m) => m.SalaryIntelligence,
           ),
       },
+      {
+        path: 'expenses/categories',
+        canActivate: [permissionGuard(Permission.ExpensesView)],
+        loadComponent: () =>
+          import('./features/expenses/categories-page/categories-page').then((m) => m.CategoriesPage),
+      },
+      {
+        path: 'expenses',
+        canActivate: [permissionGuard(Permission.ExpensesView)],
+        loadComponent: () => import('./features/expenses/expenses-page/expenses-page').then((m) => m.ExpensesPage),
+      },
     ],
   },
   {

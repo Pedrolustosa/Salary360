@@ -1,0 +1,19 @@
+<button
+  type="button"
+  role="switch"
+  class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition"
+  [class.bg-brand-600]="checked()"
+  [class.bg-slate-300]="!checked()"
+  [class.dark:bg-slate-600]="!checked()"
+  [id]="inputId()"
+  [attr.aria-checked]="checked()"
+  [attr.aria-label]="ariaLabel() || null"
+  [disabled]="disabled()"
+  (click)="toggle()"
+>
+  <span
+    class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition"
+    [class.translate-x-6]="checked()"
+    [class.translate-x-1]="!checked()"
+  ></span>
+</button>

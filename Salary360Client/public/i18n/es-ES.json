@@ -11,7 +11,8 @@
     "profile": "Perfil",
     "salaries": "Salarios",
     "evolution": "Evolución",
-    "salaryIntelligence": "Inteligencia salarial"
+    "salaryIntelligence": "Inteligencia salarial",
+    "expenses": "Gastos"
   },
   "auth": {
     "loginSubtitle": "Cada salario con un propósito.",
@@ -60,7 +61,15 @@
     "infoTitle": "Aviso",
     "salaryCreated": "Salario guardado correctamente.",
     "salaryUpdated": "Salario actualizado correctamente.",
-    "salaryDeleted": "Salario eliminado correctamente."
+    "salaryDeleted": "Salario eliminado correctamente.",
+    "expenseCreated": "Gasto guardado correctamente.",
+    "expenseUpdated": "Gasto actualizado correctamente.",
+    "expenseDeleted": "Gasto eliminado correctamente.",
+    "expensesCopied": "{{created}} gastos copiados ({{skipped}} omitidos).",
+    "categoryCreated": "Categoría creada correctamente.",
+    "categoryUpdated": "Categoría actualizada correctamente.",
+    "categoryDeleted": "Categoría eliminada correctamente.",
+    "defaultsCreated": "{{created}} categorías predeterminadas creadas."
   },
   "errors": {
     "network": "No se pudo conectar con el servidor.",
@@ -94,7 +103,12 @@
       "cannot_deactivate_self": "No puedes desactivar tu propia cuenta.",
       "address_incomplete": "Completa la dirección.",
       "business_rule_violation": "La operación no está permitida.",
-      "identity_failed": "No se pudo completar la operación."
+      "identity_failed": "No se pudo completar la operación.",
+      "duplicate_category_name": "Ya existe una categoría con este nombre.",
+      "category_in_use": "La categoría está en uso y debe reasignarse.",
+      "category_not_found": "Categoría no encontrada.",
+      "too_many_categories": "Se alcanzó el límite de categorías.",
+      "too_many_expenses_in_month": "Se alcanzó el límite de gastos del mes."
     },
     "fields": {
       "required": "Campo obligatorio.",
@@ -117,7 +131,13 @@
       "invalid_period": "Introduce un período válido (desde/hasta).",
       "period_too_long": "El período máximo es de 120 meses.",
       "invalid_basis": "Base salarial no válida.",
-      "invalid_horizon": "Horizonte de proyección no válido."
+      "invalid_horizon": "Horizonte de proyección no válido.",
+      "future_competence_limit": "La competencia futura supera el límite permitido.",
+      "invalid_due_day": "Día de vencimiento no válido.",
+      "invalid_recurrence_count": "Cantidad de recurrencia no válida.",
+      "invalid_scope": "Alcance no válido.",
+      "invalid_color": "Color no válido.",
+      "invalid_icon": "Icono no válido."
     }
   },
   "home": {
@@ -374,7 +394,8 @@
       "Profile": "Perfil",
       "Users": "Usuarios",
       "Roles": "Roles",
-      "Salaries": "Salarios"
+      "Salaries": "Salarios",
+      "Expenses": "Gastos"
     },
     "actions": {
       "View": "Ver",
@@ -447,7 +468,10 @@
     "country": "Selecciona el país",
     "money": "R$ 0,00",
     "notes": "Ej.: aumento, bonus",
-    "itemName": "Ej.: Vale comida"
+    "itemName": "Ej.: Vale comida",
+    "categoryName": "Ej.: Gimnasio",
+    "expenseName": "Ej.: Alquiler",
+    "expenseNotes": "Ej.: Débito automático"
   },
   "date": {
     "placeholderDmy": "dd/mm/aaaa",
@@ -455,5 +479,115 @@
     "open": "Abrir calendario",
     "previous": "Anterior",
     "next": "Siguiente"
+  },
+  "expenses": {
+    "title": "Gastos",
+    "subtitle": "Sigue cuánto del neto queda comprometido cada mes.",
+    "new": "Nuevo gasto",
+    "copyPrevious": "Copiar del mes anterior",
+    "categories": "Categorías",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente",
+    "noSalaryWarning": "No hay salario registrado para este mes.",
+    "addSalary": "Registrar salario",
+    "byCategory": "Por categoría",
+    "byCategoryChart": "Gráfico de gastos por categoría",
+    "last12Months": "Últimos 12 meses",
+    "seriesChart": "Gráfico de gastos de los últimos 12 meses",
+    "listTitle": "Lanzamientos",
+    "empty": "No hay gastos este mes.",
+    "name": "Nombre",
+    "category": "Categoría",
+    "typeLabel": "Tipo",
+    "amount": "Importe",
+    "competence": "Competencia",
+    "dueDay": "Día de vencimiento",
+    "noDueDay": "Sin día",
+    "paid": "Pagado",
+    "notes": "Notas",
+    "recurrence": "Repetir mensualmente",
+    "recurrenceCount": "Cantidad de meses",
+    "recurrencePreview": "Periodo: {{range}}",
+    "editScope": "Aplicar cambio",
+    "createCategoryOption": "Crear nueva categoría…",
+    "createTitle": "Nuevo gasto",
+    "editTitle": "Editar gasto",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "deleteTitle": "Eliminar gasto",
+    "deleteMessage": "¿Seguro que deseas eliminar este gasto?",
+    "deleteScopeTitle": "Eliminar serie",
+    "deleteScopeMessage": "Este gasto forma parte de una serie. Elige el alcance de la eliminación.",
+    "continue": "Continuar",
+    "unsavedTitle": "Cambios sin guardar",
+    "unsavedMessage": "Hay cambios sin guardar. ¿Deseas descartarlos?",
+    "discard": "Descartar",
+    "allCategories": "Todas las categorías",
+    "allTypes": "Todos los tipos",
+    "allPaidStatus": "Todas",
+    "paidOnly": "Pagados",
+    "unpaidOnly": "Pendientes",
+    "pageOf": "Página {{page}} de {{total}}",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "stats": {
+      "net": "Neto",
+      "total": "Total de gastos",
+      "committed": "Comprometido",
+      "available": "Disponible"
+    },
+    "type": {
+      "Fixed": "Fijo",
+      "Variable": "Variable"
+    },
+    "scope": {
+      "This": "Solo este",
+      "ThisAndFollowing": "Este y siguientes",
+      "All": "Toda la serie"
+    },
+    "states": {
+      "error": "No se pudieron cargar estos datos.",
+      "retry": "Reintentar",
+      "emptyChart": "Sin datos para el gráfico."
+    },
+    "systemCategories": {
+      "housing": "Vivienda",
+      "food": "Alimentación",
+      "transport": "Transporte",
+      "health": "Salud",
+      "education": "Educación",
+      "leisure": "Ocio",
+      "subscriptions": "Suscripciones",
+      "taxes": "Impuestos",
+      "debts": "Deudas",
+      "other": "Otros"
+    }
+  },
+  "expenseCategories": {
+    "title": "Categorías de gasto",
+    "subtitle": "Organiza tus gastos con colores e iconos.",
+    "back": "Volver",
+    "new": "Nueva categoría",
+    "empty": "No hay categorías registradas.",
+    "createDefaults": "Crear categorías predeterminadas",
+    "name": "Nombre",
+    "color": "Color",
+    "icon": "Icono",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "createTitle": "Nueva categoría",
+    "editTitle": "Editar categoría",
+    "expenseCount": "{{count}} gastos",
+    "deleteTitle": "Eliminar categoría",
+    "deleteMessage": "¿Seguro que deseas eliminar esta categoría?",
+    "reassignTitle": "Reasignar gastos",
+    "reassignMessage": "Esta categoría tiene gastos. Elige a dónde moverlos.",
+    "reassignTo": "Nueva categoría",
+    "states": {
+      "error": "No se pudieron cargar las categorías.",
+      "retry": "Reintentar"
+    }
   }
 }

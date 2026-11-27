@@ -7,6 +7,8 @@ using Microsoft.Extensions.Options;
 using FluentValidation;
 using Salary360.Application.Common;
 using Salary360.Application.Common.Interfaces;
+using Salary360.Application.Expenses.Interfaces;
+using Salary360.Application.Expenses.Services;
 using Salary360.Application.Interfaces.Email;
 using Salary360.Application.Interfaces.Identity;
 using Salary360.Application.Interfaces.Messaging;
@@ -63,6 +65,7 @@ public static class DependencyInjection
         services.AddSingleton<IPurchasingPowerCalculator, PurchasingPowerCalculator>();
         services.AddSingleton<ISalaryInsightGenerator, SalaryInsightGenerator>();
         services.AddSingleton<ISalaryProjectionCalculator, SalaryProjectionCalculator>();
+        services.AddScoped<IDefaultExpenseCategoryService, DefaultExpenseCategoryService>();
 
         return services;
     }
@@ -94,6 +97,7 @@ public static class DependencyInjection
         services.AddOptions<SeedSettings>().BindConfiguration(SeedSettings.SectionName);
 
         services.AddScoped<ISampleDataSeeder, SalarySampleDataSeeder>();
+        services.AddScoped<ISampleDataSeeder, ExpensesSampleDataSeeder>();
 
         services.AddMemoryCache();
         services.AddHttpClient(IbgeInflationProvider.HttpClientName, (sp, client) =>
@@ -122,6 +126,8 @@ public static class DependencyInjection
 
         services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<AppDbContext>());
         services.AddScoped<ISalaryRecordRepository, SalaryRecordRepository>();
+        services.AddScoped<IExpenseCategoryRepository, ExpenseCategoryRepository>();
+        services.AddScoped<IExpenseRepository, ExpenseRepository>();
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
         services.AddIdentityCore<ApplicationUser>(options =>

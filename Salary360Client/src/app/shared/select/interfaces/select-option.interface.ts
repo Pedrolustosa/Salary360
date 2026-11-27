@@ -3,4 +3,5 @@ export interface SelectOption {
   label: string;
   flagUrl?: string;
   textClass?: string;
+  dotClass?: string;
 }

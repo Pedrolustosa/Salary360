@@ -11,7 +11,8 @@
     "profile": "Profile",
     "salaries": "Salaries",
     "evolution": "Evolution",
-    "salaryIntelligence": "Salary intelligence"
+    "salaryIntelligence": "Salary intelligence",
+    "expenses": "Expenses"
   },
   "auth": {
     "loginSubtitle": "Every paycheck with a purpose.",
@@ -60,7 +61,15 @@
     "infoTitle": "Notice",
     "salaryCreated": "Salary saved successfully.",
     "salaryUpdated": "Salary updated successfully.",
-    "salaryDeleted": "Salary deleted successfully."
+    "salaryDeleted": "Salary deleted successfully.",
+    "expenseCreated": "Expense saved successfully.",
+    "expenseUpdated": "Expense updated successfully.",
+    "expenseDeleted": "Expense deleted successfully.",
+    "expensesCopied": "{{created}} expenses copied ({{skipped}} skipped).",
+    "categoryCreated": "Category created successfully.",
+    "categoryUpdated": "Category updated successfully.",
+    "categoryDeleted": "Category deleted successfully.",
+    "defaultsCreated": "{{created}} default categories created."
   },
   "errors": {
     "network": "Could not reach the server.",
@@ -94,7 +103,12 @@
       "cannot_deactivate_self": "You cannot deactivate your own account.",
       "address_incomplete": "Please fill in the complete address.",
       "business_rule_violation": "This operation is not allowed.",
-      "identity_failed": "The operation could not be completed."
+      "identity_failed": "The operation could not be completed.",
+      "duplicate_category_name": "A category with this name already exists.",
+      "category_in_use": "The category is in use and must be reassigned.",
+      "category_not_found": "Category not found.",
+      "too_many_categories": "Category limit reached.",
+      "too_many_expenses_in_month": "Monthly expense limit reached."
     },
     "fields": {
       "required": "This field is required.",
@@ -117,7 +131,13 @@
       "invalid_period": "Enter a valid period (from/to).",
       "period_too_long": "The maximum period is 120 months.",
       "invalid_basis": "Invalid salary basis.",
-      "invalid_horizon": "Invalid projection horizon."
+      "invalid_horizon": "Invalid projection horizon.",
+      "future_competence_limit": "Future competence exceeds the allowed limit.",
+      "invalid_due_day": "Invalid due day.",
+      "invalid_recurrence_count": "Invalid recurrence count.",
+      "invalid_scope": "Invalid scope.",
+      "invalid_color": "Invalid color.",
+      "invalid_icon": "Invalid icon."
     }
   },
   "home": {
@@ -374,7 +394,8 @@
       "Profile": "Profile",
       "Users": "Users",
       "Roles": "Roles",
-      "Salaries": "Salaries"
+      "Salaries": "Salaries",
+      "Expenses": "Expenses"
     },
     "actions": {
       "View": "View",
@@ -447,7 +468,10 @@
     "country": "Select a country",
     "money": "R$ 0.00",
     "notes": "E.g. raise, bonus",
-    "itemName": "E.g. Meal voucher"
+    "itemName": "E.g. Meal voucher",
+    "categoryName": "E.g. Gym",
+    "expenseName": "E.g. Rent",
+    "expenseNotes": "E.g. Auto-debit"
   },
   "date": {
     "placeholderDmy": "dd/mm/yyyy",
@@ -455,5 +479,115 @@
     "open": "Open calendar",
     "previous": "Previous",
     "next": "Next"
+  },
+  "expenses": {
+    "title": "Expenses",
+    "subtitle": "Track how much of your net pay is committed each month.",
+    "new": "New expense",
+    "copyPrevious": "Copy from previous month",
+    "categories": "Categories",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "noSalaryWarning": "There is no salary recorded for this month.",
+    "addSalary": "Add salary",
+    "byCategory": "By category",
+    "byCategoryChart": "Expenses by category chart",
+    "last12Months": "Last 12 months",
+    "seriesChart": "Expenses over the last 12 months",
+    "listTitle": "Entries",
+    "empty": "No expenses this month.",
+    "name": "Name",
+    "category": "Category",
+    "typeLabel": "Type",
+    "amount": "Amount",
+    "competence": "Competence",
+    "dueDay": "Due day",
+    "noDueDay": "No due day",
+    "paid": "Paid",
+    "notes": "Notes",
+    "recurrence": "Repeat monthly",
+    "recurrenceCount": "Number of months",
+    "recurrencePreview": "Range: {{range}}",
+    "editScope": "Apply change",
+    "createCategoryOption": "Create new category…",
+    "createTitle": "New expense",
+    "editTitle": "Edit expense",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteTitle": "Delete expense",
+    "deleteMessage": "Are you sure you want to delete this expense?",
+    "deleteScopeTitle": "Delete series",
+    "deleteScopeMessage": "This expense belongs to a series. Choose the deletion scope.",
+    "continue": "Continue",
+    "unsavedTitle": "Unsaved changes",
+    "unsavedMessage": "You have unsaved changes. Discard them?",
+    "discard": "Discard",
+    "allCategories": "All categories",
+    "allTypes": "All types",
+    "allPaidStatus": "All",
+    "paidOnly": "Paid",
+    "unpaidOnly": "Unpaid",
+    "pageOf": "Page {{page}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next",
+    "stats": {
+      "net": "Net",
+      "total": "Total expenses",
+      "committed": "Committed",
+      "available": "Available"
+    },
+    "type": {
+      "Fixed": "Fixed",
+      "Variable": "Variable"
+    },
+    "scope": {
+      "This": "This only",
+      "ThisAndFollowing": "This and following",
+      "All": "Entire series"
+    },
+    "states": {
+      "error": "Could not load this data.",
+      "retry": "Try again",
+      "emptyChart": "No chart data yet."
+    },
+    "systemCategories": {
+      "housing": "Housing",
+      "food": "Food",
+      "transport": "Transport",
+      "health": "Health",
+      "education": "Education",
+      "leisure": "Leisure",
+      "subscriptions": "Subscriptions",
+      "taxes": "Taxes",
+      "debts": "Debts",
+      "other": "Other"
+    }
+  },
+  "expenseCategories": {
+    "title": "Expense categories",
+    "subtitle": "Organize expenses with colors and icons.",
+    "back": "Back",
+    "new": "New category",
+    "empty": "No categories yet.",
+    "createDefaults": "Create default categories",
+    "name": "Name",
+    "color": "Color",
+    "icon": "Icon",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "createTitle": "New category",
+    "editTitle": "Edit category",
+    "expenseCount": "{{count}} expenses",
+    "deleteTitle": "Delete category",
+    "deleteMessage": "Are you sure you want to delete this category?",
+    "reassignTitle": "Reassign expenses",
+    "reassignMessage": "This category has expenses. Choose where to move them.",
+    "reassignTo": "Target category",
+    "states": {
+      "error": "Could not load categories.",
+      "retry": "Try again"
+    }
   }
 }

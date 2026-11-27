@@ -1,0 +1,14 @@
+<div class="grid grid-cols-5 gap-2 sm:grid-cols-9" role="radiogroup" [attr.aria-label]="ariaLabel() || null">
+  @for (color of colors; track color) {
+    <button
+      type="button"
+      role="radio"
+      class="h-8 w-8 rounded-full ring-offset-2 transition hover:scale-105 focus-visible:outline-none focus-visible:ring-2 dark:ring-offset-slate-900"
+      [class]="swatchClass(color)"
+      [attr.aria-checked]="value() === color"
+      [attr.aria-label]="color"
+      [disabled]="disabled()"
+      (click)="select(color)"
+    ></button>
+  }
+</div>

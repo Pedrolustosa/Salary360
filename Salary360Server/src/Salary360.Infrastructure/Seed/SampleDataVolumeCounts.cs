@@ -32,4 +32,20 @@ public static class SampleDataVolumeCounts
             SampleDataVolume.Large => 36,
             _ => 18
         };
+
+    public static int UserExpenseMonthCount(SampleDataVolume volume)
+        => volume switch
+        {
+            SampleDataVolume.Small => 12,
+            SampleDataVolume.Large => 36,
+            _ => 24
+        };
+
+    public static int AdminExpenseMonthCount(SampleDataVolume volume)
+        => volume switch
+        {
+            SampleDataVolume.Small => 3,
+            SampleDataVolume.Large => 12,
+            _ => 6
+        };
 }

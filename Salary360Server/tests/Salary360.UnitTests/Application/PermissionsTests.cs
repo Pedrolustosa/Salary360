@@ -14,7 +14,9 @@ public sealed class PermissionsTests
             [
                 AppPermissions.Profile.View, AppPermissions.Profile.Update,
                 AppPermissions.Salaries.View, AppPermissions.Salaries.Create,
-                AppPermissions.Salaries.Update, AppPermissions.Salaries.Delete
+                AppPermissions.Salaries.Update, AppPermissions.Salaries.Delete,
+                AppPermissions.Expenses.View, AppPermissions.Expenses.Create,
+                AppPermissions.Expenses.Update, AppPermissions.Expenses.Delete
             ],
             AppPermissions.ByRole[AppRoles.User]);
 

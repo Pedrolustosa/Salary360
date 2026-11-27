@@ -1,0 +1,280 @@
+<div class="space-y-4">
+  <section class="card flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-lg font-semibold">{{ 'expenses.title' | translate }}</h1>
+      <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'expenses.subtitle' | translate }}</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <div class="flex items-center gap-1">
+        <button type="button" class="btn-secondary px-2 py-1" [attr.aria-label]="'expenses.previousMonth' | translate" (click)="previousMonth()">
+          <app-icon name="chevron-double-left" />
+        </button>
+        <div class="w-44">
+          <app-month-year-picker
+            inputId="expensesCompetence"
+            [ngModel]="competence()"
+            (ngModelChange)="onCompetenceChange($event)"
+          />
+        </div>
+        <button type="button" class="btn-secondary px-2 py-1" [attr.aria-label]="'expenses.nextMonth' | translate" (click)="nextMonth()">
+          <app-icon name="chevron-double-right" />
+        </button>
+      </div>
+      <a routerLink="/expenses/categories" class="btn-secondary gap-2">
+        <app-icon name="tag" />
+        {{ 'expenses.categories' | translate }}
+      </a>
+      @if (canCreate()) {
+        <button type="button" class="btn-secondary gap-2" [disabled]="copying()" (click)="copyPreviousMonth()">
+          <app-icon name="document-duplicate" />
+          {{ 'expenses.copyPrevious' | translate }}
+        </button>
+        <button type="button" class="btn-primary gap-2" (click)="openCreate()">
+          <app-icon name="plus" />
+          {{ 'expenses.new' | translate }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <section class="card space-y-3">
+    @if (summaryLoading()) {
+      <app-skeleton [lines]="3" />
+    } @else if (summaryError()) {
+      <div class="space-y-2 py-4 text-center">
+        <p class="text-sm text-slate-500 dark:text-slate-400">{{ 'expenses.states.error' | translate }}</p>
+        <button type="button" class="btn-secondary text-xs" (click)="retrySummary()">{{ 'expenses.states.retry' | translate }}</button>
+      </div>
+    } @else {
+      @if (summary() && !summary()!.hasSalary) {
+        <p class="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+          {{ 'expenses.noSalaryWarning' | translate }}
+          <a routerLink="/salaries/new" class="ml-1 font-medium underline">{{ 'expenses.addSalary' | translate }}</a>
+        </p>
+      }
+      <div class="grid items-stretch gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <app-stat-card [label]="'expenses.stats.net' | translate" [value]="netDisplay()" icon="banknotes" [tone]="StatTone.Brand" />
+        <app-stat-card [label]="'expenses.stats.total' | translate" [value]="totalDisplay()" icon="receipt-percent" [tone]="StatTone.Slate" />
+        <app-stat-card [label]="'expenses.stats.committed' | translate" [value]="committedDisplay()" icon="chart-bar" [tone]="StatTone.Violet" [percent]="summary()?.committedPercent ?? null" />
+        <app-stat-card [label]="'expenses.stats.available' | translate" [value]="availableDisplay()" icon="banknotes" [tone]="availableTone()" />
+      </div>
+    }
+  </section>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <section class="card space-y-3">
+      <h2 class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'expenses.byCategory' | translate }}</h2>
+      @if (summaryLoading()) {
+        <app-skeleton [lines]="5" />
+      } @else if (summaryError()) {
+        <div class="space-y-2 py-6 text-center">
+          <p class="text-sm text-slate-500">{{ 'expenses.states.error' | translate }}</p>
+          <button type="button" class="btn-secondary text-xs" (click)="retrySummary()">{{ 'expenses.states.retry' | translate }}</button>
+        </div>
+      } @else if (doughnutValues().length === 0) {
+        <p class="py-8 text-center text-sm text-slate-500 dark:text-slate-400">{{ 'expenses.states.emptyChart' | translate }}</p>
+      } @else {
+        <div class="h-72">
+          <app-doughnut-chart [labels]="doughnutLabels()" [values]="doughnutValues()" [colors]="doughnutColors()" [ariaLabel]="'expenses.byCategoryChart' | translate" />
+        </div>
+      }
+    </section>
+
+    <section class="card space-y-3">
+      <h2 class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'expenses.last12Months' | translate }}</h2>
+      @if (seriesLoading()) {
+        <app-skeleton [lines]="5" />
+      } @else if (seriesError()) {
+        <div class="space-y-2 py-6 text-center">
+          <p class="text-sm text-slate-500">{{ 'expenses.states.error' | translate }}</p>
+          <button type="button" class="btn-secondary text-xs" (click)="retrySeries()">{{ 'expenses.states.retry' | translate }}</button>
+        </div>
+      } @else if (series().length === 0) {
+        <p class="py-8 text-center text-sm text-slate-500 dark:text-slate-400">{{ 'expenses.states.emptyChart' | translate }}</p>
+      } @else {
+        <app-bar-chart [labels]="barLabels()" [datasets]="barDatasets()" [yTickFormatter]="yFormatter" [ariaLabel]="'expenses.seriesChart' | translate" />
+      }
+    </section>
+  </div>
+
+  <section class="card space-y-3">
+    <div class="flex flex-wrap items-end justify-between gap-3">
+      <h2 class="text-sm font-semibold text-slate-700 dark:text-slate-200">{{ 'expenses.listTitle' | translate }}</h2>
+      <div class="flex flex-wrap gap-2">
+        <div class="w-40">
+          <app-select
+            inputId="expenseCategoryFilter"
+            [options]="categoryFilterOptions()"
+            [ngModel]="categoryFilter()"
+            (ngModelChange)="onCategoryFilter($event)"
+            [placeholder]="'expenses.allCategories' | translate"
+            [compact]="true"
+          />
+        </div>
+        <div class="w-36">
+          <app-select
+            inputId="expenseTypeFilter"
+            [options]="typeFilterOptions()"
+            [ngModel]="typeFilter()"
+            (ngModelChange)="onTypeFilter($event)"
+            [compact]="true"
+          />
+        </div>
+        <div class="w-36">
+          <app-select
+            inputId="expensePaidFilter"
+            [options]="paidFilterOptions()"
+            [ngModel]="paidFilter()"
+            (ngModelChange)="onPaidFilter($event)"
+            [compact]="true"
+          />
+        </div>
+      </div>
+    </div>
+
+    @if (listLoading()) {
+      <app-skeleton [lines]="6" />
+    } @else if (listError()) {
+      <div class="space-y-2 py-8 text-center">
+        <p class="text-sm text-slate-500">{{ 'expenses.states.error' | translate }}</p>
+        <button type="button" class="btn-secondary text-xs" (click)="retryList()">{{ 'expenses.states.retry' | translate }}</button>
+      </div>
+    } @else if (items().length === 0) {
+      <div class="flex flex-col items-center gap-3 py-12 text-center">
+        <app-icon name="receipt-percent" class="text-slate-400" />
+        <p class="text-sm text-slate-500 dark:text-slate-400">{{ 'expenses.empty' | translate }}</p>
+        @if (canCreate()) {
+          <button type="button" class="btn-primary gap-2" (click)="openCreate()">
+            <app-icon name="plus" />
+            {{ 'expenses.new' | translate }}
+          </button>
+        }
+      </div>
+    } @else {
+      <div class="max-h-[28rem] overflow-auto">
+        <table class="w-full min-w-[48rem] text-sm">
+          <thead class="sticky top-0 bg-white dark:bg-slate-900">
+            <tr class="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-500 dark:border-slate-700 dark:text-slate-400">
+              <th class="py-2 pr-3">{{ 'expenses.paid' | translate }}</th>
+              <th class="py-2 pr-3">{{ 'expenses.name' | translate }}</th>
+              <th class="py-2 pr-3">{{ 'expenses.category' | translate }}</th>
+              <th class="py-2 pr-3">{{ 'expenses.typeLabel' | translate }}</th>
+              <th class="py-2 pr-3">{{ 'expenses.dueDay' | translate }}</th>
+              <th class="py-2 pr-3">{{ 'expenses.amount' | translate }}</th>
+              @if (canUpdate() || canDelete()) {
+                <th class="py-2"></th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of items(); track item.id) {
+              <tr
+                class="border-b border-slate-100 dark:border-slate-800"
+                [class.bg-rose-50]="isOverdue(item.year, item.month, item.dueDay, item.isPaid)"
+                [class.dark:bg-rose-950/30]="isOverdue(item.year, item.month, item.dueDay, item.isPaid)"
+              >
+                <td class="py-2.5 pr-3">
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                    [checked]="item.isPaid"
+                    [disabled]="!canUpdate()"
+                    [attr.aria-label]="'expenses.paid' | translate"
+                    (change)="togglePaid(item)"
+                  />
+                </td>
+                <td class="py-2.5 pr-3 font-medium">{{ item.name }}</td>
+                <td class="py-2.5 pr-3">
+                  <span class="inline-flex items-center gap-2">
+                    <span class="h-2.5 w-2.5 rounded-full" [class]="categoryColorClasses(item.categoryColorKey).bg"></span>
+                    <app-icon [name]="categoryIconName(item.categoryIconKey)" class="text-slate-500" />
+                    <span>{{ categoryLabel(item) }}</span>
+                  </span>
+                </td>
+                <td class="py-2.5 pr-3">
+                  <span
+                    class="rounded-full px-2 py-0.5 text-xs font-medium"
+                    [class.bg-sky-100]="item.type === ExpenseType.Fixed"
+                    [class.text-sky-700]="item.type === ExpenseType.Fixed"
+                    [class.dark:bg-sky-950]="item.type === ExpenseType.Fixed"
+                    [class.dark:text-sky-300]="item.type === ExpenseType.Fixed"
+                    [class.bg-amber-100]="item.type === ExpenseType.Variable"
+                    [class.text-amber-700]="item.type === ExpenseType.Variable"
+                    [class.dark:bg-amber-950]="item.type === ExpenseType.Variable"
+                    [class.dark:text-amber-300]="item.type === ExpenseType.Variable"
+                  >
+                    {{ ('expenses.type.' + item.type) | translate }}
+                  </span>
+                </td>
+                <td class="py-2.5 pr-3 tabular-nums">{{ item.dueDay ?? '—' }}</td>
+                <td class="py-2.5 pr-3 tabular-nums font-semibold">{{ money(item.amount) }}</td>
+                @if (canUpdate() || canDelete()) {
+                  <td class="py-2.5">
+                    <div class="flex justify-end gap-2">
+                      @if (canUpdate()) {
+                        <button type="button" class="btn-secondary px-2 py-1 text-xs" (click)="openEdit(item.id)">{{ 'expenses.edit' | translate }}</button>
+                      }
+                      @if (canDelete()) {
+                        <button type="button" class="btn-secondary px-2 py-1 text-xs text-rose-600 dark:text-rose-400" [attr.aria-label]="'expenses.delete' | translate" (click)="askDelete(item)">
+                          <app-icon name="trash" />
+                        </button>
+                      }
+                    </div>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex items-center justify-between gap-3 text-sm text-slate-500 dark:text-slate-400">
+        <span>{{ 'expenses.pageOf' | translate: { page: page(), total: totalPages() } }}</span>
+        <div class="flex gap-2">
+          <button type="button" class="btn-secondary px-3 py-1" [disabled]="page() <= 1" (click)="previousPage()">{{ 'expenses.previous' | translate }}</button>
+          <button type="button" class="btn-secondary px-3 py-1" [disabled]="page() >= totalPages()" (click)="nextPage()">{{ 'expenses.next' | translate }}</button>
+        </div>
+      </div>
+    }
+  </section>
+</div>
+
+<app-expense-form-dialog
+  [open]="formOpen()"
+  [expenseId]="editingId()"
+  [competence]="competence()"
+  [categories]="categories()"
+  (closed)="closeForm()"
+  (saved)="onFormSaved()"
+  (categoriesChanged)="onCategoriesChanged()"
+/>
+
+<app-modal
+  [open]="scopeModalOpen()"
+  [title]="'expenses.deleteScopeTitle' | translate"
+  maxWidthClass="max-w-sm"
+  (cancelled)="cancelDelete()"
+>
+  <div class="space-y-4">
+    <p class="text-sm text-slate-600 dark:text-slate-300">{{ 'expenses.deleteScopeMessage' | translate }}</p>
+    <app-segmented-control
+      [ngModel]="deleteScope()"
+      (ngModelChange)="onDeleteScopeChange($event)"
+      [options]="scopeOptions"
+      [ariaLabel]="'expenses.deleteScopeTitle' | translate"
+    />
+    <div class="flex justify-end gap-2">
+      <button type="button" class="btn-secondary" (click)="cancelDelete()">{{ 'common.cancel' | translate }}</button>
+      <button type="button" class="btn-primary bg-rose-600 hover:bg-rose-700" (click)="confirmDelete()">{{ 'expenses.delete' | translate }}</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-confirm-dialog
+  [open]="confirmOpen()"
+  [title]="'expenses.deleteTitle' | translate"
+  [message]="'expenses.deleteMessage' | translate"
+  [confirmLabel]="'expenses.delete' | translate"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()"
+/>
