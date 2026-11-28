@@ -1,6 +1,6 @@
 using Salary360.Application.Interfaces.Persistence;
-using Salary360.Application.SalaryIntelligence.Dtos;
 using Salary360.Domain.Entities;
+using Salary360.Application.SalaryIntelligence.Dtos;
 
 namespace Salary360.Application.SalaryIntelligence;
 

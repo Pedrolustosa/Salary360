@@ -16,7 +16,7 @@ public sealed class DeleteExpenseCommandHandler(
     public async Task<Unit> HandleAsync(DeleteExpenseCommand request, CancellationToken cancellationToken = default)
     {
         var expense = await expenseRepository.GetByIdAsync(request.Id, cancellationToken);
-        if (expense is null || expense.UserId != currentUser.UserId)
+        if (expense is null || expense.UserId != currentUser.GetUserId())
             throw new NotFoundException("Expense", request.Id);
 
         IReadOnlyList<Domain.Entities.Expense> targets;

@@ -2,6 +2,7 @@ using Salary360.Application.Interfaces.Identity;
 using Salary360.Application.Interfaces.Messaging;
 using Salary360.Application.Interfaces.Persistence;
 using Salary360.Application.Salaries.Enums;
+using Salary360.Application.Salaries.Dtos;
 
 namespace Salary360.Application.Salaries.Queries;
 
@@ -14,9 +15,9 @@ public sealed class GetSalaryEvolutionQueryHandler(
         => request.Mode switch
         {
             SalaryEvolutionMode.Month => repository.GetMonthEvolutionAsync(
-                currentUser.UserId, request.Month!.Value, request.FromYear, request.ToYear, cancellationToken),
+                currentUser.GetUserId(), request.Month!.Value, request.FromYear, request.ToYear, cancellationToken),
             SalaryEvolutionMode.Year => repository.GetYearEvolutionAsync(
-                currentUser.UserId, request.FromYear, request.ToYear, cancellationToken),
+                currentUser.GetUserId(), request.FromYear, request.ToYear, cancellationToken),
             _ => throw new InvalidOperationException("Unsupported evolution mode.")
         };
 }

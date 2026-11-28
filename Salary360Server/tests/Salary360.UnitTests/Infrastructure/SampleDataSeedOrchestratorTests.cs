@@ -74,7 +74,7 @@ public sealed class SampleDataSeedOrchestratorTests
 
     private sealed class ProbeSeeder : ISampleDataSeeder
     {
-        public int Order => 1;
+        public int GetOrder() => 1;
 
         public int CallCount { get; private set; }
 

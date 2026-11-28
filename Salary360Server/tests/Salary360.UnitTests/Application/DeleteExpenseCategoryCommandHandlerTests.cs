@@ -20,7 +20,7 @@ public sealed class DeleteExpenseCategoryCommandHandlerTests
     {
         var userId = Guid.NewGuid();
         var category = new ExpenseCategory(userId, "Food", null, CategoryColor.Orange, CategoryIcon.ShoppingBag);
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         repository.GetByIdAsync(category.Id, Arg.Any<CancellationToken>()).Returns(category);
         repository.CountExpensesAsync(category.Id, Arg.Any<CancellationToken>()).Returns(2);
 
@@ -38,7 +38,7 @@ public sealed class DeleteExpenseCategoryCommandHandlerTests
         var userId = Guid.NewGuid();
         var source = new ExpenseCategory(userId, "Food", null, CategoryColor.Orange, CategoryIcon.ShoppingBag);
         var target = new ExpenseCategory(userId, "Other", null, CategoryColor.Slate, CategoryIcon.EllipsisHorizontal);
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         repository.GetByIdAsync(source.Id, Arg.Any<CancellationToken>()).Returns(source);
         repository.GetByIdAsync(target.Id, Arg.Any<CancellationToken>()).Returns(target);
         repository.CountExpensesAsync(source.Id, Arg.Any<CancellationToken>()).Returns(1);

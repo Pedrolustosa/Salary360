@@ -1,3 +1,5 @@
+using Salary360.Application.Salaries.Dtos;
+
 namespace Salary360.Application.Salaries;
 
 public static class SalaryValidation
@@ -22,5 +24,5 @@ public static class SalaryValidation
             .Where(name => name.Length > 0)
             .ToList();
         return names.Count == names.Distinct(StringComparer.OrdinalIgnoreCase).Count();
-    }
+}
 }

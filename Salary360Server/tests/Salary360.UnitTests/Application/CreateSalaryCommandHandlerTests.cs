@@ -4,6 +4,7 @@ using Salary360.Application.Interfaces.Identity;
 using Salary360.Application.Interfaces.Persistence;
 using Salary360.Application.Salaries;
 using Salary360.Application.Salaries.Commands;
+using Salary360.Application.Salaries.Dtos;
 using Salary360.Domain.Entities;
 using Salary360.Domain.Enums;
 using Salary360.Domain.Interfaces;
@@ -20,7 +21,7 @@ public sealed class CreateSalaryCommandHandlerTests
     public async Task HandleAsync_DuplicateCompetence_ThrowsConflict()
     {
         var userId = Guid.NewGuid();
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         repository.ExistsAsync(userId, 2024, 1, null, Arg.Any<CancellationToken>()).Returns(true);
         var handler = new CreateSalaryCommandHandler(repository, unitOfWork, currentUser);
 
@@ -32,7 +33,7 @@ public sealed class CreateSalaryCommandHandlerTests
     public async Task HandleAsync_CreatesForCurrentUser()
     {
         var userId = Guid.NewGuid();
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         repository.ExistsAsync(userId, 2024, 2, null, Arg.Any<CancellationToken>()).Returns(false);
         var handler = new CreateSalaryCommandHandler(repository, unitOfWork, currentUser);
 

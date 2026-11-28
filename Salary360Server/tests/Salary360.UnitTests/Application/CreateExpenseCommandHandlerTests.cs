@@ -22,7 +22,7 @@ public sealed class CreateExpenseCommandHandlerTests
     {
         var userId = Guid.NewGuid();
         var category = new ExpenseCategory(userId, "Food", null, CategoryColor.Orange, CategoryIcon.ShoppingBag);
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         categoryRepository.GetByIdAsync(category.Id, Arg.Any<CancellationToken>()).Returns(category);
         expenseRepository.CountInMonthAsync(userId, Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(0);
@@ -57,7 +57,7 @@ public sealed class CreateExpenseCommandHandlerTests
     {
         var userId = Guid.NewGuid();
         var category = new ExpenseCategory(userId, "Rent", null, CategoryColor.Blue, CategoryIcon.Home);
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         categoryRepository.GetByIdAsync(category.Id, Arg.Any<CancellationToken>()).Returns(category);
         expenseRepository.CountInMonthAsync(userId, Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(0);
@@ -86,7 +86,7 @@ public sealed class CreateExpenseCommandHandlerTests
     {
         var userId = Guid.NewGuid();
         var category = new ExpenseCategory(userId, "Other", null, CategoryColor.Slate, CategoryIcon.EllipsisHorizontal);
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         categoryRepository.GetByIdAsync(category.Id, Arg.Any<CancellationToken>()).Returns(category);
         var now = DateTime.UtcNow;
         expenseRepository.CountInMonthAsync(userId, now.Year, now.Month, Arg.Any<CancellationToken>())

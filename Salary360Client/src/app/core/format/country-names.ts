@@ -1,9 +1,5 @@
 import { getCountries } from 'libphonenumber-js';
-
-export interface CountryOption {
-  code: string;
-  name: string;
-}
+import { CountryOption } from './interfaces/country-option.interface';
 
 export function listCountries(locale: string): CountryOption[] {
   const names = new Intl.DisplayNames([locale], { type: 'region' });

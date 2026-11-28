@@ -15,7 +15,7 @@ import { Skeleton } from '../../../shared/skeleton/skeleton';
 import { CategoryFormDialog } from '../category-form-dialog/category-form-dialog';
 import { ExpenseCategoryListItem } from '../interfaces/expense-category-list-item.interface';
 import { ExpenseCategoryService } from '../services/expense-category.service';
-import { categoryColorClasses } from '../utils/category-color-classes';
+import { categoryColorClasses } from '../../../shared/utils/category-color-classes';
 import { categoryDisplayName } from '../utils/category-display';
 import { categoryIconName } from '../utils/category-icon-name';
 

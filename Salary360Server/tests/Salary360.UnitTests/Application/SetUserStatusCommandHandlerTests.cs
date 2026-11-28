@@ -16,7 +16,7 @@ public sealed class SetUserStatusCommandHandlerTests
     public async Task HandleAsync_DeactivatingYourself_ThrowsDomainException()
     {
         var userId = Guid.NewGuid();
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         var handler = new SetUserStatusCommandHandler(identity, currentUser);
 
         var exception = await Assert.ThrowsAsync<DomainException>(
@@ -29,7 +29,7 @@ public sealed class SetUserStatusCommandHandlerTests
     [Fact]
     public async Task HandleAsync_DeactivatingAnotherUser_CallsIdentityService()
     {
-        currentUser.UserId.Returns(Guid.NewGuid());
+        currentUser.GetUserId().Returns(Guid.NewGuid());
         var target = Guid.NewGuid();
         var handler = new SetUserStatusCommandHandler(identity, currentUser);
 

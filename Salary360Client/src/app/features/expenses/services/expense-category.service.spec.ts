@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../../environments/environment';
-import { CategoryColor } from '../enums/category-color.enum';
+import { CategoryColor } from '../../../shared/enums/category-color.enum';
 import { CategoryIcon } from '../enums/category-icon.enum';
 import { ExpenseCategoryService } from './expense-category.service';
 

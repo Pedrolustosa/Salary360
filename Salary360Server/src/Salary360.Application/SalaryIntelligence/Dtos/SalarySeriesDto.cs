@@ -1,3 +1,4 @@
+using Salary360.Application.Salaries.Dtos;
 namespace Salary360.Application.SalaryIntelligence.Dtos;
 
 public sealed record SalarySeriesPointDto(

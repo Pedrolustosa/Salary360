@@ -18,7 +18,7 @@ public sealed class DeleteSalaryCommandHandlerTests
     [Fact]
     public async Task HandleAsync_OtherUsersRecord_ThrowsNotFound()
     {
-        currentUser.UserId.Returns(Guid.NewGuid());
+        currentUser.GetUserId().Returns(Guid.NewGuid());
         var record = new SalaryRecord(Guid.NewGuid(), 2024, 1, 1000m, null, []);
         repository.GetByIdAsync(record.Id, Arg.Any<CancellationToken>()).Returns(record);
         var handler = new DeleteSalaryCommandHandler(repository, unitOfWork, currentUser);

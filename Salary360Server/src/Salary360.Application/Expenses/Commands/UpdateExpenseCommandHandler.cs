@@ -6,6 +6,7 @@ using Salary360.Application.Interfaces.Messaging;
 using Salary360.Application.Interfaces.Persistence;
 using Salary360.Domain.Enums;
 using Salary360.Domain.Interfaces;
+using Salary360.Application.Expenses.Dtos;
 
 namespace Salary360.Application.Expenses.Commands;
 
@@ -18,7 +19,7 @@ public sealed class UpdateExpenseCommandHandler(
     public async Task<ExpenseDto> HandleAsync(
         UpdateExpenseCommand request, CancellationToken cancellationToken = default)
     {
-        var userId = currentUser.UserId;
+        var userId = currentUser.GetUserId();
         var expense = await expenseRepository.GetByIdAsync(request.Id, cancellationToken);
         if (expense is null || expense.UserId != userId)
             throw new NotFoundException("Expense", request.Id);
@@ -36,14 +37,14 @@ public sealed class UpdateExpenseCommandHandler(
                     ErrorCode = "invalid_scope"
                 }
             ]);
-        }
+}
 
         if (competenceChanged)
         {
             var existing = await expenseRepository.CountInMonthAsync(userId, request.Year, request.Month, cancellationToken);
             if (existing >= Domain.Entities.Expense.MaxPerUserPerMonth)
                 throw new ConflictException("Too many expenses in the month.", "too_many_expenses_in_month");
-        }
+}
 
         var targets = await ResolveTargetsAsync(expense, request.Scope, cancellationToken);
         foreach (var target in targets)
@@ -60,7 +61,7 @@ public sealed class UpdateExpenseCommandHandler(
                     request.DueDay,
                     request.IsPaid,
                     request.Notes);
-            }
+}
             else
             {
                 target.UpdateWithoutCompetence(
@@ -71,12 +72,12 @@ public sealed class UpdateExpenseCommandHandler(
                     request.DueDay,
                     request.IsPaid,
                     request.Notes);
-            }
+}
         }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return expense.ToDto();
-    }
+}
 
     private async Task<IReadOnlyList<Domain.Entities.Expense>> ResolveTargetsAsync(
         Domain.Entities.Expense expense,
@@ -92,5 +93,5 @@ public sealed class UpdateExpenseCommandHandler(
 
         return await expenseRepository.ListBySeriesFromAsync(
             expense.UserId, expense.SeriesId.Value, expense.Year, expense.Month, cancellationToken);
-    }
+}
 }

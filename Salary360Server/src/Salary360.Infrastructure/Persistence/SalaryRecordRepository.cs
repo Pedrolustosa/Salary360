@@ -4,6 +4,7 @@ using Salary360.Application.Salaries;
 using Salary360.Domain.Common;
 using Salary360.Domain.Entities;
 using Salary360.Domain.Enums;
+using Salary360.Application.Salaries.Dtos;
 
 namespace Salary360.Infrastructure.Persistence;
 

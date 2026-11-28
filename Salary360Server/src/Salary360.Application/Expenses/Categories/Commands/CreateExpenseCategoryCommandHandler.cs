@@ -4,6 +4,7 @@ using Salary360.Application.Interfaces.Messaging;
 using Salary360.Application.Interfaces.Persistence;
 using Salary360.Domain.Entities;
 using Salary360.Domain.Interfaces;
+using Salary360.Application.Expenses.Dtos;
 
 namespace Salary360.Application.Expenses.Categories.Commands;
 
@@ -15,7 +16,7 @@ public sealed class CreateExpenseCategoryCommandHandler(
     public async Task<ExpenseCategoryDto> HandleAsync(
         CreateExpenseCategoryCommand request, CancellationToken cancellationToken = default)
     {
-        var userId = currentUser.UserId;
+        var userId = currentUser.GetUserId();
         var name = request.Name.Trim();
 
         if (await repository.CountByUserAsync(userId, cancellationToken) >= ExpenseCategory.MaxPerUser)
@@ -28,5 +29,5 @@ public sealed class CreateExpenseCategoryCommandHandler(
         repository.Add(category);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return category.ToDto();
-    }
+}
 }

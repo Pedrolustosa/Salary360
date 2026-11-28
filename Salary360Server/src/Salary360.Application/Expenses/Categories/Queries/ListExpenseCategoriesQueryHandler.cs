@@ -1,3 +1,4 @@
+using Salary360.Application.Expenses.Dtos;
 using Salary360.Application.Interfaces.Identity;
 using Salary360.Application.Interfaces.Messaging;
 using Salary360.Application.Interfaces.Persistence;
@@ -10,5 +11,5 @@ public sealed class ListExpenseCategoriesQueryHandler(
 {
     public Task<IReadOnlyList<ExpenseCategoryListItemDto>> HandleAsync(
         ListExpenseCategoriesQuery request, CancellationToken cancellationToken = default)
-        => repository.ListWithCountsAsync(currentUser.UserId, cancellationToken);
+        => repository.ListWithCountsAsync(currentUser.GetUserId(), cancellationToken);
 }

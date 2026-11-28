@@ -1,5 +1,6 @@
 using Salary360.Application.Auth;
 using Salary360.Application.Auth.Commands;
+using Salary360.Application.Auth.Dtos;
 
 namespace Salary360.UnitTests.Validators;
 

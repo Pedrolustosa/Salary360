@@ -1,3 +1,4 @@
+
 namespace Salary360.Application.Salaries.Enums;
 
 public enum SalaryEvolutionMode

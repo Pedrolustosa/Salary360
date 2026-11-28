@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
@@ -39,6 +40,7 @@ export class ProfilePage {
   private readonly toastr = inject(ToastrService);
   private readonly translate = inject(TranslateService);
   private readonly language = inject(LanguageService);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly ProfileTab = ProfileTab;
   protected readonly tabs = [ProfileTab.Personal, ProfileTab.Address, ProfileTab.Account];
@@ -87,26 +89,31 @@ export class ProfilePage {
   protected readonly picturePreview = signal('');
 
   constructor() {
-    this.form.controls.address.controls.country.valueChanges.subscribe((country) => {
-      this.selectedCountry.set(country);
-      const postal = this.form.controls.address.controls.postalCode;
-      const format = postalCodeFormat(country);
-      postal.setValue(format ? applyMask(postal.value, format.pattern) : postal.value, { emitEvent: false });
-      postal.updateValueAndValidity({ emitEvent: false });
-    });
+    this.form.controls.address.controls.country.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((country) => {
+        this.selectedCountry.set(country);
+        const postal = this.form.controls.address.controls.postalCode;
+        const format = postalCodeFormat(country);
+        postal.setValue(format ? applyMask(postal.value, format.pattern) : postal.value, { emitEvent: false });
+        postal.updateValueAndValidity({ emitEvent: false });
+      });
 
-    this.form.controls.profilePictureUrl.valueChanges.subscribe((value) => {
+    this.form.controls.profilePictureUrl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
       this.pictureFailed.set(false);
       this.picturePreview.set(this.form.controls.profilePictureUrl.valid ? value.trim() : '');
     });
 
-    this.auth.getProfile().subscribe({
-      next: (profile) => {
-        this.apply(profile);
-        this.loading.set(false);
-      },
-      error: () => this.loading.set(false),
-    });
+    this.auth
+      .getProfile()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (profile) => {
+          this.apply(profile);
+          this.loading.set(false);
+        },
+        error: () => this.loading.set(false),
+      });
   }
 
   protected created(): string {
@@ -138,6 +145,7 @@ export class ProfilePage {
         profilePictureUrl: profilePictureUrl.trim() === '' ? null : profilePictureUrl.trim(),
         address: this.toAddress(address),
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (profile) => {
           this.apply(profile);

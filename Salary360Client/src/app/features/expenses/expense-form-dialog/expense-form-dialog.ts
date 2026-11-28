@@ -36,7 +36,7 @@ import { ExpenseType } from '../enums/expense-type.enum';
 import { Expense } from '../interfaces/expense.interface';
 import { ExpenseCategoryListItem } from '../interfaces/expense-category-list-item.interface';
 import { ExpenseService } from '../services/expense.service';
-import { categoryColorClasses } from '../utils/category-color-classes';
+import { categoryColorClasses } from '../../../shared/utils/category-color-classes';
 import { categoryDisplayName } from '../utils/category-display';
 import { competenceRangePreview } from '../utils/competence';
 

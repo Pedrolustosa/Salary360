@@ -5,6 +5,7 @@ using Salary360.Application.Interfaces.Persistence;
 using Salary360.Domain.Entities;
 using Salary360.Domain.Enums;
 using Salary360.Domain.Interfaces;
+using Salary360.Application.Expenses.Dtos;
 
 namespace Salary360.Application.Expenses.Commands;
 
@@ -18,7 +19,7 @@ public sealed class CreateExpenseCommandHandler(
     public async Task<IReadOnlyList<ExpenseDto>> HandleAsync(
         CreateExpenseCommand request, CancellationToken cancellationToken = default)
     {
-        var userId = currentUser.UserId;
+        var userId = currentUser.GetUserId();
         var category = await categoryRepository.GetByIdAsync(request.CategoryId, cancellationToken);
         if (category is null || category.UserId != userId)
             throw new NotFoundException("ExpenseCategory", request.CategoryId, "category_not_found");
@@ -52,13 +53,13 @@ public sealed class CreateExpenseCommandHandler(
                 offset == 0 && request.IsPaid,
                 request.Notes,
                 seriesId,
-                offset == 0 && request.IsPaid ? DateTime.UtcNow : null);
+                offset == 0 && request.IsPaid ? time.GetUtcNow().UtcDateTime : null);
 
             created.Add(expense);
-        }
+}
 
         expenseRepository.AddRange(created);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return created.Select(expense => expense.ToDto()).ToList();
-    }
+}
 }

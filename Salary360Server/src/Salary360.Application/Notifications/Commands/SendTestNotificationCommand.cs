@@ -17,7 +17,7 @@ public sealed class SendTestNotificationCommandHandler(INotificationPublisher pu
             "Test notification",
             "Real-time notifications are working.");
 
-        await publisher.SendToUserAsync(currentUser.UserId, notification, cancellationToken);
+        await publisher.SendToUserAsync(currentUser.GetUserId(), notification, cancellationToken);
         return Unit.Value;
     }
 }

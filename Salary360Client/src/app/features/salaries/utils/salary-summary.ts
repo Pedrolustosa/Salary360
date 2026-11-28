@@ -1,11 +1,7 @@
 import { roundToEven } from '../../../core/format/money';
-import { SalaryItemType } from '../enums/salary-item-type.enum';
+import { SalaryItemType } from '../../../core/salaries/enums/salary-item-type.enum';
 import { SalarySummary } from '../interfaces/salary-summary.interface';
-
-export interface SalarySummaryItem {
-  type: SalaryItemType | string;
-  amount: number | null;
-}
+import { SalarySummaryItem } from '../interfaces/salary-summary-item.interface';
 
 export function calculateSalarySummary(gross: number | null, items: SalarySummaryItem[]): SalarySummary {
   const safeGross = roundToEven(gross ?? 0);

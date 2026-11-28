@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CategoryColor } from '../../features/expenses/enums/category-color.enum';
+import { CategoryColor } from '../enums/category-color.enum';
 import { ColorSwatchPicker } from './color-swatch-picker';
 
 describe('ColorSwatchPicker', () => {

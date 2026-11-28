@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Salary360.Application.Expenses;
+using Salary360.Application.Expenses.Dtos;
 using Salary360.Application.Interfaces.Persistence;
 using Salary360.Domain.Entities;
 

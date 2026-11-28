@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -55,20 +56,23 @@ export class Login {
     this.unconfirmedEmail.set(null);
     this.invalidCredentials.set(false);
     const { email, password, remember } = this.form.getRawValue();
-    this.auth.login({ email, password }, remember).subscribe({
-      next: () => void this.router.navigate(['/']),
-      error: (error: unknown) => {
-        this.loading.set(false);
-        const code = apiErrorCode(error);
-        if (code === 'email_not_confirmed') this.unconfirmedEmail.set(email);
-        if (code === 'invalid_credentials') this.invalidCredentials.set(true);
-        if (code === 'too_many_requests' || code === 'account_locked') {
-          const seconds = apiRetryAfterSeconds(error);
-          if (seconds !== null) this.startCountdown(seconds);
-        }
-        applyServerErrors(this.form, error);
-      },
-    });
+    this.auth
+      .login({ email, password }, remember)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => void this.router.navigate(['/']),
+        error: (error: unknown) => {
+          this.loading.set(false);
+          const code = apiErrorCode(error);
+          if (code === 'email_not_confirmed') this.unconfirmedEmail.set(email);
+          if (code === 'invalid_credentials') this.invalidCredentials.set(true);
+          if (code === 'too_many_requests' || code === 'account_locked') {
+            const seconds = apiRetryAfterSeconds(error);
+            if (seconds !== null) this.startCountdown(seconds);
+          }
+          applyServerErrors(this.form, error);
+        },
+      });
   }
 
   private startCountdown(seconds: number): void {

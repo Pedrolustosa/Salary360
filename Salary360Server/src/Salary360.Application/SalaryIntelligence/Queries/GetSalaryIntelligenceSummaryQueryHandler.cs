@@ -1,8 +1,8 @@
 using Salary360.Application.Interfaces.Identity;
 using Salary360.Application.Interfaces.Messaging;
 using Salary360.Application.Interfaces.Persistence;
-using Salary360.Application.SalaryIntelligence.Dtos;
 using Salary360.Application.SalaryIntelligence.Interfaces;
+using Salary360.Application.SalaryIntelligence.Dtos;
 
 namespace Salary360.Application.SalaryIntelligence.Queries;
 
@@ -16,7 +16,7 @@ public sealed class GetSalaryIntelligenceSummaryQueryHandler(
         GetSalaryIntelligenceSummaryQuery request, CancellationToken cancellationToken = default)
     {
         var loaded = await SalaryIntelligenceQuerySupport.LoadAsync(
-            currentUser.UserId, request.From, request.To, repository, cancellationToken);
+            currentUser.GetUserId(), request.From, request.To, repository, cancellationToken);
 
         if (loaded is null)
         {
@@ -34,7 +34,7 @@ public sealed class GetSalaryIntelligenceSummaryQueryHandler(
                 null,
                 null,
                 null);
-        }
+}
 
         var (from, to, records) = loaded.Value;
         if (records.Count < SalaryAnalysisPeriodResolver.EvolutionRequiredRecords)
@@ -54,7 +54,7 @@ public sealed class GetSalaryIntelligenceSummaryQueryHandler(
                 null,
                 null,
                 null);
-        }
+}
 
         var evolution = evolutionCalculator.Calculate(records);
         var current = records[^1];
@@ -72,5 +72,5 @@ public sealed class GetSalaryIntelligenceSummaryQueryHandler(
             evolution.Gross.Percent,
             evolution.Net.Absolute,
             evolution.Net.Percent);
-    }
+}
 }

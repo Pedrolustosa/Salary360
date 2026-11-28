@@ -1,26 +1,9 @@
+import { EvolutionChartData } from '../interfaces/evolution-chart-data.interface';
+import { ProjectionChartData } from '../interfaces/projection-chart-data.interface';
 import { ProjectionPoint } from '../interfaces/projection-point.interface';
+import { PurchasingPowerChartData } from '../interfaces/purchasing-power-chart-data.interface';
 import { PurchasingPowerPoint } from '../interfaces/purchasing-power-point.interface';
 import { SalarySeriesPoint } from '../interfaces/salary-series-point.interface';
-
-export interface EvolutionChartData {
-  labels: string[];
-  gross: (number | null)[];
-  net: (number | null)[];
-}
-
-export interface PurchasingPowerChartData {
-  labels: string[];
-  actual: (number | null)[];
-  inflationAdjusted: (number | null)[];
-}
-
-export interface ProjectionChartData {
-  labels: string[];
-  actual: (number | null)[];
-  conservative: (number | null)[];
-  likely: (number | null)[];
-  optimistic: (number | null)[];
-}
 
 export function competenceLabel(year: number, month: number): string {
   return `${year}-${String(month).padStart(2, '0')}`;

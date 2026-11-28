@@ -13,6 +13,7 @@ using Salary360.Domain.Enums;
 using Salary360.Infrastructure.Enums;
 using Salary360.Infrastructure.Interfaces;
 using Salary360.Infrastructure.Persistence;
+using Salary360.Application.Auth.Dtos;
 
 namespace Salary360.Infrastructure.Identity;
 

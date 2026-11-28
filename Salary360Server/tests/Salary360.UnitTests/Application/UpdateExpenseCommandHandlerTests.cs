@@ -19,7 +19,7 @@ public sealed class UpdateExpenseCommandHandlerTests
     public async Task HandleAsync_ScopeThis_UpdatesOnlyTarget()
     {
         var (userId, category, first, second) = BuildSeries();
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         expenseRepository.GetByIdAsync(first.Id, Arg.Any<CancellationToken>()).Returns(first);
         categoryRepository.GetByIdAsync(category.Id, Arg.Any<CancellationToken>()).Returns(category);
 
@@ -38,7 +38,7 @@ public sealed class UpdateExpenseCommandHandlerTests
         var (userId, category, first, second) = BuildSeries();
         var third = new Expense(
             userId, category.Id, "Rent", ExpenseType.Fixed, 100m, 2024, 3, 5, false, null, first.SeriesId);
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         expenseRepository.GetByIdAsync(second.Id, Arg.Any<CancellationToken>()).Returns(second);
         categoryRepository.GetByIdAsync(category.Id, Arg.Any<CancellationToken>()).Returns(category);
         expenseRepository.ListBySeriesFromAsync(userId, first.SeriesId!.Value, 2024, 2, Arg.Any<CancellationToken>())
@@ -56,7 +56,7 @@ public sealed class UpdateExpenseCommandHandlerTests
     public async Task HandleAsync_ScopeAll_UpdatesEntireSeries()
     {
         var (userId, category, first, second) = BuildSeries();
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         expenseRepository.GetByIdAsync(second.Id, Arg.Any<CancellationToken>()).Returns(second);
         categoryRepository.GetByIdAsync(category.Id, Arg.Any<CancellationToken>()).Returns(category);
         expenseRepository.ListBySeriesAsync(userId, first.SeriesId!.Value, Arg.Any<CancellationToken>())

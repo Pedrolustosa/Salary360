@@ -21,7 +21,7 @@ public sealed class GetSalaryProjectionQueryHandlerTests
 
     public GetSalaryProjectionQueryHandlerTests()
     {
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
     }
 
     [Fact]

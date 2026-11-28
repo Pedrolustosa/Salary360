@@ -1,6 +1,7 @@
 using Salary360.Application.Interfaces.Identity;
 using Salary360.Application.Interfaces.Messaging;
 using Salary360.Application.Interfaces.Persistence;
+using Salary360.Application.Salaries.Dtos;
 
 namespace Salary360.Application.Salaries.Queries;
 
@@ -12,12 +13,12 @@ public sealed class ListSalariesQueryHandler(
         ListSalariesQuery request, CancellationToken cancellationToken = default)
     {
         var (items, total) = await repository.ListAsync(
-            currentUser.UserId, request.Year, request.Page, request.PageSize, cancellationToken);
+            currentUser.GetUserId(), request.Year, request.Page, request.PageSize, cancellationToken);
 
         return new PagedSalariesDto(
             items.Select(item => item.ToDto()).ToList(),
             request.Page,
             request.PageSize,
             total);
-    }
+}
 }

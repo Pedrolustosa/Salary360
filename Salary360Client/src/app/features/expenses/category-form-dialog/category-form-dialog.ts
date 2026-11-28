@@ -9,7 +9,7 @@ import { ConfirmDialog } from '../../../shared/confirm-dialog/confirm-dialog';
 import { FieldError } from '../../../shared/field-error/field-error';
 import { Icon } from '../../../shared/icon';
 import { Modal } from '../../../shared/modal/modal';
-import { CategoryColor } from '../enums/category-color.enum';
+import { CategoryColor } from '../../../shared/enums/category-color.enum';
 import { CategoryIcon } from '../enums/category-icon.enum';
 import { ExpenseCategoryListItem } from '../interfaces/expense-category-list-item.interface';
 import { ExpenseCategoryService } from '../services/expense-category.service';

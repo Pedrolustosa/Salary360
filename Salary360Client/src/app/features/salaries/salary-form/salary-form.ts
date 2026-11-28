@@ -28,10 +28,10 @@ import { MonthYearValue } from '../../../shared/month-year-picker/interfaces/mon
 import { Select } from '../../../shared/select/select';
 import { SelectOption } from '../../../shared/select/interfaces/select-option.interface';
 import { Spinner } from '../../../shared/spinner';
-import { SalaryItemType } from '../enums/salary-item-type.enum';
-import { SalaryItemInput } from '../interfaces/salary-item-input.interface';
-import { SalaryRecord } from '../interfaces/salary-record.interface';
-import { SalaryService } from '../services/salary.service';
+import { SalaryItemType } from '../../../core/salaries/enums/salary-item-type.enum';
+import { SalaryItemInput } from '../../../core/salaries/interfaces/salary-item-input.interface';
+import { SalaryRecord } from '../../../core/salaries/interfaces/salary-record.interface';
+import { SalaryService } from '../../../core/salaries/salary.service';
 import { calculateSalarySummary } from '../utils/salary-summary';
 
 const MAX_ITEMS = 50;

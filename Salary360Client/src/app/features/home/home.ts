@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../core/auth/auth.service';
@@ -31,6 +31,7 @@ export class Home {
   private readonly translate = inject(TranslateService);
   private readonly notifications = inject(NotificationService);
   private readonly language = inject(LanguageService);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly sending = signal(false);
   protected readonly usersLoading = signal(false);
@@ -60,13 +61,16 @@ export class Home {
   constructor() {
     if (!this.canViewUsers()) return;
     this.usersLoading.set(true);
-    this.auth.listUsers().subscribe({
-      next: (users) => {
-        this.users.set(users);
-        this.usersLoading.set(false);
-      },
-      error: () => this.usersLoading.set(false),
-    });
+    this.auth
+      .listUsers()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (users) => {
+          this.users.set(users);
+          this.usersLoading.set(false);
+        },
+        error: () => this.usersLoading.set(false),
+      });
   }
 
   protected phone(user: UserProfile): string {
@@ -79,16 +83,22 @@ export class Home {
 
   protected toggleStatus(user: UserProfile): void {
     const next = user.status === UserStatus.Active ? UserStatus.Inactive : UserStatus.Active;
-    this.auth.setUserStatus(user.userId, next).subscribe((updated) => {
-      this.users.update((users) => users.map((item) => (item.userId === updated.userId ? updated : item)));
-    });
+    this.auth
+      .setUserStatus(user.userId, next)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((updated) => {
+        this.users.update((users) => users.map((item) => (item.userId === updated.userId ? updated : item)));
+      });
   }
 
   protected sendTestNotification(): void {
     this.sending.set(true);
-    this.notifications.sendTest().subscribe({
-      next: () => this.sending.set(false),
-      error: () => this.sending.set(false),
-    });
+    this.notifications
+      .sendTest()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => this.sending.set(false),
+        error: () => this.sending.set(false),
+      });
   }
 }
