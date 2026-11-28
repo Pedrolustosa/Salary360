@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { Subject, of } from 'rxjs';
-import { SalaryService } from '../../salaries/services/salary.service';
+import { SalaryService } from '../../../core/salaries/salary.service';
 import { SalaryBasis } from '../enums/salary-basis.enum';
 import { SalaryIntelligenceService } from '../services/salary-intelligence.service';
 import { SalaryIntelligence } from './salary-intelligence';

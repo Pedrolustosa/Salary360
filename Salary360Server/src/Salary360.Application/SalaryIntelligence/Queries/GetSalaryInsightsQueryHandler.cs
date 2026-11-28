@@ -2,8 +2,8 @@ using Salary360.Application.Common.Interfaces;
 using Salary360.Application.Interfaces.Identity;
 using Salary360.Application.Interfaces.Messaging;
 using Salary360.Application.Interfaces.Persistence;
-using Salary360.Application.SalaryIntelligence.Dtos;
 using Salary360.Application.SalaryIntelligence.Interfaces;
+using Salary360.Application.SalaryIntelligence.Dtos;
 
 namespace Salary360.Application.SalaryIntelligence.Queries;
 
@@ -19,7 +19,7 @@ public sealed class GetSalaryInsightsQueryHandler(
         GetSalaryInsightsQuery request, CancellationToken cancellationToken = default)
     {
         var loaded = await SalaryIntelligenceQuerySupport.LoadAsync(
-            currentUser.UserId, request.From, request.To, repository, cancellationToken);
+            currentUser.GetUserId(), request.From, request.To, repository, cancellationToken);
 
         if (loaded is null)
         {
@@ -30,7 +30,7 @@ public sealed class GetSalaryInsightsQueryHandler(
                 null,
                 null,
                 []);
-        }
+}
 
         var (from, to, records) = loaded.Value;
         if (records.Count < SalaryAnalysisPeriodResolver.EvolutionRequiredRecords)
@@ -42,7 +42,7 @@ public sealed class GetSalaryInsightsQueryHandler(
                 SalaryIntelligenceQuerySupport.ToDto(from),
                 SalaryIntelligenceQuerySupport.ToDto(to),
                 []);
-        }
+}
 
         var inflation = await inflationProvider.GetIndicesAsync(cancellationToken);
         var purchasingPower = inflation.Available
@@ -63,5 +63,5 @@ public sealed class GetSalaryInsightsQueryHandler(
                     insight.Params,
                     insight.ReferenceCompetence))
                 .ToList());
-    }
+}
 }

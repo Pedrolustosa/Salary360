@@ -1,4 +1,5 @@
 using Salary360.Domain.Entities;
+using Salary360.Application.Expenses.Dtos;
 
 namespace Salary360.Application.Expenses;
 

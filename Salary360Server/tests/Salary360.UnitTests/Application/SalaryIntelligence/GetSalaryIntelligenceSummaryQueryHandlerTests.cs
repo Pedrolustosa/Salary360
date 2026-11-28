@@ -19,7 +19,7 @@ public sealed class GetSalaryIntelligenceSummaryQueryHandlerTests
 
     public GetSalaryIntelligenceSummaryQueryHandlerTests()
     {
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
     }
 
     [Fact]

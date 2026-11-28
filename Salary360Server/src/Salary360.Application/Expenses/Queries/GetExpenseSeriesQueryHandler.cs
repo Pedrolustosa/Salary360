@@ -1,6 +1,7 @@
 using Salary360.Application.Interfaces.Identity;
 using Salary360.Application.Interfaces.Messaging;
 using Salary360.Application.Interfaces.Persistence;
+using Salary360.Application.Expenses.Dtos;
 
 namespace Salary360.Application.Expenses.Queries;
 
@@ -11,7 +12,7 @@ public sealed class GetExpenseSeriesQueryHandler(
     public Task<IReadOnlyList<ExpenseSeriesPointDto>> HandleAsync(
         GetExpenseSeriesQuery request, CancellationToken cancellationToken = default)
         => repository.GetSeriesAsync(
-            currentUser.UserId,
+            currentUser.GetUserId(),
             request.FromYear,
             request.FromMonth,
             request.ToYear,

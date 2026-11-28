@@ -1,18 +1,6 @@
-import { SalaryEvolutionPoint } from '../../salaries/interfaces/salary-evolution-point.interface';
-
-export interface EvolutionChartSeries {
-  labels: string[];
-  gross: (number | null)[];
-  net: (number | null)[];
-  benefits: (number | null)[];
-  deductions: (number | null)[];
-}
-
-export interface EvolutionStats {
-  maxNet: number | null;
-  minNet: number | null;
-  variationPercent: number | null;
-}
+import { SalaryEvolutionPoint } from '../../../core/salaries/interfaces/salary-evolution-point.interface';
+import { EvolutionChartSeries } from '../interfaces/evolution-chart-series.interface';
+import { EvolutionStats } from '../interfaces/evolution-stats.interface';
 
 export function validateEvolutionRange(fromYear: number, toYear: number): string | null {
   if (!Number.isInteger(fromYear) || !Number.isInteger(toYear) || fromYear < 1900 || toYear > 2100) {

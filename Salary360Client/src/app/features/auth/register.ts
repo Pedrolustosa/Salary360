@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -24,6 +25,7 @@ export class Register {
   private readonly fb = inject(FormBuilder).nonNullable;
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly appName = environment.appName;
   protected readonly loading = signal(false);
@@ -50,12 +52,15 @@ export class Register {
     this.loading.set(true);
     const { phoneNumber, ...rest } = this.form.getRawValue();
     const { email } = rest;
-    this.auth.register({ ...rest, phoneNumber: phoneNumber.trim() === '' ? null : phoneNumber.trim() }).subscribe({
-      next: () => void this.router.navigate(['/check-email'], { queryParams: { email } }),
-      error: (error: unknown) => {
-        applyServerErrors(this.form, error);
-        this.loading.set(false);
-      },
-    });
+    this.auth
+      .register({ ...rest, phoneNumber: phoneNumber.trim() === '' ? null : phoneNumber.trim() })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => void this.router.navigate(['/check-email'], { queryParams: { email } }),
+        error: (error: unknown) => {
+          applyServerErrors(this.form, error);
+          this.loading.set(false);
+        },
+      });
   }
 }

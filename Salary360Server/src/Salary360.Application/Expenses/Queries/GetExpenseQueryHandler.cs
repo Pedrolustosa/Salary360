@@ -2,6 +2,7 @@ using Salary360.Application.Common.Exceptions;
 using Salary360.Application.Interfaces.Identity;
 using Salary360.Application.Interfaces.Messaging;
 using Salary360.Application.Interfaces.Persistence;
+using Salary360.Application.Expenses.Dtos;
 
 namespace Salary360.Application.Expenses.Queries;
 
@@ -12,9 +13,9 @@ public sealed class GetExpenseQueryHandler(
     public async Task<ExpenseDto> HandleAsync(GetExpenseQuery request, CancellationToken cancellationToken = default)
     {
         var expense = await repository.GetByIdAsync(request.Id, cancellationToken);
-        if (expense is null || expense.UserId != currentUser.UserId)
+        if (expense is null || expense.UserId != currentUser.GetUserId())
             throw new NotFoundException("Expense", request.Id);
 
         return expense.ToDto();
-    }
+}
 }

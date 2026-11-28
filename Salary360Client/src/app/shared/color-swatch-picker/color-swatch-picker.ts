@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, forwardRef, input, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CategoryColor } from '../../features/expenses/enums/category-color.enum';
-import { CATEGORY_COLOR_CLASSES } from '../../features/expenses/utils/category-color-classes';
+import { CategoryColor } from '../enums/category-color.enum';
+import { CATEGORY_COLOR_CLASSES } from '../utils/category-color-classes';
 
 @Component({
   selector: 'app-color-swatch-picker',

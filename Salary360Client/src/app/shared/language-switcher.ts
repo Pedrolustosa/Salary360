@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageCode } from '../core/i18n/enums/language-code.enum';
@@ -14,6 +15,7 @@ import { Select } from './select/select';
   styleUrl: './language-switcher.scss',
 })
 export class LanguageSwitcher {
+  private readonly destroyRef = inject(DestroyRef);
   protected readonly language = inject(LanguageService);
   protected readonly control = new FormControl<string>(this.language.current(), { nonNullable: true });
   protected readonly options: SelectOption[] = this.language.languages.map((item) => ({
@@ -23,6 +25,8 @@ export class LanguageSwitcher {
 
   constructor() {
     effect(() => this.control.setValue(this.language.current(), { emitEvent: false }));
-    this.control.valueChanges.subscribe((code) => void this.language.set(code as LanguageCode));
+    this.control.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((code) => void this.language.set(code as LanguageCode));
   }
 }

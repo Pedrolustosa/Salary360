@@ -15,7 +15,7 @@ public sealed class DeleteExpenseCategoryCommandHandler(
     public async Task<Unit> HandleAsync(DeleteExpenseCategoryCommand request, CancellationToken cancellationToken = default)
     {
         var category = await repository.GetByIdAsync(request.Id, cancellationToken);
-        if (category is null || category.UserId != currentUser.UserId)
+        if (category is null || category.UserId != currentUser.GetUserId())
             throw new NotFoundException("ExpenseCategory", request.Id, "category_not_found");
 
         var expenseCount = await repository.CountExpensesAsync(category.Id, cancellationToken);
@@ -25,7 +25,7 @@ public sealed class DeleteExpenseCategoryCommandHandler(
                 throw new ConflictException("Category has expenses and cannot be deleted.", "category_in_use");
 
             var target = await repository.GetByIdAsync(request.ReassignToCategoryId.Value, cancellationToken);
-            if (target is null || target.UserId != currentUser.UserId)
+            if (target is null || target.UserId != currentUser.GetUserId())
                 throw new NotFoundException("ExpenseCategory", request.ReassignToCategoryId.Value, "category_not_found");
 
             if (target.Id == category.Id)

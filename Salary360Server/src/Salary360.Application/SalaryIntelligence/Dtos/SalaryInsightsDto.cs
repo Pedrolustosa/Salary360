@@ -1,5 +1,4 @@
 using Salary360.Application.SalaryIntelligence.Enums;
-
 namespace Salary360.Application.SalaryIntelligence.Dtos;
 
 public sealed record SalaryInsightDto(

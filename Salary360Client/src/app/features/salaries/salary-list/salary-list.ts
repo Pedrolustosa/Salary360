@@ -13,8 +13,8 @@ import { Icon } from '../../../shared/icon';
 import { Select } from '../../../shared/select/select';
 import { SelectOption } from '../../../shared/select/interfaces/select-option.interface';
 import { Spinner } from '../../../shared/spinner';
-import { SalaryRecord } from '../interfaces/salary-record.interface';
-import { SalaryService } from '../services/salary.service';
+import { SalaryRecord } from '../../../core/salaries/interfaces/salary-record.interface';
+import { SalaryService } from '../../../core/salaries/salary.service';
 
 @Component({
   selector: 'app-salary-list',

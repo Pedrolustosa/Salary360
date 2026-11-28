@@ -21,7 +21,7 @@ public sealed class GetPurchasingPowerQueryHandlerTests
 
     public GetPurchasingPowerQueryHandlerTests()
     {
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
     }
 
     [Fact]

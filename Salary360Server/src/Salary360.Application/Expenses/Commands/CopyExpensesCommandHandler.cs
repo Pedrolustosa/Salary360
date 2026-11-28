@@ -4,6 +4,7 @@ using Salary360.Application.Interfaces.Messaging;
 using Salary360.Application.Interfaces.Persistence;
 using Salary360.Domain.Entities;
 using Salary360.Domain.Interfaces;
+using Salary360.Application.Expenses.Dtos;
 
 namespace Salary360.Application.Expenses.Commands;
 
@@ -15,7 +16,7 @@ public sealed class CopyExpensesCommandHandler(
     public async Task<CopyExpensesResultDto> HandleAsync(
         CopyExpensesCommand request, CancellationToken cancellationToken = default)
     {
-        var userId = currentUser.UserId;
+        var userId = currentUser.GetUserId();
         var source = await expenseRepository.ListForMonthAsync(
             userId, request.FromYear, request.FromMonth, request.OnlyFixed, cancellationToken);
 
@@ -61,8 +62,8 @@ public sealed class CopyExpensesCommandHandler(
         {
             expenseRepository.AddRange(toAdd);
             await unitOfWork.SaveChangesAsync(cancellationToken);
-        }
+}
 
         return new CopyExpensesResultDto(created, skipped);
-    }
+}
 }

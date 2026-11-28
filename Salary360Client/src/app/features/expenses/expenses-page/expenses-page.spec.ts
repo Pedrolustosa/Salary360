@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subject, of, throwError } from 'rxjs';
 import { AuthService } from '../../../core/auth/auth.service';
 import { LanguageService } from '../../../core/i18n/language.service';
-import { SalaryService } from '../../salaries/services/salary.service';
+import { SalaryService } from '../../../core/salaries/salary.service';
 import { ExpenseCategoryService } from '../services/expense-category.service';
 import { ExpenseService } from '../services/expense.service';
 import { ExpensesPage } from './expenses-page';

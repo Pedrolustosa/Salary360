@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signa
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Subject, catchError, debounceTime, merge, of, switchMap, tap } from 'rxjs';
-import { SalaryService } from '../../salaries/services/salary.service';
+import { SalaryService } from '../../../core/salaries/salary.service';
 import { SalaryBasis } from '../enums/salary-basis.enum';
 import { PurchasingPower } from '../interfaces/purchasing-power.interface';
 import { SalaryAnalysisFilter } from '../interfaces/salary-analysis-filter.interface';

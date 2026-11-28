@@ -17,7 +17,7 @@ public sealed class GetSalarySeriesQueryHandlerTests
 
     public GetSalarySeriesQueryHandlerTests()
     {
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
     }
 
     [Fact]

@@ -22,7 +22,7 @@ public sealed class GetSalaryInsightsQueryHandlerTests
 
     public GetSalaryInsightsQueryHandlerTests()
     {
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
     }
 
     [Fact]

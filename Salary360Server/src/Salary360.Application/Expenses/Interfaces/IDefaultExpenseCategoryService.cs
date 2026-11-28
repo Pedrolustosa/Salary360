@@ -1,3 +1,4 @@
+
 namespace Salary360.Application.Expenses.Interfaces;
 
 public interface IDefaultExpenseCategoryService

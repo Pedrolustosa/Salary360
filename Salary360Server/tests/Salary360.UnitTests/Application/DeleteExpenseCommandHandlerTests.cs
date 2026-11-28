@@ -18,7 +18,7 @@ public sealed class DeleteExpenseCommandHandlerTests
     public async Task HandleAsync_ScopeThis_RemovesOnlyTarget()
     {
         var (userId, first, second) = BuildSeries();
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         expenseRepository.GetByIdAsync(first.Id, Arg.Any<CancellationToken>()).Returns(first);
 
         var handler = new DeleteExpenseCommandHandler(expenseRepository, unitOfWork, currentUser);
@@ -34,7 +34,7 @@ public sealed class DeleteExpenseCommandHandlerTests
     public async Task HandleAsync_ScopeThisAndFollowing_RemovesFromTarget()
     {
         var (userId, first, second) = BuildSeries();
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         expenseRepository.GetByIdAsync(second.Id, Arg.Any<CancellationToken>()).Returns(second);
         expenseRepository.ListBySeriesFromAsync(userId, first.SeriesId!.Value, 2024, 2, Arg.Any<CancellationToken>())
             .Returns([second]);
@@ -50,7 +50,7 @@ public sealed class DeleteExpenseCommandHandlerTests
     public async Task HandleAsync_ScopeAll_RemovesEntireSeries()
     {
         var (userId, first, second) = BuildSeries();
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         expenseRepository.GetByIdAsync(second.Id, Arg.Any<CancellationToken>()).Returns(second);
         expenseRepository.ListBySeriesAsync(userId, first.SeriesId!.Value, Arg.Any<CancellationToken>())
             .Returns([first, second]);

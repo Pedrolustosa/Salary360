@@ -18,7 +18,7 @@ public sealed class GetSalaryQueryHandlerTests
     {
         var owner = Guid.NewGuid();
         var current = Guid.NewGuid();
-        currentUser.UserId.Returns(current);
+        currentUser.GetUserId().Returns(current);
         var record = new SalaryRecord(owner, 2024, 1, 1000m, null, [("A", SalaryItemType.Benefit, 10m)]);
         repository.GetByIdAsync(record.Id, Arg.Any<CancellationToken>()).Returns(record);
         var handler = new GetSalaryQueryHandler(repository, currentUser);
@@ -30,7 +30,7 @@ public sealed class GetSalaryQueryHandlerTests
     public async Task HandleAsync_OwnRecord_ReturnsDto()
     {
         var userId = Guid.NewGuid();
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
         var record = new SalaryRecord(userId, 2024, 1, 1000m, null, [("A", SalaryItemType.Benefit, 10m)]);
         repository.GetByIdAsync(record.Id, Arg.Any<CancellationToken>()).Returns(record);
         var handler = new GetSalaryQueryHandler(repository, currentUser);

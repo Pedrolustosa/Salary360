@@ -19,7 +19,7 @@ public sealed class CopyExpensesCommandHandlerTests
     {
         var userId = Guid.NewGuid();
         var categoryId = Guid.NewGuid();
-        currentUser.UserId.Returns(userId);
+        currentUser.GetUserId().Returns(userId);
 
         var source = new List<Expense>
         {

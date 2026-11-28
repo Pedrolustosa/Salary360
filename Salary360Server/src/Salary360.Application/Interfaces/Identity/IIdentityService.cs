@@ -1,5 +1,6 @@
 using Salary360.Application.Auth;
 using Salary360.Domain.Enums;
+using Salary360.Application.Auth.Dtos;
 
 namespace Salary360.Application.Interfaces.Identity;
 

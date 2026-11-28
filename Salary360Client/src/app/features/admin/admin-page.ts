@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, of } from 'rxjs';
@@ -27,6 +28,7 @@ export class AdminPage {
   private readonly auth = inject(AuthService);
   private readonly toastr = inject(ToastrService);
   private readonly translate = inject(TranslateService);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly loading = signal(true);
   protected readonly saving = signal(false);
@@ -66,26 +68,30 @@ export class AdminPage {
     if (changed.length === 0) return;
 
     this.saving.set(true);
-    forkJoin(changed.map((role) => this.auth.updateRolePermissions(role.name, this.draft()[role.name]))).subscribe({
-      next: (updated) => {
-        this.roles.update((roles) => roles.map((role) => updated.find((item) => item.name === role.name) ?? role));
-        this.discard();
-        this.saving.set(false);
-        this.toastr.success(this.translate.instant('admin.saved'));
-      },
-      error: () => this.saving.set(false),
-    });
+    forkJoin(changed.map((role) => this.auth.updateRolePermissions(role.name, this.draft()[role.name])))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (updated) => {
+          this.roles.update((roles) => roles.map((role) => updated.find((item) => item.name === role.name) ?? role));
+          this.discard();
+          this.saving.set(false);
+          this.toastr.success(this.translate.instant('admin.saved'));
+        },
+        error: () => this.saving.set(false),
+      });
   }
 
   private load(): void {
-    forkJoin({ roles: this.auth.hasPermission(Permission.RolesView) ? this.auth.listRoles() : of<RoleSummary[]>([]) }).subscribe({
-      next: ({ roles }) => {
-        this.roles.set(roles);
-        this.draft.set(this.toDraft(roles));
-        this.loading.set(false);
-      },
-      error: () => this.loading.set(false),
-    });
+    forkJoin({ roles: this.auth.hasPermission(Permission.RolesView) ? this.auth.listRoles() : of<RoleSummary[]>([]) })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: ({ roles }) => {
+          this.roles.set(roles);
+          this.draft.set(this.toDraft(roles));
+          this.loading.set(false);
+        },
+        error: () => this.loading.set(false),
+      });
   }
 
   private toDraft(roles: RoleSummary[]): Record<string, string[]> {

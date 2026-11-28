@@ -7,6 +7,7 @@ using Salary360.Application.Expenses.Commands;
 using Salary360.Application.Expenses.Queries;
 using Salary360.Application.Interfaces.Messaging;
 using Salary360.Domain.Enums;
+using Salary360.API.Contracts.Responses.Expenses;
 
 namespace Salary360.API.Controllers;
 
@@ -19,23 +20,36 @@ public sealed class ExpensesController(IDispatcher dispatcher) : ControllerBase
     [HttpPost]
     [Authorize(Policy = AppPermissions.Expenses.Create)]
     [EndpointSummary("Create expense")]
-    [ProducesResponseType<IReadOnlyList<ExpenseDto>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<IReadOnlyList<ExpenseResponse>>(StatusCodes.Status201Created)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<IReadOnlyList<ExpenseDto>>> Create(
-        [FromBody] CreateExpenseCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyList<ExpenseResponse>>> Create(
+        [FromBody] CreateExpenseRequest request, CancellationToken cancellationToken)
     {
-        var created = await dispatcher.SendAsync(command, cancellationToken);
-        return CreatedAtAction(nameof(GetById), new { id = created[0].Id }, created);
+        var created = await dispatcher.SendAsync(
+            new CreateExpenseCommand(
+                request.CategoryId,
+                request.Name,
+                request.Type,
+                request.Amount,
+                request.Year,
+                request.Month,
+                request.DueDay,
+                request.IsPaid,
+                request.Notes,
+                request.Recurrence,
+                request.RecurrenceCount),
+            cancellationToken);
+        return CreatedAtAction(nameof(GetById), new { id = created[0].Id }, created.ToResponse());
     }
 
     [HttpGet]
     [Authorize(Policy = AppPermissions.Expenses.View)]
     [EndpointSummary("List expenses")]
-    [ProducesResponseType<PagedExpensesDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<PagedExpensesResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<PagedExpensesDto>> List(
+    public async Task<ActionResult<PagedExpensesResponse>> List(
         [FromQuery] int year,
         [FromQuery] int month,
         [FromQuery] Guid? categoryId,
@@ -44,57 +58,64 @@ public sealed class ExpensesController(IDispatcher dispatcher) : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
         CancellationToken cancellationToken = default)
-        => Ok(await dispatcher.SendAsync(
+    {
+        var result = await dispatcher.SendAsync(
             new ListExpensesQuery(year, month, categoryId, type, isPaid, page, pageSize),
-            cancellationToken));
+            cancellationToken);
+        return Ok(result.ToResponse());
+    }
 
     [HttpGet("summary")]
     [Authorize(Policy = AppPermissions.Expenses.View)]
     [EndpointSummary("Expense month summary")]
-    [ProducesResponseType<ExpenseMonthSummaryDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ExpenseMonthSummaryResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<ExpenseMonthSummaryDto>> Summary(
+    public async Task<ActionResult<ExpenseMonthSummaryResponse>> Summary(
         [FromQuery] int year,
         [FromQuery] int month,
         CancellationToken cancellationToken = default)
-        => Ok(await dispatcher.SendAsync(new GetExpenseMonthSummaryQuery(year, month), cancellationToken));
+        => Ok((await dispatcher.SendAsync(new GetExpenseMonthSummaryQuery(year, month), cancellationToken)).ToResponse());
 
     [HttpGet("series")]
     [Authorize(Policy = AppPermissions.Expenses.View)]
     [EndpointSummary("Expense series")]
-    [ProducesResponseType<IReadOnlyList<ExpenseSeriesPointDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<IReadOnlyList<ExpenseSeriesPointResponse>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<IReadOnlyList<ExpenseSeriesPointDto>>> Series(
+    public async Task<ActionResult<IReadOnlyList<ExpenseSeriesPointResponse>>> Series(
         [FromQuery] int fromYear,
         [FromQuery] int fromMonth,
         [FromQuery] int toYear,
         [FromQuery] int toMonth,
         CancellationToken cancellationToken = default)
-        => Ok(await dispatcher.SendAsync(
+    {
+        var result = await dispatcher.SendAsync(
             new GetExpenseSeriesQuery(fromYear, fromMonth, toYear, toMonth),
-            cancellationToken));
+            cancellationToken);
+        return Ok(result.ToResponse());
+    }
 
     [HttpGet("{id:guid}")]
     [Authorize(Policy = AppPermissions.Expenses.View)]
     [EndpointSummary("Get expense")]
-    [ProducesResponseType<ExpenseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ExpenseResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ExpenseDto>> GetById(Guid id, CancellationToken cancellationToken)
-        => Ok(await dispatcher.SendAsync(new GetExpenseQuery(id), cancellationToken));
+    public async Task<ActionResult<ExpenseResponse>> GetById(Guid id, CancellationToken cancellationToken)
+        => Ok((await dispatcher.SendAsync(new GetExpenseQuery(id), cancellationToken)).ToResponse());
 
     [HttpPut("{id:guid}")]
     [Authorize(Policy = AppPermissions.Expenses.Update)]
     [EndpointSummary("Update expense")]
-    [ProducesResponseType<ExpenseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ExpenseResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<ExpenseDto>> Update(
+    public async Task<ActionResult<ExpenseResponse>> Update(
         Guid id,
         [FromQuery] ExpenseChangeScope scope,
         [FromBody] UpdateExpenseRequest request,
         CancellationToken cancellationToken)
-        => Ok(await dispatcher.SendAsync(
+    {
+        var updated = await dispatcher.SendAsync(
             new UpdateExpenseCommand(
                 id,
                 request.CategoryId,
@@ -107,7 +128,9 @@ public sealed class ExpensesController(IDispatcher dispatcher) : ControllerBase
                 request.IsPaid,
                 request.Notes,
                 scope),
-            cancellationToken));
+            cancellationToken);
+        return Ok(updated.ToResponse());
+    }
 
     [HttpDelete("{id:guid}")]
     [Authorize(Policy = AppPermissions.Expenses.Delete)]
@@ -126,21 +149,31 @@ public sealed class ExpensesController(IDispatcher dispatcher) : ControllerBase
     [HttpPatch("{id:guid}/paid")]
     [Authorize(Policy = AppPermissions.Expenses.Update)]
     [EndpointSummary("Set expense paid")]
-    [ProducesResponseType<ExpenseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ExpenseResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ExpenseDto>> SetPaid(
+    public async Task<ActionResult<ExpenseResponse>> SetPaid(
         Guid id,
         [FromBody] SetExpensePaidRequest request,
         CancellationToken cancellationToken)
-        => Ok(await dispatcher.SendAsync(new SetExpensePaidCommand(id, request.IsPaid), cancellationToken));
+        => Ok((await dispatcher.SendAsync(new SetExpensePaidCommand(id, request.IsPaid), cancellationToken)).ToResponse());
 
     [HttpPost("copy")]
     [Authorize(Policy = AppPermissions.Expenses.Create)]
     [EndpointSummary("Copy expenses")]
-    [ProducesResponseType<CopyExpensesResultDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<CopyExpensesResultResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<CopyExpensesResultDto>> Copy(
-        [FromBody] CopyExpensesCommand command, CancellationToken cancellationToken)
-        => Ok(await dispatcher.SendAsync(command, cancellationToken));
+    public async Task<ActionResult<CopyExpensesResultResponse>> Copy(
+        [FromBody] CopyExpensesRequest request, CancellationToken cancellationToken)
+    {
+        var result = await dispatcher.SendAsync(
+            new CopyExpensesCommand(
+                request.FromYear,
+                request.FromMonth,
+                request.ToYear,
+                request.ToMonth,
+                request.OnlyFixed),
+            cancellationToken);
+        return Ok(result.ToResponse());
+    }
 }

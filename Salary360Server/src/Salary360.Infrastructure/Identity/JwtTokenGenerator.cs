@@ -7,6 +7,7 @@ using Salary360.Application.Auth;
 using Salary360.Application.Common;
 using Salary360.Application.Settings;
 using Salary360.Infrastructure.Interfaces;
+using Salary360.Application.Auth.Dtos;
 
 namespace Salary360.Infrastructure.Identity;
 
@@ -49,5 +50,5 @@ public sealed class JwtTokenGenerator(IOptions<JwtSettings> options, TimeProvide
             expiresAt,
             roleList,
             permissionList);
-    }
+}
 }

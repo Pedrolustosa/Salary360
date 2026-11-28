@@ -26,7 +26,7 @@ public static class SampleDataSeedOrchestrator
             return;
         }
 
-        var seeders = services.GetServices<ISampleDataSeeder>().OrderBy(seeder => seeder.Order).ToList();
+        var seeders = services.GetServices<ISampleDataSeeder>().OrderBy(seeder => seeder.GetOrder()).ToList();
         foreach (var seeder in seeders)
             await seeder.SeedAsync(cancellationToken);
     }

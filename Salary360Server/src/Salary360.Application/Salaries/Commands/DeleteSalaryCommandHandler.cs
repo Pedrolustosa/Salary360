@@ -15,7 +15,7 @@ public sealed class DeleteSalaryCommandHandler(
     public async Task<Unit> HandleAsync(DeleteSalaryCommand request, CancellationToken cancellationToken = default)
     {
         var record = await repository.GetByIdAsync(request.Id, cancellationToken);
-        if (record is null || record.UserId != currentUser.UserId)
+        if (record is null || record.UserId != currentUser.GetUserId())
             throw new NotFoundException("SalaryRecord", request.Id);
 
         repository.Remove(record);

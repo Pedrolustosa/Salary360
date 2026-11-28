@@ -31,7 +31,7 @@ import { StatCard } from '../../../shared/stat-card/stat-card';
 import { StatTone } from '../../../shared/stat-card/enums/stat-tone.enum';
 import { SegmentedControl } from '../../../shared/segmented-control/segmented-control';
 import { SegmentedOption } from '../../../shared/segmented-control/interfaces/segmented-option.interface';
-import { SalaryService } from '../../salaries/services/salary.service';
+import { SalaryService } from '../../../core/salaries/salary.service';
 import { ExpenseFormDialog } from '../expense-form-dialog/expense-form-dialog';
 import { ExpenseChangeScope } from '../enums/expense-change-scope.enum';
 import { ExpenseType } from '../enums/expense-type.enum';
@@ -41,7 +41,7 @@ import { ExpenseMonthSummary } from '../interfaces/expense-month-summary.interfa
 import { ExpenseSeriesPoint } from '../interfaces/expense-series-point.interface';
 import { ExpenseCategoryService } from '../services/expense-category.service';
 import { ExpenseService } from '../services/expense.service';
-import { categoryColorClasses } from '../utils/category-color-classes';
+import { categoryColorClasses } from '../../../shared/utils/category-color-classes';
 import { categoryDisplayName } from '../utils/category-display';
 import { categoryIconName } from '../utils/category-icon-name';
 import { seriesFromMonths, shiftCompetence } from '../utils/competence';

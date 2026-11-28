@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Spinner } from './spinner';
@@ -11,15 +12,17 @@ import { Spinner } from './spinner';
   styleUrl: './route-loader.scss',
 })
 export class RouteLoader {
+  private readonly destroyRef = inject(DestroyRef);
   protected readonly loading = signal(false);
 
   constructor() {
-    const subscription = inject(Router).events.subscribe((event) => {
-      if (event instanceof NavigationStart) this.loading.set(true);
-      if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
-        this.loading.set(false);
-      }
-    });
-    inject(DestroyRef).onDestroy(() => subscription.unsubscribe());
+    inject(Router)
+      .events.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        if (event instanceof NavigationStart) this.loading.set(true);
+        if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
+          this.loading.set(false);
+        }
+      });
   }
 }

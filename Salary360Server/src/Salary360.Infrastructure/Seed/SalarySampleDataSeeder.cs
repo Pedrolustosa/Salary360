@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Salary360.Domain.Common;
 using Salary360.Domain.Entities;
 using Salary360.Domain.Enums;
 using Salary360.Infrastructure.Persistence;
@@ -17,7 +18,7 @@ public sealed class SalarySampleDataSeeder(
     private const int UserRandomSeed = 360_001;
     private const int AdminRandomSeed = 360_002;
 
-    public int Order => 10;
+    public int GetOrder() => 10;
 
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
@@ -258,8 +259,8 @@ public sealed class SalarySampleDataSeeder(
                 ("Home Office", SalaryItemType.Benefit, 200m),
                 ("Performance Bonus", SalaryItemType.Benefit, 900m),
                 ("Transport", SalaryItemType.Benefit, 220m),
-                ("INSS", SalaryItemType.Deduction, Math.Round(gross * 0.11m, 2, MidpointRounding.ToEven)),
-                ("IRRF", SalaryItemType.Deduction, Math.Round(gross * 0.15m, 2, MidpointRounding.ToEven)),
+                ("INSS", SalaryItemType.Deduction, Money.Round(gross * 0.11m)),
+                ("IRRF", SalaryItemType.Deduction, Money.Round(gross * 0.15m)),
                 ("Pension", SalaryItemType.Deduction, 350m),
                 ("Union Fee", SalaryItemType.Deduction, 45m)
             ];
@@ -267,9 +268,9 @@ public sealed class SalarySampleDataSeeder(
 
         var meal = isAdminProfile ? 600m + (year % 3) * 20m : 650m + (year % 5) * 30m + (month % 3) * 10m;
         var health = isAdminProfile ? 320m : 360m + (year % 4) * 25m;
-        var inss = Math.Round(gross * 0.11m, 2, MidpointRounding.ToEven);
+        var inss = Money.Round(gross * 0.11m);
         var irrfRate = isAdminProfile ? 0.125m : 0.135m + Math.Min(yearsFactor(year, indexFromOldest), 0.03m);
-        var irrf = Math.Round(gross * irrfRate, 2, MidpointRounding.ToEven);
+        var irrf = Money.Round(gross * irrfRate);
 
         var items = new List<(string Name, SalaryItemType Type, decimal Amount)>
         {
@@ -282,7 +283,7 @@ public sealed class SalarySampleDataSeeder(
             items.Insert(1, ("Health Allowance", SalaryItemType.Benefit, health));
 
         if (month == 12)
-            items.Insert(1, ("Thirteenth Salary", SalaryItemType.Benefit, MoneyRound(gross * 0.92m)));
+            items.Insert(1, ("Thirteenth Salary", SalaryItemType.Benefit, Money.Round(gross * 0.92m)));
 
         if (month == 3 && !isAdminProfile)
             items.Insert(1, ("Profit Sharing", SalaryItemType.Benefit, 1200m + (year % 4) * 150m));
@@ -300,7 +301,4 @@ public sealed class SalarySampleDataSeeder(
 
         static decimal yearsFactor(int year, int index) => ((year % 5) + (index % 3)) * 0.005m;
     }
-
-    private static decimal MoneyRound(decimal value)
-        => Math.Round(value, 2, MidpointRounding.ToEven);
 }

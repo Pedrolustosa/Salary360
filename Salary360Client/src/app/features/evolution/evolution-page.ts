@@ -12,9 +12,9 @@ import { SelectOption } from '../../shared/select/interfaces/select-option.inter
 import { Spinner } from '../../shared/spinner';
 import { StatCard } from '../../shared/stat-card/stat-card';
 import { StatTone } from '../../shared/stat-card/enums/stat-tone.enum';
-import { EvolutionMode } from '../salaries/enums/evolution-mode.enum';
-import { SalaryEvolutionPoint } from '../salaries/interfaces/salary-evolution-point.interface';
-import { SalaryService } from '../salaries/services/salary.service';
+import { EvolutionMode } from '../../core/salaries/enums/evolution-mode.enum';
+import { SalaryEvolutionPoint } from '../../core/salaries/interfaces/salary-evolution-point.interface';
+import { SalaryService } from '../../core/salaries/salary.service';
 import {
   computeEvolutionStats,
   toEvolutionChartData,

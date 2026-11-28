@@ -28,7 +28,7 @@ public sealed class ExpensesSampleDataSeeder(
     private const string GapMonthName = "Gap month expense";
     private const string PlanningName = "Planning ceiling";
 
-    public int Order => 20;
+    public int GetOrder() => 20;
 
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {

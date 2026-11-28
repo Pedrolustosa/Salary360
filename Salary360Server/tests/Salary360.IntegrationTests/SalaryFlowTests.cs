@@ -145,4 +145,3 @@ public sealed class SalaryFlowTests : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.OK, restore.StatusCode);
     }
 }
-

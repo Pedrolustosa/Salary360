@@ -3,6 +3,7 @@ using Salary360.Application.Interfaces.Identity;
 using Salary360.Application.Interfaces.Messaging;
 using Salary360.Application.Interfaces.Persistence;
 using Salary360.Domain.Interfaces;
+using Salary360.Application.Salaries.Dtos;
 
 namespace Salary360.Application.Salaries.Commands;
 
@@ -15,11 +16,11 @@ public sealed class UpdateSalaryCommandHandler(
         UpdateSalaryCommand request, CancellationToken cancellationToken = default)
     {
         var record = await repository.GetByIdAsync(request.Id, cancellationToken);
-        if (record is null || record.UserId != currentUser.UserId)
+        if (record is null || record.UserId != currentUser.GetUserId())
             throw new NotFoundException("SalaryRecord", request.Id);
 
         if (await repository.ExistsAsync(
-                currentUser.UserId, request.Year, request.Month, request.Id, cancellationToken))
+                currentUser.GetUserId(), request.Year, request.Month, request.Id, cancellationToken))
             throw new ConflictException($"A salary record already exists for {request.Year}-{request.Month:D2}.");
 
         record.Update(
@@ -31,5 +32,5 @@ public sealed class UpdateSalaryCommandHandler(
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return record.ToDto();
-    }
+}
 }

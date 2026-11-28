@@ -4,6 +4,7 @@ using Salary360.Application.Interfaces.Persistence;
 using Salary360.Domain.Common;
 using Salary360.Domain.Entities;
 using Salary360.Domain.Enums;
+using Salary360.Application.Expenses.Dtos;
 
 namespace Salary360.Infrastructure.Persistence;
 
@@ -285,5 +286,5 @@ public sealed class ExpenseRepository(AppDbContext context) : IExpenseRepository
             .OrderBy(expense => expense.Year)
             .ThenBy(expense => expense.Month)
             .ToListAsync(cancellationToken);
-    }
+}
 }

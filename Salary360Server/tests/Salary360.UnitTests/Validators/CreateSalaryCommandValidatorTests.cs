@@ -1,5 +1,6 @@
 using Salary360.Application.Salaries;
 using Salary360.Application.Salaries.Commands;
+using Salary360.Application.Salaries.Dtos;
 using Salary360.Domain.Enums;
 
 namespace Salary360.UnitTests.Validators;

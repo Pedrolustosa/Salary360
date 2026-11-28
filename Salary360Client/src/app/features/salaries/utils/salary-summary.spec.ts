@@ -1,4 +1,4 @@
-import { SalaryItemType } from '../enums/salary-item-type.enum';
+import { SalaryItemType } from '../../../core/salaries/enums/salary-item-type.enum';
 import { calculateSalarySummary } from './salary-summary';
 
 describe('calculateSalarySummary', () => {

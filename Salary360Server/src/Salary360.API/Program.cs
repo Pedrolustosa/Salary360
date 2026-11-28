@@ -29,7 +29,6 @@ if (app.Environment.IsDevelopment())
     });
     app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 }
-
 app.UseHttpsRedirection();
 app.UseCors(ApiServiceCollectionExtensions.CorsPolicyName);
 app.UseAuthentication();
